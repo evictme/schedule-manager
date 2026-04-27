@@ -5,1065 +5,365 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Work Schedule Manager</title>
 <style>
-:root{
-  --bg:#f5f3ee;--card:#fffdf8;--ink:#202124;--muted:#6b6f76;--line:#ded8cc;
-  --accent:#315c49;--accent2:#e8f1ea;--bad:#a33a3a;--badbg:#fff0f0;--good:#246b45;--warn:#8a5a1b;
-  --shadow:0 4px 18px rgba(30,35,32,.08);--radius:18px;
-}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-size:16px}
-body{padding-bottom:88px}.app{max-width:720px;margin:0 auto;padding:14px 12px 24px}
-header{position:sticky;top:0;z-index:5;background:linear-gradient(#fffdf8 70%,rgba(255,253,248,.92));border-bottom:1px solid var(--line);padding:12px 12px 10px;box-shadow:0 1px 10px rgba(0,0,0,.04)}
-.header-inner{max-width:720px;margin:0 auto;display:flex;align-items:center;gap:10px}.logo{width:42px;height:42px;border-radius:14px;background:var(--accent2);object-fit:cover;border:1px solid var(--line)}
-h1{font-size:18px;line-height:1.1;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:2px}.sync{font-size:11px;color:var(--muted);margin-top:2px}.sync.dirty{color:var(--warn);font-weight:800}.sync.ok{color:var(--good);font-weight:800}.top-actions{margin-left:auto;display:flex;gap:6px}.top-actions button{padding:8px 9px;font-size:13px}
-nav{position:fixed;left:0;right:0;bottom:0;z-index:10;background:#fffdf8;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:7px 7px calc(7px + env(safe-area-inset-bottom));box-shadow:0 -4px 16px rgba(0,0,0,.08)}
-nav button{border:0;background:transparent;color:var(--muted);padding:7px 2px;border-radius:12px;font-size:11px;font-weight:700;display:flex;flex-direction:column;gap:2px;align-items:center}nav button.active{background:var(--accent2);color:var(--accent)}nav span{font-size:18px;line-height:1}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;margin:12px 0}.card.tight{padding:10px}.row{display:flex;gap:8px;align-items:center}.row.wrap{flex-wrap:wrap}.between{justify-content:space-between}.grid{display:grid;gap:10px}.grid.two{grid-template-columns:1fr 1fr}.grid.three{grid-template-columns:repeat(3,1fr)}
-label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:800;color:#384139}input,select,textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px;background:#fff;color:var(--ink);font:inherit;min-height:44px}textarea{min-height:170px;resize:vertical;line-height:1.35}button,.btn{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:12px;padding:11px 13px;font-weight:800;font:inherit;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:42px}button.secondary,.btn.secondary{background:#fff;color:var(--accent)}button.danger{background:#fff;color:var(--bad);border-color:var(--bad)}button.warn{background:#fff;color:var(--warn);border-color:var(--warn)}button:disabled{opacity:.45}.full{width:100%}.hide{display:none!important}.notice{font-size:13px;color:var(--muted);line-height:1.35}.small{font-size:12px;color:var(--muted)}
-.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.kpi{background:var(--accent2);border-radius:15px;padding:10px}.kpi b{font-size:20px;display:block}.kpi span{font-size:12px;color:var(--muted);font-weight:700}.shift{border:1px solid var(--line);border-radius:16px;background:#fff;padding:12px;margin:10px 0}.shift.off{background:var(--badbg);border-color:#efc7c7}.shift.today{outline:2px solid var(--accent)}.shift-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.daybadge{min-width:52px;text-align:center;background:var(--accent2);border-radius:12px;padding:7px 6px;font-weight:900}.off .daybadge{background:#ffe0e0;color:var(--bad)}.daybadge span{display:block;font-size:11px;color:var(--muted);font-weight:800}.shift-main{flex:1}.shift-title{font-size:18px;font-weight:900}.shift-meta{font-size:13px;color:var(--muted);margin-top:3px}.money{font-variant-numeric:tabular-nums;font-weight:900}.pill{display:inline-block;border-radius:999px;background:var(--accent2);padding:3px 8px;font-size:12px;font-weight:800;color:var(--accent)}.pill.bad{background:#ffe1e1;color:var(--bad)}.pill.warn{background:#fff1dc;color:var(--warn)}
-.table{width:100%;border-collapse:separate;border-spacing:0 8px}.table th{font-size:11px;color:var(--muted);text-align:left}.table td{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px;font-size:13px}.table td:first-child{border-left:1px solid var(--line);border-radius:12px 0 0 12px}.table td:last-child{border-right:1px solid var(--line);border-radius:0 12px 12px 0}.raw{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px;max-height:260px;overflow:auto;font-size:12px}.tabs{display:flex;gap:6px;background:#eee9df;border-radius:14px;padding:4px;margin:8px 0}.tabs button{flex:1;min-height:36px;padding:7px;border:0;background:transparent;color:var(--muted);border-radius:11px;font-size:13px}.tabs button.active{background:#fff;color:var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.08)}
-@media(max-width:390px){.app{padding:10px 9px 24px}.grid.two,.grid.three{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.card{padding:12px}.shift-title{font-size:16px}button,.btn{padding:10px 11px}.header-inner{gap:8px}.logo{width:38px;height:38px}}
-@media print{header,nav,.no-print{display:none!important}body{background:#fff}.app{max-width:100%;padding:0}.card{box-shadow:none;border:0}}
+:root{--bg:#f5f3ee;--card:#fffdf8;--ink:#202124;--muted:#6b6f76;--line:#ded8cc;--accent:#315c49;--accent2:#e8f1ea;--bad:#a33a3a;--badbg:#fff0f0;--good:#246b45;--warn:#8a5a1b;--shadow:0 4px 18px rgba(30,35,32,.08);--radius:18px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-size:16px}body{padding-bottom:88px}.app{max-width:760px;margin:0 auto;padding:14px 12px 24px}header{position:sticky;top:0;z-index:5;background:linear-gradient(#fffdf8 70%,rgba(255,253,248,.92));border-bottom:1px solid var(--line);padding:12px 12px 10px;box-shadow:0 1px 10px rgba(0,0,0,.04)}.header-inner{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:10px}.logo{width:42px;height:42px;border-radius:14px;background:var(--accent2);object-fit:cover;border:1px solid var(--line)}h1{font-size:18px;line-height:1.1;margin:0}h2,h3{margin:0 0 10px}.sub{font-size:12px;color:var(--muted);margin-top:2px}.sync{font-size:11px;color:var(--muted);margin-top:2px}.sync.dirty{color:var(--warn);font-weight:800}.sync.ok{color:var(--good);font-weight:800}.top-actions{margin-left:auto;display:flex;gap:6px}.top-actions button{padding:8px 9px;font-size:13px}nav{position:fixed;left:0;right:0;bottom:0;z-index:10;background:#fffdf8;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:7px 7px calc(7px + env(safe-area-inset-bottom));box-shadow:0 -4px 16px rgba(0,0,0,.08)}nav button{border:0;background:transparent;color:var(--muted);padding:7px 2px;border-radius:12px;font-size:11px;font-weight:700;display:flex;flex-direction:column;gap:2px;align-items:center}nav button.active{background:var(--accent2);color:var(--accent)}nav span{font-size:18px;line-height:1}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;margin:12px 0}.row{display:flex;gap:8px;align-items:center}.row.wrap{flex-wrap:wrap}.between{justify-content:space-between}.grid{display:grid;gap:10px}.grid.two{grid-template-columns:1fr 1fr}.grid.three{grid-template-columns:repeat(3,1fr)}label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:800;color:#384139}input,select,textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px;background:#fff;color:var(--ink);font:inherit;min-height:44px}input[type=color]{padding:4px;height:44px}textarea{min-height:120px;resize:vertical;line-height:1.35}button,.btn{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:12px;padding:11px 13px;font-weight:800;font:inherit;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:42px}button.secondary,.btn.secondary{background:#fff;color:var(--accent)}button.danger{background:#fff;color:var(--bad);border-color:var(--bad)}button.warn{background:#fff;color:var(--warn);border-color:var(--warn)}button:disabled{opacity:.45}.full{width:100%}.hide{display:none!important}.notice{font-size:13px;color:var(--muted);line-height:1.35}.small{font-size:12px;color:var(--muted)}.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.kpi{background:var(--accent2);border-radius:15px;padding:10px}.kpi b{font-size:20px;display:block}.kpi span{font-size:12px;color:var(--muted);font-weight:700}.filterbar{display:flex;gap:6px;overflow-x:auto;padding:4px 0 8px}.filterbar button{white-space:nowrap;min-height:36px;padding:8px 11px;font-size:13px}.filterbar button.active{background:var(--accent);color:#fff}.daygroup{border:1px solid var(--line);border-radius:18px;background:#fff;padding:10px;margin:10px 0}.daygroup.today{outline:2px solid var(--accent)}.daygroup-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}.daybadge{min-width:54px;text-align:center;background:var(--accent2);border-radius:12px;padding:7px 6px;font-weight:900}.daybadge span{display:block;font-size:11px;color:var(--muted);font-weight:800}.shift{border:1px solid var(--line);border-left:8px solid var(--accent);border-radius:16px;background:#fff;padding:12px;margin:8px 0;cursor:pointer}.shift.off{background:var(--badbg);border-left-color:var(--bad);border-color:#efc7c7}.shift:focus{outline:2px solid var(--accent);outline-offset:2px}.shift-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.shift-main{flex:1}.shift-title{font-size:17px;font-weight:900}.shift-meta{font-size:13px;color:var(--muted);margin-top:3px}.money{font-variant-numeric:tabular-nums;font-weight:900}.pill{display:inline-block;border-radius:999px;background:var(--accent2);padding:3px 8px;font-size:12px;font-weight:800;color:var(--accent)}.pill.bad{background:#ffe1e1;color:var(--bad)}.pill.color{color:#fff}.shift-tools{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.shift-tools .menu-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}.shift-tools button{width:100%;min-height:40px;padding:9px;font-size:13px}.inline-editor{background:#f8f5ee;border:1px solid var(--line);border-radius:14px;padding:10px;margin-top:8px}.inline-editor textarea{min-height:80px}.table{width:100%;border-collapse:separate;border-spacing:0 8px}.table th{font-size:11px;color:var(--muted);text-align:left}.table td{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px;font-size:13px}.table td:first-child{border-left:1px solid var(--line);border-radius:12px 0 0 12px}.table td:last-child{border-right:1px solid var(--line);border-radius:0 12px 12px 0}.raw{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px;max-height:260px;overflow:auto;font-size:12px}.business-card{border:1px solid var(--line);border-radius:16px;padding:12px;background:#fff;margin:10px 0}.color-dot{width:12px;height:12px;border-radius:999px;display:inline-block;border:1px solid rgba(0,0,0,.15)}.share-panel .grid{margin-top:10px}@media(max-width:430px){.app{padding:10px 9px 24px}.grid.two,.grid.three{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.card{padding:12px}.shift-title{font-size:16px}button,.btn{padding:10px 11px}.header-inner{gap:8px}.logo{width:38px;height:38px}.shift-tools .menu-row{grid-template-columns:1fr}.share-panel .grid.two{grid-template-columns:1fr}.top-actions{gap:4px}.top-actions button{padding:7px 7px;font-size:12px}}@media print{header,nav,.no-print{display:none!important}body{background:#fff}.app{max-width:100%;padding:0}.card{box-shadow:none;border:0}}
 
-/* Mobile inline editor + share controls */
-.shift{cursor:pointer}
-.shift:focus{outline:2px solid var(--accent);outline-offset:2px}
-.shift-tools{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
-.shift-tools .menu-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
-.shift-tools button{width:100%;min-height:40px;padding:9px;font-size:13px}
-.inline-editor{background:#f8f5ee;border:1px solid var(--line);border-radius:14px;padding:10px;margin-top:8px}
-.inline-editor textarea{min-height:80px}
-.share-panel .grid{margin-top:10px}
-@media(max-width:390px){.shift-tools .menu-row{grid-template-columns:1fr}.share-panel .grid.two{grid-template-columns:1fr}}
+/* v9 header share + clearer next-shift date */
+.shift-head.next-clear{align-items:flex-start}
+.shift-datebox{min-width:62px;text-align:center;border:1px solid var(--line);border-radius:13px;background:var(--accent2);padding:8px 6px;font-weight:900;color:var(--accent)}
+.shift-datebox span{display:block;font-size:12px;color:var(--muted);font-weight:800;margin-top:2px}
+.share-popover{position:fixed;right:10px;top:72px;z-index:30;width:min(94vw,360px);background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 14px 38px rgba(0,0,0,.18);padding:12px}
+.share-popover.hide{display:none!important}
+.share-popover .filterbar{padding-bottom:8px}
+.share-popover h3{margin:0 0 6px}
+@media(max-width:430px){.share-popover{right:8px;left:8px;top:70px;width:auto}.shift-datebox{min-width:56px}}
+
+/* v10 mobile status bar, business logos, next-shift stack, log exporters */
+.sync{position:relative;overflow:hidden;display:inline-block;min-width:min(100%,280px);max-width:100%;padding:5px 10px;border-radius:999px;background:linear-gradient(90deg,#9aa0a6,#6f7479);color:#fff!important;font-weight:900;line-height:1.15;box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);--progress:0%}
+.sync::before{content:"";position:absolute;inset:0 auto 0 0;width:var(--progress,0%);background:linear-gradient(90deg,#1f7a4a,#36a56a);transition:width .35s ease;z-index:0}.sync::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,0));z-index:1}.sync{z-index:0}.sync .sync-text{position:relative;z-index:2}.sync.ok{--progress:100%}.sync.dirty{--progress:38%}.sync.working{--progress:68%}
+.next-stack{display:grid;gap:8px;margin-top:10px}.shift-rank{width:30px;height:30px;border-radius:999px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--accent);flex:0 0 auto}.shift-logo{width:42px;height:42px;border-radius:13px;object-fit:cover;background:var(--accent2);border:1px solid var(--line);flex:0 0 auto}.shift-logo.letter{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;border-color:transparent}.next-left{display:flex;gap:8px;align-items:flex-start}.shift-head.next-clear{justify-content:flex-start}.shift-datebox{flex:0 0 auto}.log-export-menu{display:flex;gap:6px;overflow-x:auto;padding:4px 0}.log-export-menu button{white-space:nowrap}.business-logo-preview{width:48px;height:48px;border-radius:14px;object-fit:cover;border:1px solid var(--line);background:var(--accent2)}
+@media(max-width:430px){.sync{min-width:210px;font-size:10px}.shift-logo{width:38px;height:38px}.shift-rank{width:28px;height:28px}.log-export-menu{width:100%}}
 
 </style>
 </head>
 <body>
-<header>
-  <div class="header-inner">
-    <img id="logoImg" class="logo" alt="Logo">
-    <div><h1 id="title">Schedule Manager</h1><div class="sub" id="subtitle">Local mobile schedule tracker</div><div class="sync" id="syncStatus">Autosaved locally</div></div>
-    <div class="top-actions"><button id="icloudLoadBtn" class="secondary">Load</button><button id="icloudSaveBtn" class="secondary">Save</button><button id="googleSyncBtn" class="secondary">Sync</button><button id="quickIcs" class="secondary">Add All</button></div>
-  </div>
-</header>
-<nav class="no-print">
-  <button data-tab="home" class="active"><span>⌂</span>Home</button>
-  <button data-tab="paste"><span>＋</span>Paste</button>
-  <button data-tab="log"><span>☰</span>Log</button>
-  <button data-tab="pay"><span>$</span>Pay</button>
-  <button data-tab="setup"><span>⚙</span>Setup</button>
-</nav>
-<div class="app">
-  <section id="home" class="tab"></section>
-  <section id="paste" class="tab hide"></section>
-  <section id="log" class="tab hide"></section>
-  <section id="pay" class="tab hide"></section>
-  <section id="setup" class="tab hide"></section>
-</div>
+<header><div class="header-inner"><img id="logoImg" class="logo" alt="Logo"><div><h1 id="title">Schedule Manager</h1><div class="sub" id="subtitle">Multi-business mobile schedule tracker</div><div class="sync" id="syncStatus">Autosaved locally</div></div><div class="top-actions"><button id="importBtn" class="secondary">Import</button><button id="backupBtn" class="secondary">Backup</button><button id="shareMenuBtn" class="secondary">Share</button><button id="googleSyncBtn" class="secondary">Sync</button><button id="quickIcs" class="secondary">Add All</button></div></div></header>
+<nav class="no-print"><button data-tab="home" class="active"><span>⌂</span>Home</button><button data-tab="paste"><span>＋</span>Paste</button><button data-tab="log"><span>☰</span>Log</button><button data-tab="pay"><span>$</span>Pay</button><button data-tab="setup"><span>⚙</span>Setup</button></nav>
+<div class="app"><section id="home" class="tab"></section><section id="paste" class="tab hide"></section><section id="log" class="tab hide"></section><section id="pay" class="tab hide"></section><section id="setup" class="tab hide"></section></div>
+<input class="hide" type="file" id="jsonImport" accept="application/json">
 <script>
-const STORE='workScheduleManager.general.v1';
-const seedText=`Monday 4/27: OFF
-
-Tuesday 4/28: 9am Main Location
-
-Wednesday 4/29: 9am Main Location
-
-Thursday 4/30: 10am Back Office
-
-Friday 5/1: 12pm-8pm Main Location
-
-Saturday 5/2: 11am-7pm Event Site
-(Training shift)
-
-Sunday 5/3: OFF`;
-const defaultState={
-  settings:{businessName:'My Workplace',employeeName:'Your Name',logoData:'',hourlyRate:15,ilTax:0,ficaTax:.0765,federalTax:0,payPeriodAnchor:'2026-04-20',payPeriodDays:14,paydayOffset:5,defaultShiftHours:8,defaultEndIfMissing:true,defaultLocation:'Main Location',calendarTitlePrefix:'Work',googleScriptUrl:'',googleScriptSecret:'',locations:'Main Location\nBack Office\nEvent Site\nRemote\nTraining'},
-  currentWeekId:'',
-  shifts:[
-    {date:'2026-04-27',day:'MON',start:'',end:'',status:'Off',location:'',notes:'Sample off day',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''},
-    {date:'2026-04-28',day:'TUE',start:'09:00',end:'',status:'Scheduled',location:'Main Location',notes:'',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''},
-    {date:'2026-04-29',day:'WED',start:'09:00',end:'',status:'Scheduled',location:'Main Location',notes:'',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''},
-    {date:'2026-04-30',day:'THU',start:'10:00',end:'',status:'Scheduled',location:'Back Office',notes:'',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''},
-    {date:'2026-05-01',day:'FRI',start:'12:00',end:'20:00',status:'Scheduled',location:'Main Location',notes:'',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''},
-    {date:'2026-05-02',day:'SAT',start:'11:00',end:'19:00',status:'Scheduled',location:'Event Site',notes:'Training shift',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''},
-    {date:'2026-05-03',day:'SUN',start:'',end:'',status:'Off',location:'',notes:'Sample off day',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''}
-  ],
-  logs:[]
-};
-let state=load();let parsedPreview=[];let dataFileHandle=null;let dirty=false;let lastLoadedFileName='data.json';ensureSettingsDefaults();
-function load(){try{const s=JSON.parse(localStorage.getItem(STORE));if(s&&s.settings)return s}catch(e){}const s=JSON.parse(JSON.stringify(defaultState));s.currentWeekId=weekId(s.shifts);s.logs=[makeLog('Initial spreadsheet example',s.shifts,seedText)];return s}
-function ensureSettingsDefaults(){
-  if(!state.settings)state.settings={};
-  const d=defaultState.settings;
-  ['businessName','employeeName','hourlyRate','ilTax','ficaTax','federalTax','payPeriodAnchor','payPeriodDays','paydayOffset','defaultShiftHours','defaultEndIfMissing','defaultLocation','calendarTitlePrefix','googleScriptUrl','googleScriptSecret'].forEach(k=>{
-    if(state.settings[k]===undefined||state.settings[k]===null||state.settings[k]==='') state.settings[k]=d[k];
-  });
-}
-function save(){
-  localStorage.setItem(STORE,JSON.stringify(state));
-  dirty=true;
-  refreshHeader();
-  updateSyncStatus('Autosaved locally · saved in this browser · export backup if needed','dirty');
-}
-function markClean(msg='Saved to data file'){
-  dirty=false;
-  updateSyncStatus(msg,'ok');
-}
-function updateSyncStatus(msg,mode=''){
-  const el=document.getElementById('syncStatus');
-  if(!el)return;
-  el.className='sync '+mode;
-  el.textContent=msg;
-}
+const STORE='workScheduleManager.multi.v2';
+const LEGACY_KEYS=['workScheduleManager.general.v1','personalScheduleManager.v1'];
+const APP_VERSION=4;
+const COLORS=['#315c49','#6b4f9c','#1f6f8b','#8a5a1b','#8f3f3f','#3f6b35','#7a3b75','#50545c'];
+const STATE_TAX_RATES={NONE:0,AL:0.05,AK:0,AZ:0.025,AR:0.039,CA:0.093,CO:0.044,CT:0.05,DE:0.055,FL:0,GA:0.0539,HI:0.07,ID:0.058,IL:0.0495,IN:0.03,IA:0.038,KS:0.052,KY:0.04,LA:0.03,ME:0.058,MD:0.0475,MA:0.05,MI:0.0425,MN:0.068,MS:0.047,MO:0.047,MT:0.059,NE:0.052,NN:0,NV:0,NH:0,NJ:0.0637,NM:0.049,NY:0.0597,NC:0.0399,ND:0.02,OH:0.035,OK:0.0475,OR:0.0875,PA:0.0307,RI:0.0475,SC:0.062,SD:0,TN:0,TX:0,UT:0.0455,VT:0.066,VA:0.0575,WA:0,WV:0.047,WI:0.053,WY:0,DC:0.065};
+const STATE_NAMES={NONE:'Custom / No State Tax',AL:'Alabama',AK:'Alaska',AZ:'Arizona',AR:'Arkansas',CA:'California',CO:'Colorado',CT:'Connecticut',DE:'Delaware',FL:'Florida',GA:'Georgia',HI:'Hawaii',ID:'Idaho',IL:'Illinois',IN:'Indiana',IA:'Iowa',KS:'Kansas',KY:'Kentucky',LA:'Louisiana',ME:'Maine',MD:'Maryland',MA:'Massachusetts',MI:'Michigan',MN:'Minnesota',MS:'Mississippi',MO:'Missouri',MT:'Montana',NE:'Nebraska',NN:'No State Selected',NV:'Nevada',NH:'New Hampshire',NJ:'New Jersey',NM:'New Mexico',NY:'New York',NC:'North Carolina',ND:'North Dakota',OH:'Ohio',OK:'Oklahoma',OR:'Oregon',PA:'Pennsylvania',RI:'Rhode Island',SC:'South Carolina',SD:'South Dakota',TN:'Tennessee',TX:'Texas',UT:'Utah',VT:'Vermont',VA:'Virginia',WA:'Washington',WV:'West Virginia',WI:'Wisconsin',WY:'Wyoming',DC:'District of Columbia'};
+const STATE_ORDER=['NONE','AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'];
+const seedText=`Monday 4/27: OFF\n\nTuesday 4/28: 9am Main Location\n\nWednesday 4/29: 9am Main Location\n\nThursday 4/30: 10am Back Office\n\nFriday 5/1: 12pm-8pm Main Location\n\nSaturday 5/2: 11am-7pm Event Site\n(Training shift)\n\nSunday 5/3: OFF`;
+const defaultBusiness={id:'biz-main',name:'My Workplace',color:'#315c49',hourlyRate:15,stateCode:'NONE',ilTax:0,ficaTax:.0765,federalTax:.10,payPeriodAnchor:'2026-04-20',payPeriodDays:14,paydayOffset:5,defaultShiftHours:8,defaultEndIfMissing:true,defaultLocation:'Main Location',calendarTitlePrefix:'Work',locations:[{name:'Main Location',color:'',useBusinessColor:true},{name:'Back Office',color:'#1f6f8b',useBusinessColor:false},{name:'Event Site',color:'#8a5a1b',useBusinessColor:false},{name:'Remote',color:'#6b4f9c',useBusinessColor:false},{name:'Training',color:'#3f6b35',useBusinessColor:false}]};
+const defaultState={version:APP_VERSION,settings:{employeeName:'Your Name',logoData:'',googleScriptUrl:'',googleScriptSecret:'',activeBusinessId:'biz-main',homeFilter:'ALL',payFilter:'ALL',shareFilter:'ALL'},businesses:[defaultBusiness],shifts:sampleShifts('biz-main'),logs:[]};
+function sampleShifts(businessId){return[{id:uid(),businessId,date:'2026-04-27',day:'MON',start:'',end:'',status:'Off',location:'',notes:'Sample off day',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''},{id:uid(),businessId,date:'2026-04-28',day:'TUE',start:'09:00',end:'',status:'Scheduled',location:'Main Location',notes:'',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''},{id:uid(),businessId,date:'2026-04-29',day:'WED',start:'09:00',end:'',status:'Scheduled',location:'Main Location',notes:'',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''},{id:uid(),businessId,date:'2026-04-30',day:'THU',start:'10:00',end:'',status:'Scheduled',location:'Back Office',notes:'',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''},{id:uid(),businessId,date:'2026-05-01',day:'FRI',start:'12:00',end:'20:00',status:'Scheduled',location:'Main Location',notes:'',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''},{id:uid(),businessId,date:'2026-05-02',day:'SAT',start:'11:00',end:'19:00',status:'Scheduled',location:'Event Site',notes:'Training shift',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''},{id:uid(),businessId,date:'2026-05-03',day:'SUN',start:'',end:'',status:'Off',location:'',notes:'Sample off day',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''}]}
+let state=loadState();let parsedPreview=[];let openShiftId=null;let openEditorId=null;let activeTab='home';ensureState();saveSilent();
+function uid(){return 'id-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8)}
+function clone(x){return JSON.parse(JSON.stringify(x))}
+function loadState(){try{const s=JSON.parse(localStorage.getItem(STORE));if(s&&s.version>=2)return s}catch(e){}for(const key of LEGACY_KEYS){try{const old=JSON.parse(localStorage.getItem(key));if(old&&old.settings)return migrateLegacy(old)}catch(e){}}const s=clone(defaultState);s.logs=[makeLog('Sample schedule',s.shifts,seedText)];return s}
+function migrateLegacy(old){const b={...clone(defaultBusiness),id:'biz-main',name:old.settings.businessName||'My Workplace',hourlyRate:num(old.settings.hourlyRate,15),stateCode:old.settings.stateCode||'NONE',ilTax:num(old.settings.ilTax,STATE_TAX_RATES[old.settings.stateCode||'NONE']||0),ficaTax:num(old.settings.ficaTax,.0765),federalTax:num(old.settings.federalTax,.10),payPeriodAnchor:old.settings.payPeriodAnchor||'2026-04-20',payPeriodDays:num(old.settings.payPeriodDays,14),paydayOffset:num(old.settings.paydayOffset,5),defaultShiftHours:num(old.settings.defaultShiftHours,8),defaultLocation:old.settings.defaultLocation||'Main Location',calendarTitlePrefix:old.settings.calendarTitlePrefix||'Work',locations:stringToLocations(old.settings.locations||old.settings.defaultLocation||'Main Location', '#315c49')};return{version:APP_VERSION,settings:{employeeName:old.settings.employeeName||'Your Name',logoData:old.settings.logoData||'',googleScriptUrl:old.settings.googleScriptUrl||'',googleScriptSecret:old.settings.googleScriptSecret||'',activeBusinessId:b.id,homeFilter:'ALL',payFilter:'ALL',shareFilter:'ALL'},businesses:[b],shifts:(old.shifts||[]).map(s=>({...s,id:s.id||uid(),businessId:b.id,calendarEventId:s.calendarEventId||''})),logs:(old.logs||[]).map(l=>({...l,shifts:(l.shifts||[]).map(s=>({...s,id:s.id||uid(),businessId:s.businessId||b.id}))}))}}
+function ensureState(){const previousVersion=num(state.version,0);if(!state.version)state.version=APP_VERSION;if(!state.settings)state.settings={};if(!Array.isArray(state.businesses)||!state.businesses.length)state.businesses=[clone(defaultBusiness)];state.businesses=state.businesses.map((b,i)=>ensureBusiness(b,i));if(!Array.isArray(state.shifts))state.shifts=[];state.shifts=state.shifts.map(s=>ensureShift(s));if(!Array.isArray(state.logs))state.logs=[];if(!state.settings.employeeName)state.settings.employeeName='Your Name';if(!('logoData'in state.settings))state.settings.logoData='';if(!('googleScriptUrl'in state.settings))state.settings.googleScriptUrl='';if(!('googleScriptSecret'in state.settings))state.settings.googleScriptSecret='';if(!state.settings.activeBusinessId||!businessById(state.settings.activeBusinessId))state.settings.activeBusinessId=state.businesses[0].id;if(!state.settings.homeFilter)state.settings.homeFilter='ALL';if(!state.settings.payFilter)state.settings.payFilter='ALL';if(!state.settings.shareFilter)state.settings.shareFilter='ALL';if(!state.settings.pasteDrafts)state.settings.pasteDrafts={};if(previousVersion<3){state.businesses.forEach(b=>{if(b.federalTax===0)b.federalTax=.10})}if(previousVersion<4){state.businesses.forEach(b=>{state.settings.pasteDrafts[b.id]=state.settings.pasteDrafts[b.id]||businessPasteText(b.id)})}state.version=APP_VERSION}
+function ensureBusiness(b,i=0){let d=clone(defaultBusiness);b={...d,...(b||{})};b.id=b.id||uid();b.name=b.name||'Workplace '+(i+1);b.color=b.color||COLORS[i%COLORS.length];b.stateCode=b.stateCode||'NONE';b.hourlyRate=num(b.hourlyRate,15);b.ilTax=num(b.ilTax,STATE_TAX_RATES[b.stateCode]||0);b.ficaTax=num(b.ficaTax,.0765);b.federalTax=num(b.federalTax,.10);b.payPeriodDays=num(b.payPeriodDays,14);b.paydayOffset=num(b.paydayOffset,5);b.defaultShiftHours=num(b.defaultShiftHours,8);b.locations=Array.isArray(b.locations)?b.locations:stringToLocations(b.locations||b.defaultLocation||'Main Location',b.color);b.locations=b.locations.map((l,idx)=>({name:l.name||('Location '+(idx+1)),color:l.useBusinessColor?'':(l.color||''),useBusinessColor:l.useBusinessColor!==undefined?!!l.useBusinessColor:!l.color}));if(!b.locations.length)b.locations=[{name:b.defaultLocation||'Main Location',color:'',useBusinessColor:true}];b.defaultLocation=b.defaultLocation||b.locations[0].name;b.calendarTitlePrefix=b.calendarTitlePrefix||b.name||'Work';return b}
+function ensureShift(s){s=s||{};return{...s,id:s.id||uid(),businessId:s.businessId||(state.businesses[0]&&state.businesses[0].id)||'biz-main',date:s.date||todayISO(),day:s.day||day3(s.date||todayISO()),start:s.start||'',end:s.end||'',status:s.status==='Scheduled'?'Scheduled':'Off',location:s.location||'',notes:s.notes||'',source:s.source||'',importedAt:s.importedAt||new Date().toISOString(),calendarEventId:s.calendarEventId||'',calendarDelete:!!s.calendarDelete}}
+function stringToLocations(str,color){return String(str||'').split(/[\n,]+/).map(x=>x.trim()).filter(Boolean).map((line,i)=>{let [name,c]=line.split('|').map(v=>v&&v.trim());return{name:name||('Location '+(i+1)),color:c||'',useBusinessColor:!c}})}
+function save(){ensureState();localStorage.setItem(STORE,JSON.stringify(state));refreshHeader();updateSyncStatus('Autosaved locally in this browser','dirty')}
+function saveSilent(){ensureState();localStorage.setItem(STORE,JSON.stringify(state))}
+function updateSyncStatus(msg,mode=''){const el=document.getElementById('syncStatus');if(el){el.className='sync '+mode;el.textContent=msg}}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function todayISO(){return new Date().toISOString().slice(0,10)}
-function dateObj(iso){return new Date(iso+'T00:00:00')}
-function dateAdd(iso,d){const x=dateObj(iso);x.setDate(x.getDate()+d);return x.toISOString().slice(0,10)}
-function mdy(iso){if(!iso)return'';const [y,m,d]=iso.split('-').map(Number);return `${m}/${d}`}
-function day3(iso){return ['SUN','MON','TUE','WED','THU','FRI','SAT'][dateObj(iso).getDay()]}
-function fmtTime(t,ampm=true){if(!t)return'';let [h,m]=t.split(':').map(Number);const ap=h>=12?'PM':'AM';h=h%12||12;return `${h}:${String(m).padStart(2,'0')}${ampm?ap:''}`}
-function timeRange(s,e){if(!s)return'';return e?`${fmtTime(s,false)}-${fmtTime(e,true)}`:fmtTime(s,true)}
-function hours(sh){if(sh.status!=='Scheduled'||!sh.start)return 0;let s=timeToNum(sh.start),e=sh.end?timeToNum(sh.end):s+state.settings.defaultShiftHours;if(e<s)e+=24;return Math.max(0,+(e-s).toFixed(2))}
-function timeToNum(t){const [h,m]=t.split(':').map(Number);return h+m/60}
-function money(n){return '$'+(Number(n)||0).toFixed(2)}
-function calc(sh){const h=hours(sh),gross=h*state.settings.hourlyRate,il=gross*state.settings.ilTax,fica=gross*state.settings.ficaTax,fed=gross*state.settings.federalTax,tax=il+fica+fed;return{hours:h,gross,il,fica,fed,tax,net:gross-tax}}
-function payPeriod(date){let start=dateObj(state.settings.payPeriodAnchor),d=dateObj(date),len=Number(state.settings.payPeriodDays)||14;while(start>d)start.setDate(start.getDate()-len);while(new Date(start.getTime()+len*864e5)<=d)start.setDate(start.getDate()+len);let end=new Date(start);end.setDate(end.getDate()+len-1);let pay=new Date(end);pay.setDate(pay.getDate()+(Number(state.settings.paydayOffset)||0));return{start:start.toISOString().slice(0,10),end:end.toISOString().slice(0,10),payday:pay.toISOString().slice(0,10)}}
-function upcoming(){return state.shifts.filter(s=>s.date>=todayISO()).sort((a,b)=>a.date.localeCompare(b.date))}
-function nextShift(){return upcoming().find(s=>s.status==='Scheduled')||null}
-function weekId(shifts){const dates=shifts.map(s=>s.date).sort();return dates[0]||''}
-function makeLog(label,shifts,source){return{id:Date.now()+Math.random(),label,importedAt:new Date().toISOString(),weekStart:weekId(shifts),source:source||'',shifts:JSON.parse(JSON.stringify(shifts))}}
-function refreshHeader(){document.getElementById('title').textContent=state.settings.businessName||'Schedule Manager';document.getElementById('subtitle').textContent=`${state.settings.employeeName||'My'} schedule · ${state.shifts.length} saved entries`;const img=document.getElementById('logoImg');img.src=state.settings.logoData||svgLogo()}
-function svgLogo(){return 'data:image/svg+xml;utf8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96"><rect width="96" height="96" rx="24" fill="#e8f1ea"/><text x="48" y="57" text-anchor="middle" font-family="Arial" font-size="34" font-weight="700" fill="#315c49">WS</text></svg>`)}
-function showTab(id){document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));document.querySelectorAll('.tab').forEach(s=>s.classList.add('hide'));document.getElementById(id).classList.remove('hide');render();window.scrollTo({top:0,behavior:'smooth'})}
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));document.getElementById('quickIcs').onclick=()=>downloadICS(upcoming().filter(s=>s.status==='Scheduled'),'upcoming_schedule.ics');document.getElementById('icloudLoadBtn').onclick=loadICloudData;document.getElementById('icloudSaveBtn').onclick=saveICloudData;document.getElementById('googleSyncBtn').onclick=syncToGoogleCalendar;
-function render(){refreshHeader();renderHome();renderPaste();renderLog();renderPay();renderSetup()}
-function renderHome(){const n=nextShift();const current=state.shifts.slice().sort((a,b)=>a.date.localeCompare(b.date));let k=summary(current);document.getElementById('home').innerHTML=`
-<div class="card">
-  <div class="row between"><div><b>Next Shift</b><div class="notice">Quick view for your phone</div></div><button class="secondary" onclick="showTab('paste')">Paste New</button></div>
-  ${n?shiftCard(n,true):`<div class="shift off"><div class="shift-title">No upcoming scheduled shift</div><div class="notice">Paste or import your next schedule.</div></div>`}
-</div>
-<div class="kpis">
-  <div class="kpi"><span>Upcoming Hours</span><b>${k.hours.toFixed(1)}</b></div>
-  <div class="kpi"><span>Est. Gross</span><b>${money(k.gross)}</b></div>
-  <div class="kpi"><span>Est. Take Home</span><b>${money(k.net)}</b></div>
-  <div class="kpi"><span>Next Payday</span><b>${esc(k.payday?mdy(k.payday):'—')}</b></div>
-</div>
-<div class="card">
-  <div class="row between"><b>Upcoming / Current Schedule</b><div class="row wrap"><button class="secondary" onclick="syncToGoogleCalendar()">Sync Google</button><button class="secondary" onclick="downloadICS(state.shifts.filter(s=>s.status==='Scheduled'),'schedule_with_alerts.ics')">Add All to Calendar</button></div></div>
-  ${current.map(s=>shiftCard(s,false)).join('') || '<p class="notice">No schedule loaded.</p>'}
-</div>`}
-function shiftCard(s,big){const c=calc(s),isToday=s.date===todayISO(),off=s.status!=='Scheduled';return `<div class="shift ${off?'off':''} ${isToday?'today':''}"><div class="shift-head"><div class="daybadge">${esc(s.day||day3(s.date))}<span>${esc(mdy(s.date))}</span></div><div class="shift-main"><div class="shift-title">${off?esc(s.status||'Off'):esc(timeRange(s.start,s.end))}</div><div class="shift-meta">${esc(s.location||'')}${s.notes?' · '+esc(s.notes):''}</div>${!off?`<div class="shift-meta"><span class="pill">${c.hours.toFixed(1)} hrs</span> <span class="money">${money(c.net)} take-home est.</span></div>`:''}</div></div><div class="row wrap" style="margin-top:10px"><button class="secondary" onclick="editShift('${s.date}')">Edit</button>${big&&!off?`<button class="secondary" onclick="downloadICS([getShift('${s.date}')],'shift_${s.date}.ics')">Add Shift</button><a class="btn secondary" target="_blank" href="${googleLink(s)}">Google</a>`:''}</div></div>`}
-function shiftIndexByDate(date){return (state.shifts||[]).findIndex(s=>s.date===date)}
-function normalizeUserTime(value){
-  value=String(value||'').trim();
-  if(!value)return '';
-  let m=value.match(/^(\d{1,2})(?::(\d{2}))?\s*(am|pm)?$/i);
-  if(!m)return value;
-  let h=Number(m[1]), min=m[2]?Number(m[2]):0, ap=(m[3]||'').toLowerCase();
-  if(ap==='pm'&&h<12)h+=12;
-  if(ap==='am'&&h===12)h=0;
-  if(!ap&&h>=1&&h<=7)h+=12;
-  return `${String(h).padStart(2,'0')}:${String(min).padStart(2,'0')}`;
-}
-function logCurrentBeforeEdit(reason){
-  if(confirm('Save the current schedule to the log before editing?')){
-    state.logs.unshift(makeLog(reason||'Manual edit backup',state.shifts,'Saved before manual edit'));
-  }
-}
-function editShift(date){
-  const i=shiftIndexByDate(date);
-  if(i<0)return alert('Shift not found.');
-  const sh=state.shifts[i];
-  logCurrentBeforeEdit('Before editing '+(sh.day||day3(sh.date))+' '+mdy(sh.date));
-  let status=prompt('Set status for '+(sh.day||day3(sh.date))+' '+mdy(sh.date)+'\n\nType Scheduled or Off:',sh.status||'Scheduled');
-  if(status===null)return;
-  status=status.trim().toLowerCase();
-  if(status==='off' || status==='o'){
-    sh.status='Off';
-    sh.start='';
-    sh.end='';
-    sh.location='';
-    sh.notes='';
-    sh.calendarDelete=true;
-    sh.editedAt=new Date().toISOString();
-    save();render();
-    return;
-  }
-  sh.status='Scheduled';
-  const start=prompt('Start time? Examples: 8am, 1:30pm, 13:30',sh.start?fmtTime(sh.start,true):'');
-  if(start===null)return;
-  sh.start=normalizeUserTime(start);
-  const end=prompt('End time? Leave blank if unknown.',sh.end?fmtTime(sh.end,true):'');
-  if(end===null)return;
-  sh.end=normalizeUserTime(end);
-  const loc=prompt('Location?',sh.location||state.settings.defaultLocation||'');
-  if(loc===null)return;
-  sh.location=loc.trim();
-  const notes=prompt('Notes? Leave blank if none.',sh.notes||'');
-  if(notes===null)return;
-  sh.notes=notes.trim();
-  sh.calendarDelete=false;
-  sh.editedAt=new Date().toISOString();
-  save();render();
-}
-function getShift(date){return state.shifts.find(s=>s.date===date)}
-function summary(shifts){let out={hours:0,gross:0,net:0,payday:''};shifts.filter(s=>s.status==='Scheduled').forEach(s=>{let c=calc(s);out.hours+=c.hours;out.gross+=c.gross;out.net+=c.net;if(!out.payday||payPeriod(s.date).payday<out.payday)out.payday=payPeriod(s.date).payday});return out}
-function renderPaste(){document.getElementById('paste').innerHTML=`<div class="card"><h2>Paste Schedule</h2><p class="notice">Paste a schedule from email/text. The parser uses the main text after each date for Scheduled/Off status. Parentheses are saved as notes/secondary details only.</p><textarea id="pasteBox" placeholder="Paste schedule here...">${esc(seedText)}</textarea><div class="grid two" style="margin-top:10px"><button onclick="previewPaste()">Preview</button><button class="secondary" onclick="useSeed()">Use Example</button></div></div><div id="previewArea"></div>`;if(parsedPreview.length)drawPreview()}
-function useSeed(){document.getElementById('pasteBox').value=seedText;previewPaste()}
-function previewPaste(){const txt=document.getElementById('pasteBox').value;parsedPreview=parseScheduleText(txt);drawPreview(txt)}
-function drawPreview(src){document.getElementById('previewArea').innerHTML=`<div class="card"><div class="row between"><b>Parsed Preview</b><span class="pill">${parsedPreview.length} lines</span></div>${parsedPreview.map(s=>shiftCard(s,false)).join('')}<div class="grid two"><button onclick="importPreview()">Save as Current</button><button class="secondary" onclick="appendPreview()">Add to Log Only</button></div></div>`}
-function importPreview(){if(!parsedPreview.length)return alert('Preview first.');const src=document.getElementById('pasteBox').value;state.logs.unshift(makeLog('Imported schedule',parsedPreview,src));state.shifts=parsedPreview;state.currentWeekId=weekId(parsedPreview);save();parsedPreview=[];showTab('home')}
-function appendPreview(){if(!parsedPreview.length)return alert('Preview first.');state.logs.unshift(makeLog('Log only',parsedPreview,document.getElementById('pasteBox').value));save();parsedPreview=[];showTab('log')}
-function parseScheduleText(txt){
-  const lines=txt.replace(/\r/g,'').split('\n').map(x=>x.trim()).filter(Boolean);
-  let results=[],last=null,baseYear=new Date().getFullYear();
-
-  for(const line of lines){
-    const dayMatch=line.match(/\b(mon(day)?|tue(sday)?|wed(nesday)?|thu(rsday)?|fri(day)?|sat(urday)?|sun(day)?)\b/i);
-    const dateMatch=line.match(/(\d{1,2})\s*\/\s*(\d{1,2})(?:\s*\/\s*(\d{2,4}))?/);
-
-    // Parentheses are intentionally ignored for determining Scheduled vs Off.
-    // They are treated as notes/secondary location details only.
-    const parenNotes=[];
-    let m;
-    const parenRegex=/\(([^)]*)\)/g;
-    while((m=parenRegex.exec(line))!==null){
-      const note=(m[1]||'').trim();
-      if(note)parenNotes.push(note);
-    }
-
-    const mainLine=line.replace(/\([^)]*\)/g,' ').replace(/\s+/g,' ').trim();
-    const mainAfterDate=dateMatch
-      ? mainLine.slice(mainLine.indexOf(dateMatch[0])+dateMatch[0].length).replace(/^\s*:?\s*/,'').trim()
-      : mainLine.replace(/^\s*[A-Za-z]+:?\s*/,'').trim();
-
-    const timeRangeMatch=mainAfterDate.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\s*(?:-|to|–|—)\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/i);
-    const oneTimeMatch=mainAfterDate.match(/\b(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b/i);
-
-    // OFF only counts when it appears outside parentheses, in the main schedule text.
-    // This prevents notes like "(Training shift)" from changing the employee schedule.
-    const isOffMain=/\boff\b|unavailable|not scheduled/i.test(mainAfterDate);
-
-    if(dayMatch||dateMatch||timeRangeMatch||oneTimeMatch||isOffMain){
-      let d=dateMatch?makeISO(dateMatch,baseYear):(last?dateAdd(last.date,1):todayISO());
-      let start='',end='',status='Off';
-
-      if(!isOffMain){
-        if(timeRangeMatch){
-          start=normTime(timeRangeMatch[1],timeRangeMatch[2],timeRangeMatch[3]||timeRangeMatch[6]||'');
-          end=normTime(timeRangeMatch[4],timeRangeMatch[5],timeRangeMatch[6]||timeRangeMatch[3]||'');
-          status='Scheduled';
-        }else if(oneTimeMatch){
-          start=normTime(oneTimeMatch[1],oneTimeMatch[2],oneTimeMatch[3]);
-          status='Scheduled';
-        }
-      }
-
-      let clean=mainAfterDate
-        .replace(timeRangeMatch?timeRangeMatch[0]:'','')
-        .replace(!timeRangeMatch&&oneTimeMatch?oneTimeMatch[0]:'','')
-        .replace(/\boff\b/ig,'')
-        .replace(/unavailable|not scheduled/ig,'')
-        .replace(/[():]+/g,' ')
-        .replace(/\s+/g,' ')
-        .trim();
-
-      let loc='',notes='';
-      if(status==='Scheduled'){
-        const known=['Main Location','Back Office','Event Site','Remote','Training'];
-        const knownMain=known.find(k=>clean.toLowerCase().includes(k.toLowerCase()));
-        loc=knownMain||clean||state.settings.defaultLocation;
-
-        // Parenthetical time/location details are secondary schedule notes, not separate shifts.
-        // Example: (Event Site 3pm-7pm at Main Location) stays as a note on the same day.
-        notes=parenNotes.join(' | ');
-      }else{
-        loc='';
-        notes=parenNotes.length?parenNotes.join(' | '):line;
-      }
-
-      last={
-        date:d,
-        day:day3(d),
-        start,
-        end,
-        status,
-        location:status==='Scheduled'?loc:'',
-        notes,
-        source:txt,
-        importedAt:new Date().toISOString(),
-        calendarEventId:'',
-        calendarDelete:status!=='Scheduled'
-      };
-      results.push(last);
-    }else if(last){
-      // Continuation lines are notes only. Parenthetical continuation lines stay notes only.
-      const extra=line.replace(/^\((.*)\)$/,'$1').trim();
-      if(extra)last.notes=(last.notes?last.notes+' | ':'')+extra;
-    }
-  }
-  return results.slice(0,14);
-}
-function makeISO(m,baseYear){let mo=+m[1],da=+m[2],yr=m[3]?+m[3]:baseYear;if(yr<100)yr+=2000;return `${yr}-${String(mo).padStart(2,'0')}-${String(da).padStart(2,'0')}`}
-function normTime(h,m,ap){h=+h;m=m?+m:0;ap=(ap||'').toLowerCase();if(ap==='pm'&&h<12)h+=12;if(ap==='am'&&h===12)h=0;return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`}
-function renderLog(){document.getElementById('log').innerHTML=`<div class="card"><div class="row between"><h2>Schedule Log</h2><button class="danger" onclick="clearLogs()">Clear</button></div><p class="notice">Every import can be kept here as a running log.</p></div>${(state.logs||[]).map((l,i)=>`<div class="card"><div class="row between"><div><b>${esc(l.label||'Schedule')}</b><div class="small">${new Date(l.importedAt).toLocaleString()} · Week ${esc(mdy(l.weekStart))}</div></div><button class="secondary" onclick="restoreLog(${i})">Restore</button></div><div class="raw">${esc((l.shifts||[]).map(s=>`${s.day} ${mdy(s.date)} ${s.status==='Scheduled'?timeRange(s.start,s.end):s.status} ${s.location||''} ${s.notes||''}`).join('\n'))}</div></div>`).join('')||'<div class="card notice">No saved logs yet.</div>'}`}
-function restoreLog(i){if(!confirm('Restore this schedule as current?'))return;state.shifts=JSON.parse(JSON.stringify(state.logs[i].shifts));state.currentWeekId=weekId(state.shifts);save();showTab('home')}
-function clearLogs(){if(confirm('Clear schedule log?')){state.logs=[];save();renderLog()}}
-function renderPay(){const rows=state.shifts.filter(s=>s.status==='Scheduled').map(s=>({...s,...calc(s),pp:payPeriod(s.date)}));const sum=summary(state.shifts);document.getElementById('pay').innerHTML=`<div class="card"><h2>Pay Estimate</h2><div class="kpis"><div class="kpi"><span>Hours</span><b>${sum.hours.toFixed(1)}</b></div><div class="kpi"><span>Gross</span><b>${money(sum.gross)}</b></div><div class="kpi"><span>Taxes</span><b>${money(sum.gross-sum.net)}</b></div><div class="kpi"><span>Take Home</span><b>${money(sum.net)}</b></div></div></div><div class="card"><table class="table"><thead><tr><th>Shift</th><th>Hrs</th><th>Gross</th><th>Net</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.day)} ${esc(mdy(r.date))}<br><span class="small">${esc(timeRange(r.start,r.end))}</span></td><td>${r.hours.toFixed(1)}</td><td>${money(r.gross)}</td><td>${money(r.net)}</td></tr>`).join('')}</tbody></table></div><div class="card"><b>Tax Settings Used</b><p class="notice">IL ${(state.settings.ilTax*100).toFixed(2)}% · FICA ${(state.settings.ficaTax*100).toFixed(2)}% · Federal ${(state.settings.federalTax*100).toFixed(2)}% · Hourly ${money(state.settings.hourlyRate)}</p></div>`}
-function renderSetup(){let s=state.settings;document.getElementById('setup').innerHTML=`<div class="card"><h2>Setup</h2><p class="notice"><b>First use:</b> enter your workplace name, your name, default location, hourly rate, tax assumptions, and optional Google Calendar sync details. These settings are saved privately in this browser.</p><div class="grid"><label>Business Name <input id="businessName" value="${esc(s.businessName)}"></label><label>Your Name <input id="employeeName" value="${esc(s.employeeName)}"></label><label>Logo Image <input type="file" id="logoFile" accept="image/*"></label></div></div><div class="card"><h3>Google Calendar Sync</h3><p class="notice">Optional: sync shifts to your own Google Calendar using your own Google Apps Script web app. Leave these blank if you only want local tracking and export/share tools.</p><div class="grid"><label>Apps Script Web App URL <input id="googleScriptUrl" value="${esc(s.googleScriptUrl||'')}"></label><label>Secret Key <input id="googleScriptSecret" value="${esc(s.googleScriptSecret||'')}"></label><label>Calendar Event Title Prefix <input id="calendarTitlePrefix" value="${esc(s.calendarTitlePrefix||'Work')}"></label></div><div class="grid two" style="margin-top:10px"><button id="setupGoogleSyncBtn" type="button">Sync Scheduled Shifts</button><button id="previewGooglePayloadBtn" class="secondary" type="button">Preview Payload</button><button id="copyAppsScriptFixBtn" class="secondary" type="button">Copy Apps Script v6</button><button id="openGoogleSyncUrlBtn" class="secondary" type="button">Open Sync URL</button></div><p class="small">Setup requires your own Calendar ID, Apps Script web app URL, and secret key. Sync sends Scheduled and Off days so Google Calendar can create, update, or delete matching shift events.</p></div><div class="card"><h3>Pay / Tax Formulas</h3><div class="grid two"><label>Hourly Rate <input id="hourlyRate" type="number" step="0.01" value="${s.hourlyRate}"></label><label>Default Shift Hours <input id="defaultShiftHours" type="number" step="0.25" value="${s.defaultShiftHours}"></label><label>IL Tax Rate <input id="ilTax" type="number" step="0.0001" value="${s.ilTax}"></label><label>FICA Tax Rate <input id="ficaTax" type="number" step="0.0001" value="${s.ficaTax}"></label><label>Federal Tax Rate <input id="federalTax" type="number" step="0.0001" value="${s.federalTax}"></label><label>Default Location <input id="defaultLocation" value="${esc(s.defaultLocation)}"></label><label>Pay Period Anchor <input id="payPeriodAnchor" type="date" value="${esc(s.payPeriodAnchor)}"></label><label>Payday Offset Days <input id="paydayOffset" type="number" value="${s.paydayOffset}"></label></div></div><div class="card"><h3>Data Backup / Restore</h3><p class="notice">The app autosaves to this browser. Use Download JSON to keep a copy or Import JSON to move your schedule to another device/browser.</p><div class="grid two"><button onclick="loadICloudData()">Import Backup</button><button onclick="saveICloudData()">Download Backup</button></div><input class="hide" type="file" id="icloudJsonFile" accept="application/json"></div><div class="card"><h3>Data</h3><div class="grid two"><button onclick="downloadJSON()">Download JSON</button><label class="btn secondary">Import JSON <input class="hide" type="file" id="jsonFile" accept="application/json"></label><button class="danger" onclick="resetAll()">Reset Example</button><button class="secondary" onclick="print()">Print</button></div></div>`;['businessName','employeeName','hourlyRate','defaultShiftHours','ilTax','ficaTax','federalTax','defaultLocation','payPeriodAnchor','paydayOffset','googleScriptUrl','googleScriptSecret','calendarTitlePrefix'].forEach(id=>document.getElementById(id).onchange=e=>{state.settings[id]=e.target.type==='number'?Number(e.target.value):e.target.value;save();render()});document.getElementById('logoFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{state.settings.logoData=r.result;save();render()};r.readAsDataURL(f)};document.getElementById('jsonFile').onchange=e=>importJSON(e.target.files[0]);const syncBtn=document.getElementById('setupGoogleSyncBtn');if(syncBtn)syncBtn.onclick=syncToGoogleCalendar;const prevBtn=document.getElementById('previewGooglePayloadBtn');if(prevBtn)prevBtn.onclick=testGoogleCalendarPayload;const fixBtn=document.getElementById('copyAppsScriptFixBtn');if(fixBtn)fixBtn.onclick=copyCompatibleAppsScript;const openBtn=document.getElementById('openGoogleSyncUrlBtn');if(openBtn)openBtn.onclick=openGoogleSyncUrlManually;const ic=document.getElementById('icloudJsonFile');if(ic)ic.onchange=e=>loadSelectedICloudFile(e.target.files[0])}
-
-async function loadICloudData(){
-  // Best case: browsers that support File System Access API keep a writable handle.
-  if(window.showOpenFilePicker){
-    try{
-      [dataFileHandle]=await window.showOpenFilePicker({
-        types:[{description:'Schedule JSON',accept:{'application/json':['.json']}}],
-        multiple:false
-      });
-      const file=await dataFileHandle.getFile();
-      lastLoadedFileName=file.name||'data.json';
-      const text=await file.text();
-      const loaded=JSON.parse(text);
-      if(!loaded.settings||!Array.isArray(loaded.shifts)) throw new Error('Invalid schedule data file');
-      state=loaded;
-      localStorage.setItem(STORE,JSON.stringify(state));
-      markClean('Loaded from '+lastLoadedFileName,'ok');
-      render();
-      return;
-    }catch(err){
-      if(err && err.name==='AbortError') return;
-      alert('Could not load that file. Make sure it is your data.json schedule file.');
-      return;
-    }
-  }
-  // iPhone/Safari fallback: use a normal file picker.
-  const picker=document.getElementById('icloudJsonFile');
-  if(picker){ picker.value=''; picker.click(); }
-  else alert('Use Setup > Import Backup.');
-}
-function loadSelectedICloudFile(file){
-  if(!file)return;
-  lastLoadedFileName=file.name||'data.json';
-  const r=new FileReader();
-  r.onload=()=>{
-    try{
-      const loaded=JSON.parse(r.result);
-      if(!loaded.settings||!Array.isArray(loaded.shifts)) throw new Error('Invalid schedule data file');
-      state=loaded;
-      localStorage.setItem(STORE,JSON.stringify(state));
-      dataFileHandle=null;
-      markClean('Loaded from '+lastLoadedFileName+' · iPhone save will download a replacement file','ok');
-      render();
-    }catch(e){alert('Invalid data file. Pick the data.json file created for this app.');}
-  };
-  r.readAsText(file);
-}
-async function saveICloudData(){
-  const text=JSON.stringify(state,null,2);
-  // Best case: write directly back to the chosen file.
-  if(dataFileHandle && dataFileHandle.createWritable){
-    try{
-      const writable=await dataFileHandle.createWritable();
-      await writable.write(text);
-      await writable.close();
-      markClean('Saved to '+(lastLoadedFileName||'data.json'),'ok');
-      return;
-    }catch(err){
-      alert('Direct save failed. A downloadable data.json backup will be created instead.');
-    }
-  }
-  // Fallback for iPhone/Safari: download the updated data.json.
-  downloadBlob(text,'data.json','application/json');
-  markClean('Downloaded data.json backup','dirty');
-  alert('Your updated data.json backup was downloaded. Keep it somewhere safe or import it on another device/browser.');
-}
-
-
-async function copyCompatibleAppsScript(){
-  const txt=String.raw`const CALENDAR_ID = "PASTE_YOUR_WORK_SCHEDULE_CALENDAR_ID_HERE";
+function num(v,d=0){v=Number(v);return Number.isFinite(v)?v:d}function todayISO(){return new Date().toISOString().slice(0,10)}function dateObj(iso){return new Date(iso+'T00:00:00')}function dateAdd(iso,d){const x=dateObj(iso);x.setDate(x.getDate()+d);return x.toISOString().slice(0,10)}function mdy(iso){if(!iso)return'';const [y,m,d]=iso.split('-').map(Number);return `${m}/${d}`}function day3(iso){return ['SUN','MON','TUE','WED','THU','FRI','SAT'][dateObj(iso).getDay()]}function fmtTime(t,ampm=true){if(!t)return'';let [h,m]=t.split(':').map(Number);const ap=h>=12?'PM':'AM';h=h%12||12;return `${h}:${String(m).padStart(2,'0')}${ampm?ap:''}`}function timeRange(s,e){if(!s)return'';return e?`${fmtTime(s,false)}-${fmtTime(e,true)}`:fmtTime(s,true)}function timeToNum(t){const [h,m]=String(t||'0:0').split(':').map(Number);return h+(m||0)/60}function numToTime(n){n=((n%24)+24)%24;let h=Math.floor(n),m=Math.round((n-h)*60);return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`}function money(n){return '$'+(Number(n)||0).toFixed(2)}
+function businessById(id){return state.businesses.find(b=>b.id===id)}function businessName(id){return (businessById(id)||{}).name||'Unknown'}function activeBusiness(){return businessById(state.settings.activeBusinessId)||state.businesses[0]}function locationObj(b,loc){b=b||activeBusiness();return (b.locations||[]).find(l=>String(l.name).toLowerCase()===String(loc).toLowerCase())||null}function shiftColor(s){if(s.status!=='Scheduled')return '#a33a3a';const b=businessById(s.businessId)||activeBusiness();return (locationObj(b,s.location)||{}).color||b.color||'#315c49'}function hours(sh){const b=businessById(sh.businessId)||activeBusiness();if(sh.status!=='Scheduled'||!sh.start)return 0;let s=timeToNum(sh.start),e=sh.end?timeToNum(sh.end):s+b.defaultShiftHours;if(e<s)e+=24;return Math.max(0,+(e-s).toFixed(2))}function calc(sh){const b=businessById(sh.businessId)||activeBusiness();const h=hours(sh),gross=h*b.hourlyRate,il=gross*b.ilTax,fica=gross*b.ficaTax,fed=gross*b.federalTax,tax=il+fica+fed;return{hours:h,gross,il,fica,fed,tax,net:gross-tax}}
+function payPeriod(date,b){b=b||activeBusiness();let start=dateObj(b.payPeriodAnchor),d=dateObj(date),len=num(b.payPeriodDays,14);while(start>d)start.setDate(start.getDate()-len);while(new Date(start.getTime()+len*864e5)<=d)start.setDate(start.getDate()+len);let end=new Date(start);end.setDate(end.getDate()+len-1);let pay=new Date(end);pay.setDate(pay.getDate()+num(b.paydayOffset,0));return{start:start.toISOString().slice(0,10),end:end.toISOString().slice(0,10),payday:pay.toISOString().slice(0,10)}}function weekId(shifts){const dates=(shifts||[]).map(s=>s.date).sort();return dates[0]||''}function makeLog(label,shifts,source){return{id:uid(),label,importedAt:new Date().toISOString(),weekStart:weekId(shifts),source:source||'',shifts:clone(shifts)}}
+function shiftsForFilter(filter){return state.shifts.filter(s=>filter==='ALL'||s.businessId===filter).sort((a,b)=>a.date.localeCompare(b.date)||businessName(a.businessId).localeCompare(businessName(b.businessId))||String(a.start).localeCompare(String(b.start)))}function upcoming(filter='ALL'){return shiftsForFilter(filter).filter(s=>s.date>=todayISO())}function nextShift(filter='ALL'){return upcoming(filter).find(s=>s.status==='Scheduled')||null}function summary(shifts){let out={hours:0,gross:0,net:0,tax:0,payday:''};(shifts||[]).filter(s=>s.status==='Scheduled').forEach(s=>{let c=calc(s),b=businessById(s.businessId);out.hours+=c.hours;out.gross+=c.gross;out.net+=c.net;out.tax+=c.tax;let pd=payPeriod(s.date,b).payday;if(!out.payday||pd<out.payday)out.payday=pd});return out}
+function svgLogo(){return 'data:image/svg+xml;utf8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96"><rect width="96" height="96" rx="24" fill="#e8f1ea"/><text x="48" y="57" text-anchor="middle" font-family="Arial" font-size="34" font-weight="700" fill="#315c49">WS</text></svg>`)}function refreshHeader(){document.getElementById('title').textContent='Schedule Manager';document.getElementById('subtitle').textContent=`${state.settings.employeeName||'My'} schedule · ${state.businesses.length} business${state.businesses.length===1?'':'es'} · ${state.shifts.length} entries`;document.getElementById('logoImg').src=state.settings.logoData||svgLogo()}
+function showTab(id){activeTab=id;document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));document.querySelectorAll('.tab').forEach(s=>s.classList.add('hide'));document.getElementById(id).classList.remove('hide');render();window.scrollTo({top:0,behavior:'smooth'})}document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));document.getElementById('quickIcs').onclick=()=>downloadICS(upcoming(state.settings.homeFilter).filter(s=>s.status==='Scheduled'),'upcoming_schedule.ics');document.getElementById('importBtn').onclick=()=>document.getElementById('jsonImport').click();document.getElementById('backupBtn').onclick=downloadJSON;document.getElementById('googleSyncBtn').onclick=()=>syncToGoogleCalendar();document.getElementById('jsonImport').onchange=e=>importJSON(e.target.files[0]);
+function render(){refreshHeader();if(activeTab==='home')renderHome();if(activeTab==='paste')renderPaste();if(activeTab==='log')renderLog();if(activeTab==='pay')renderPay();if(activeTab==='setup')renderSetup()}
+function filterButtons(current,handlerName,includeAll=true){let html='<div class="filterbar">';if(includeAll)html+=`<button class="${current==='ALL'?'active':'secondary'}" onclick="${handlerName}('ALL')">All</button>`;state.businesses.forEach(b=>html+=`<button class="${current===b.id?'active':'secondary'}" onclick="${handlerName}('${b.id}')"><span class="color-dot" style="background:${esc(b.color)}"></span>${esc(b.name)}</button>`);return html+'</div>'}function setHomeFilter(id){state.settings.homeFilter=id;openShiftId=null;openEditorId=null;save();renderHome()}function setPayFilter(id){state.settings.payFilter=id;save();renderPay()}function setShareFilter(id){state.settings.shareFilter=id;save();renderHome()}function setPasteBusiness(id){state.settings.activeBusinessId=id;parsedPreview=[];state.settings.pasteDrafts=state.settings.pasteDrafts||{};state.settings.pasteDrafts[id]=state.settings.pasteDrafts[id]||businessPasteText(id);save();renderPaste()}
+function renderHome(){const filter=state.settings.homeFilter||'ALL';const list=shiftsForFilter(filter);const n=nextShift(filter);const k=summary(list);document.getElementById('home').innerHTML=`<div class="card"><div class="row between"><div><b>Next Shift</b><div class="notice">Tap any shift to edit, set Off, or sync that day.</div></div><button class="secondary" onclick="showTab('paste')">Paste New</button></div>${filterButtons(filter,'setHomeFilter')}${n?shiftCard(n,true):`<div class="shift off"><div class="shift-title">No upcoming scheduled shift</div><div class="notice">Paste or import your next schedule.</div></div>`}</div><div class="kpis"><div class="kpi"><span>Hours</span><b>${k.hours.toFixed(1)}</b></div><div class="kpi"><span>Gross</span><b>${money(k.gross)}</b></div><div class="kpi"><span>Take Home</span><b>${money(k.net)}</b></div><div class="kpi"><span>Next Payday</span><b>${esc(k.payday?mdy(k.payday):'—')}</b></div></div><div class="card share-panel"><div class="row between"><b>Share Schedule</b><span class="small">Text / PNG / JPEG</span></div>${filterButtons(state.settings.shareFilter||'ALL','setShareFilter')}<div class="grid three"><button class="secondary" onclick="shareSchedule('text')">Share Text</button><button class="secondary" onclick="shareSchedule('png')">Share PNG</button><button class="secondary" onclick="shareSchedule('jpeg')">Share JPEG</button></div></div><div class="card"><div class="row between"><b>Upcoming / Current Schedule</b><div class="row wrap"><button class="secondary" onclick="syncToGoogleCalendar()">Sync Google</button><button class="secondary" onclick="downloadICS(shiftsForFilter(state.settings.homeFilter).filter(s=>s.status==='Scheduled'),'schedule_with_alerts.ics')">Add All</button></div></div>${groupedScheduleHtml(list)||'<p class="notice">No schedule loaded.</p>'}</div>`}
+function groupedScheduleHtml(list){const by={};list.forEach(s=>(by[s.date]||(by[s.date]=[])).push(s));return Object.keys(by).sort().map(date=>`<div class="daygroup ${date===todayISO()?'today':''}"><div class="daygroup-head"><div class="daybadge">${day3(date)}<span>${mdy(date)}</span></div><div><b>${new Date(date+'T00:00:00').toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'})}</b><div class="small">${by[date].length} entr${by[date].length===1?'y':'ies'}</div></div></div>${by[date].map(s=>shiftCard(s,false)).join('')}</div>`).join('')}
+function shiftCard(s,big){const c=calc(s),off=s.status!=='Scheduled',b=businessById(s.businessId)||activeBusiness(),isOpen=openShiftId===s.id,isEdit=openEditorId===s.id,color=shiftColor(s);return `<div class="shift ${off?'off':''}" tabindex="0" style="border-left-color:${esc(color)}" onclick="toggleShiftMenu('${s.id}')" onfocus="openShiftMenu('${s.id}')"><div class="shift-head"><div class="shift-main"><div class="shift-title">${off?esc(s.status||'Off'):esc(timeRange(s.start,s.end))}</div><div class="shift-meta"><span class="pill color" style="background:${esc(b.color)}">${esc(b.name)}</span> ${esc(s.location||'')}${s.notes?' · '+esc(s.notes):''}</div>${!off?`<div class="shift-meta"><span class="pill">${c.hours.toFixed(1)} hrs</span> <span class="money">${money(c.net)} take-home est.</span></div>`:''}</div></div>${isOpen?`<div class="shift-tools" onclick="event.stopPropagation()"><div class="menu-row"><button class="danger" onclick="setShiftOff('${s.id}')">Off</button><button class="secondary" onclick="openShiftEditor('${s.id}')">Edit</button><button class="secondary" onclick="syncOneShift('${s.id}')">Sync This Shift</button></div>${isEdit?shiftEditorHtml(s):''}</div>`:''}</div>`}
+function toggleShiftMenu(id){if(openShiftId===id){openShiftId=null;openEditorId=null}else{openShiftId=id;openEditorId=null}renderHome()}function openShiftMenu(id){if(openShiftId!==id){openShiftId=id;openEditorId=null;renderHome()}}function openShiftEditor(id){openShiftId=id;openEditorId=id;renderHome()}function shiftById(id){return state.shifts.find(s=>s.id===id)}function shiftIndexById(id){return state.shifts.findIndex(s=>s.id===id)}function shiftEditorHtml(s){const b=businessById(s.businessId)||activeBusiness();return `<div class="inline-editor"><div class="grid two"><label>Business<select onchange="updateShiftField('${s.id}','businessId',this.value)">${state.businesses.map(x=>`<option value="${x.id}" ${x.id===s.businessId?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label><label>Status<select onchange="updateShiftStatus('${s.id}',this.value)"><option value="Scheduled" ${s.status==='Scheduled'?'selected':''}>Scheduled</option><option value="Off" ${s.status!=='Scheduled'?'selected':''}>Off</option></select></label><label>Start Time<select onchange="updateShiftField('${s.id}','start',this.value)">${hourOptions(s.start,false)}</select></label><label>End Time<select onchange="updateShiftField('${s.id}','end',this.value)">${hourOptions(s.end,true)}</select></label><label>Location<select onchange="updateShiftField('${s.id}','location',this.value)">${locationOptions(b,s.location||b.defaultLocation)}</select></label><label>Notes<textarea onchange="updateShiftField('${s.id}','notes',this.value)" placeholder="Notes...">${esc(s.notes||'')}</textarea></label></div></div>`}
+function hourOptions(selected='',allowBlank=false){const opts=[];if(allowBlank)opts.push(`<option value="" ${!selected?'selected':''}>Blank / use default hours</option>`);const known=[];for(let h=0;h<24;h++){const v=String(h).padStart(2,'0')+':00';known.push(v);opts.push(`<option value="${v}" ${selected===v?'selected':''}>${fmtTime(v,true)}</option>`)}if(selected&&!known.includes(selected))opts.unshift(`<option value="${esc(selected)}" selected>${esc(fmtTime(selected,true)||selected)}</option>`);return opts.join('')}function locationOptions(b,selected=''){return (b.locations||[]).map(loc=>`<option value="${esc(loc.name)}" ${String(loc.name).toLowerCase()===String(selected||'').toLowerCase()?'selected':''}>${esc(loc.name)}</option>`).join('')}
+function logScheduleChange(reason){state.logs.unshift(makeLog(reason||'Manual schedule change',state.shifts,'Auto-saved from inline edit'));if(state.logs.length>100)state.logs=state.logs.slice(0,100)}function saveAfterInlineEdit(reason){logScheduleChange(reason);save();updateSyncStatus('Autosaved locally · change written to log','ok')}function setShiftOff(id){const sh=shiftById(id);if(!sh)return;sh.status='Off';sh.start='';sh.end='';sh.location='';sh.notes='';sh.calendarDelete=true;sh.editedAt=new Date().toISOString();saveAfterInlineEdit('Set '+day3(sh.date)+' '+mdy(sh.date)+' Off');openShiftId=id;openEditorId=null;renderHome()}function updateShiftStatus(id,value){if(value==='Off')return setShiftOff(id);const sh=shiftById(id);if(!sh)return;const b=businessById(sh.businessId)||activeBusiness();sh.status='Scheduled';sh.calendarDelete=false;if(!sh.start)sh.start='09:00';if(!sh.location)sh.location=b.defaultLocation;saveAfterInlineEdit('Set shift scheduled');renderHome()}function updateShiftField(id,field,value){const sh=shiftById(id);if(!sh)return;if(field==='businessId'){sh.businessId=value;const b=businessById(value);sh.location=b.defaultLocation||((b.locations||[])[0]||{}).name||''}else if(field==='start'||field==='end'){sh[field]=value}else{sh[field]=String(value||'').trim()}if(field!=='notes'){sh.status='Scheduled';sh.calendarDelete=false}sh.editedAt=new Date().toISOString();saveAfterInlineEdit('Edited '+day3(sh.date)+' '+mdy(sh.date));openShiftId=id;openEditorId=id;renderHome()}
+function businessPasteText(businessId){const list=state.shifts.filter(s=>s.businessId===businessId).sort((a,b)=>a.date.localeCompare(b.date)||String(a.start).localeCompare(String(b.start)));if(!list.length)return seedText;return list.map(s=>{const day=s.day||day3(s.date);const date=mdy(s.date);if(s.status!=='Scheduled')return `${day} ${date}: OFF${s.notes?` (${s.notes})`:''}`;const b=businessById(s.businessId)||activeBusiness();const time=s.end?`${fmtTime(s.start,true)}-${fmtTime(s.end,true)}`:fmtTime(s.start,true);return `${day} ${date}: ${time}${s.location?` ${s.location}`:''}${s.notes?` (${s.notes})`:''}`}).join('\n\n')}
+function currentPasteText(){const b=activeBusiness();state.settings.pasteDrafts=state.settings.pasteDrafts||{};if(!state.settings.pasteDrafts[b.id])state.settings.pasteDrafts[b.id]=businessPasteText(b.id);return state.settings.pasteDrafts[b.id]}
+function savePasteDraft(){const box=document.getElementById('pasteBox');if(!box)return;const b=activeBusiness();state.settings.pasteDrafts=state.settings.pasteDrafts||{};state.settings.pasteDrafts[b.id]=box.value;saveSilent()}
+function renderPaste(){const b=activeBusiness();const txt=currentPasteText();document.getElementById('paste').innerHTML=`<div class="card"><h2>Paste Schedule</h2><p class="notice">Choose the business first. This box now reloads the last pasted/saved schedule for that business. Saving a parsed schedule immediately updates Home and writes a log entry.</p>${filterButtons(state.settings.activeBusinessId,'setPasteBusiness',false)}<textarea id="pasteBox" placeholder="Paste schedule here..." oninput="savePasteDraft()">${esc(txt)}</textarea><div class="grid two" style="margin-top:10px"><button onclick="previewPaste()">Preview for ${esc(b.name)}</button><button class="secondary" onclick="useCurrentScheduleText()">Load Current Saved Schedule</button><button class="secondary" onclick="useSeed()">Use Example</button></div></div><div id="previewArea"></div>`;if(parsedPreview.length)drawPreview()}
+function useCurrentScheduleText(){document.getElementById('pasteBox').value=businessPasteText(state.settings.activeBusinessId);savePasteDraft();previewPaste()}
+function useSeed(){document.getElementById('pasteBox').value=seedText;savePasteDraft();previewPaste()}
+function previewPaste(){const txt=document.getElementById('pasteBox').value;savePasteDraft();parsedPreview=parseScheduleText(txt,activeBusiness());drawPreview()}
+function drawPreview(){document.getElementById('previewArea').innerHTML=`<div class="card"><div class="row between"><b>Parsed Preview</b><span class="pill">${parsedPreview.length} entries</span></div>${groupedScheduleHtml(parsedPreview)}<div class="grid two"><button onclick="importPreview()">Save as Current for Business</button><button class="secondary" onclick="appendPreview()">Add to Log Only</button></div></div>`}
+function importPreview(){if(!parsedPreview.length)return alert('Preview first.');const biz=state.settings.activeBusinessId,src=document.getElementById('pasteBox').value;state.logs.unshift(makeLog('Imported schedule - '+businessName(biz),parsedPreview,src));state.shifts=state.shifts.filter(s=>s.businessId!==biz).concat(parsedPreview);state.settings.pasteDrafts=state.settings.pasteDrafts||{};state.settings.pasteDrafts[biz]=src;save();parsedPreview=[];activeTab='home';showTab('home')}
+function appendPreview(){if(!parsedPreview.length)return alert('Preview first.');const biz=state.settings.activeBusinessId,src=document.getElementById('pasteBox').value;state.logs.unshift(makeLog('Log only - '+businessName(biz),parsedPreview,src));state.settings.pasteDrafts=state.settings.pasteDrafts||{};state.settings.pasteDrafts[biz]=src;save();parsedPreview=[];showTab('log')}
+function parseScheduleText(txt,biz){const lines=txt.replace(/\r/g,'').split('\n').map(x=>x.trim()).filter(Boolean);let results=[],last=null,baseYear=new Date().getFullYear();for(const line of lines){const dayMatch=line.match(/\b(mon(day)?|tue(sday)?|wed(nesday)?|thu(rsday)?|fri(day)?|sat(urday)?|sun(day)?)\b/i);const dateMatch=line.match(/(\d{1,2})\s*\/\s*(\d{1,2})(?:\s*\/\s*(\d{2,4}))?/);const parenNotes=[];let m;const parenRegex=/\(([^)]*)\)/g;while((m=parenRegex.exec(line))!==null){const note=(m[1]||'').trim();if(note)parenNotes.push(note)}const mainLine=line.replace(/\([^)]*\)/g,' ').replace(/\s+/g,' ').trim();const mainAfterDate=dateMatch?mainLine.slice(mainLine.indexOf(dateMatch[0])+dateMatch[0].length).replace(/^\s*:?\s*/,'').trim():mainLine.replace(/^\s*[A-Za-z]+:?\s*/,'').trim();const timeRangeMatch=mainAfterDate.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\s*(?:-|to|–|—)\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/i);const oneTimeMatch=mainAfterDate.match(/\b(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b/i);const isOffMain=/\boff\b|unavailable|not scheduled/i.test(mainAfterDate);if(dayMatch||dateMatch||timeRangeMatch||oneTimeMatch||isOffMain){let d=dateMatch?makeISO(dateMatch,baseYear):(last?dateAdd(last.date,1):todayISO());let start='',end='',status='Off';if(!isOffMain){if(timeRangeMatch){start=normTime(timeRangeMatch[1],timeRangeMatch[2],timeRangeMatch[3]||timeRangeMatch[6]||'');end=normTime(timeRangeMatch[4],timeRangeMatch[5],timeRangeMatch[6]||timeRangeMatch[3]||'');status='Scheduled'}else if(oneTimeMatch){start=normTime(oneTimeMatch[1],oneTimeMatch[2],oneTimeMatch[3]);status='Scheduled'}}let clean=mainAfterDate.replace(timeRangeMatch?timeRangeMatch[0]:'','').replace(!timeRangeMatch&&oneTimeMatch?oneTimeMatch[0]:'','').replace(/\boff\b/ig,'').replace(/unavailable|not scheduled/ig,'').replace(/[():]+/g,' ').replace(/\s+/g,' ').trim();let loc='',notes='';if(status==='Scheduled'){const known=(biz.locations||[]).map(l=>l.name);const knownMain=known.find(k=>clean.toLowerCase().includes(k.toLowerCase()));loc=knownMain||clean||biz.defaultLocation;notes=parenNotes.join(' | ')}else{notes=parenNotes.length?parenNotes.join(' | '):line}last={id:uid(),businessId:biz.id,date:d,day:day3(d),start,end,status,location:status==='Scheduled'?loc:'',notes,source:txt,importedAt:new Date().toISOString(),calendarEventId:'',calendarDelete:status!=='Scheduled'};results.push(last)}else if(last){const extra=line.replace(/^\((.*)\)$/,'$1').trim();if(extra)last.notes=(last.notes?last.notes+' | ':'')+extra}}return results.slice(0,31)}function makeISO(m,baseYear){let mo=+m[1],da=+m[2],yr=m[3]?+m[3]:baseYear;if(yr<100)yr+=2000;return `${yr}-${String(mo).padStart(2,'0')}-${String(da).padStart(2,'0')}`}function normTime(h,m,ap){h=+h;m=m?+m:0;ap=(ap||'').toLowerCase();if(ap==='pm'&&h<12)h+=12;if(ap==='am'&&h===12)h=0;return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`}
+function renderLog(){document.getElementById('log').innerHTML=`<div class="card"><div class="row between"><h2>Schedule Log</h2><button class="danger" onclick="clearLogs()">Clear</button></div><p class="notice">Imports and inline edits are saved here as a running log.</p></div>${(state.logs||[]).map((l,i)=>`<div class="card"><div class="row between"><div><b>${esc(l.label||'Schedule')}</b><div class="small">${new Date(l.importedAt).toLocaleString()} · Week ${esc(mdy(l.weekStart))}</div></div><button class="secondary" onclick="restoreLog(${i})">Restore</button></div><div class="raw">${esc((l.shifts||[]).map(s=>`${businessName(s.businessId)} | ${s.day||day3(s.date)} ${mdy(s.date)} | ${s.status==='Scheduled'?timeRange(s.start,s.end):s.status} | ${s.location||''} | ${s.notes||''}`).join('\n'))}</div></div>`).join('')||'<div class="card notice">No saved logs yet.</div>'}`}function restoreLog(i){if(!confirm('Restore this log snapshot as current schedule?'))return;state.shifts=clone(state.logs[i].shifts).map(ensureShift);save();showTab('home')}function clearLogs(){if(confirm('Clear schedule log?')){state.logs=[];save();renderLog()}}
+function renderPay(){const filter=state.settings.payFilter||'ALL';const rows=shiftsForFilter(filter).filter(s=>s.status==='Scheduled').map(s=>({...s,...calc(s),business:businessById(s.businessId)}));const sum=summary(rows);document.getElementById('pay').innerHTML=`<div class="card"><h2>Pay Estimate</h2><p class="notice">Combined totals show all selected shifts. Filter by business to inspect one job.</p>${filterButtons(filter,'setPayFilter')}<div class="kpis"><div class="kpi"><span>Hours</span><b>${sum.hours.toFixed(1)}</b></div><div class="kpi"><span>Gross</span><b>${money(sum.gross)}</b></div><div class="kpi"><span>Taxes</span><b>${money(sum.tax)}</b></div><div class="kpi"><span>Take Home</span><b>${money(sum.net)}</b></div></div></div><div class="card"><table class="table"><thead><tr><th>Shift</th><th>Business</th><th>Hrs</th><th>Net</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.day||day3(r.date))} ${esc(mdy(r.date))}<br><span class="small">${esc(timeRange(r.start,r.end))}</span></td><td>${esc(businessName(r.businessId))}</td><td>${r.hours.toFixed(1)}</td><td>${money(r.net)}</td></tr>`).join('')}</tbody></table></div>${state.businesses.map(b=>{const bs=summary(state.shifts.filter(s=>s.businessId===b.id));return `<div class="card"><div class="row between"><b><span class="color-dot" style="background:${esc(b.color)}"></span> ${esc(b.name)}</b><span class="money">${money(bs.net)}</span></div><p class="notice">${bs.hours.toFixed(1)} hrs · Gross ${money(bs.gross)} · Taxes ${money(bs.tax)}</p></div>`}).join('')}`}
+function renderSetup(){document.getElementById('setup').innerHTML=`<div class="card"><h2>Setup</h2><p class="notice"><b>First use:</b> add each job/business below. Each business has its own locations, colors, pay defaults, tax assumptions, and calendar title prefix. Google Calendar uses one shared Apps Script/calendar for all businesses.</p><div class="grid two"><label>Your Name<input id="employeeName" value="${esc(state.settings.employeeName)}"></label><label>Logo Image<input type="file" id="logoFile" accept="image/*"></label></div></div><div class="card"><div class="row between"><h3>Businesses</h3><button onclick="addBusiness()">Add Business</button></div>${state.businesses.map((b,i)=>businessSetupHtml(b,i)).join('')}</div><div class="card"><h3>Google Calendar Sync</h3><p class="notice">Optional. One Google Calendar for all businesses. Events include business-specific titles and colors remain visual inside this app.</p><div class="grid"><label>Apps Script Web App URL<input id="googleScriptUrl" value="${esc(state.settings.googleScriptUrl||'')}"></label><label>Secret Key<input id="googleScriptSecret" value="${esc(state.settings.googleScriptSecret||'')}"></label></div><div class="grid two" style="margin-top:10px"><button onclick="syncToGoogleCalendar()">Sync All Shifts</button><button class="secondary" onclick="testGoogleCalendarPayload()">Preview Payload</button><button class="secondary" onclick="copyCompatibleAppsScript()">Copy Apps Script v9</button><button class="secondary" onclick="openGoogleSyncUrlManually()">Open Sync URL</button></div></div><div class="card"><h3>Data Backup / Restore</h3><p class="notice">The app autosaves locally to this browser. Download JSON before changing devices or clearing browser data.</p><div class="grid two"><button onclick="downloadJSON()">Download JSON</button><label class="btn secondary">Import JSON<input class="hide" type="file" id="jsonFile" accept="application/json"></label><button class="danger" onclick="resetAll()">Reset Example</button><button class="secondary" onclick="print()">Print</button></div></div>`;document.getElementById('employeeName').onchange=e=>{state.settings.employeeName=e.target.value;save();renderSetup()};document.getElementById('logoFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{state.settings.logoData=r.result;save();renderSetup()};r.readAsDataURL(f)};['googleScriptUrl','googleScriptSecret'].forEach(id=>document.getElementById(id).onchange=e=>{state.settings[id]=e.target.value;save();renderSetup()});document.getElementById('jsonFile').onchange=e=>importJSON(e.target.files[0])}
+function stateOptions(selected){return STATE_ORDER.map(code=>`<option value="${code}" ${selected===code?'selected':''}>${esc(STATE_NAMES[code]||code)}</option>`).join('')}
+function formatRate(v){return (num(v,0)*100).toFixed(2)+'%'}
+function locationRowsHtml(b){return (b.locations||[]).map((loc,i)=>{const useBiz=loc.useBusinessColor!==false&&!loc.color;const pickerColor=useBiz?(b.color||'#315c49'):(loc.color||b.color||'#315c49');return `<div class="grid three" style="align-items:end;margin:8px 0;padding:8px;border:1px solid var(--line);border-radius:12px;background:#fff"><label>Location Name<input value="${esc(loc.name)}" onchange="updateLocationName('${b.id}',${i},this.value)"></label><label>Location Color<input type="color" value="${esc(pickerColor)}" ${useBiz?'disabled':''} onchange="updateLocationColor('${b.id}',${i},this.value)"></label><label style="gap:8px"><span>Color Mode</span><button type="button" class="secondary" onclick="toggleLocationBusinessColor('${b.id}',${i})">${useBiz?'Using Workplace Color':'Using Custom Color'}</button></label><button type="button" class="danger" onclick="deleteLocation('${b.id}',${i})">Delete Location</button></div>`}).join('')}
+function businessSetupHtml(b,i){return `<div class="business-card"><div class="row between"><b><span class="color-dot" style="background:${esc(b.color)}"></span> ${esc(b.name)}</b>${state.businesses.length>1?`<button class="danger" onclick="deleteBusiness('${b.id}')">Delete</button>`:''}</div><div class="grid two"><label>Business Name<input value="${esc(b.name)}" onchange="updateBusiness('${b.id}','name',this.value)"></label><label>Business Color<input type="color" value="${esc(b.color)}" onchange="updateBusiness('${b.id}','color',this.value)"></label><label>Calendar Title Prefix<input value="${esc(b.calendarTitlePrefix)}" onchange="updateBusiness('${b.id}','calendarTitlePrefix',this.value)"></label><label>Default Shift Hours<input type="number" step="0.25" value="${b.defaultShiftHours}" onchange="updateBusiness('${b.id}','defaultShiftHours',this.value)"></label><label>Hourly Rate<input type="number" step="0.01" value="${b.hourlyRate}" onchange="updateBusiness('${b.id}','hourlyRate',this.value)"></label><label>Default Location<select onchange="updateBusiness('${b.id}','defaultLocation',this.value)">${(b.locations||[]).map(l=>`<option value="${esc(l.name)}" ${l.name===b.defaultLocation?'selected':''}>${esc(l.name)}</option>`).join('')}</select></label><label>State for Income Tax<select onchange="updateBusinessState('${b.id}',this.value)">${stateOptions(b.stateCode||'NONE')}</select></label><label>State Tax Rate <span class="small">Auto-filled, editable estimate</span><input type="number" step="0.0001" value="${b.ilTax}" onchange="updateBusiness('${b.id}','ilTax',this.value)"></label><label>FICA Tax Rate<input type="number" step="0.0001" value="${b.ficaTax}" onchange="updateBusiness('${b.id}','ficaTax',this.value)"></label><label>Federal Tax Rate <span class="small">Always included in estimates</span><input type="number" step="0.0001" value="${b.federalTax}" onchange="updateBusiness('${b.id}','federalTax',this.value)"></label><label>Pay Period Anchor<input type="date" value="${esc(b.payPeriodAnchor)}" onchange="updateBusiness('${b.id}','payPeriodAnchor',this.value)"></label><label>Pay Period Days<input type="number" value="${b.payPeriodDays}" onchange="updateBusiness('${b.id}','payPeriodDays',this.value)"></label><label>Payday Offset Days<input type="number" value="${b.paydayOffset}" onchange="updateBusiness('${b.id}','paydayOffset',this.value)"></label></div><p class="small">Tax rates are paycheck estimates only. State selector auto-fills a broad income-tax estimate; override it if your actual withholding differs.</p><div style="margin-top:12px"><div class="row between"><b>Locations</b><button type="button" class="secondary" onclick="addLocation('${b.id}')">Add Location</button></div><p class="small">Scheduled shift color uses the location color. If a location uses workplace color, it follows the business color automatically.</p>${locationRowsHtml(b)}</div></div>`}
+function addBusiness(){const id=uid(),color=COLORS[state.businesses.length%COLORS.length];state.businesses.push(ensureBusiness({id,name:'New Business',color,stateCode:'NONE',calendarTitlePrefix:'Work',defaultLocation:'Main Location',locations:[{name:'Main Location',color:'',useBusinessColor:true}]}));state.settings.activeBusinessId=id;state.settings.pasteDrafts=state.settings.pasteDrafts||{};state.settings.pasteDrafts[id]=seedText;save();renderSetup()}
+function deleteBusiness(id){if(state.businesses.length<=1)return alert('Keep at least one business.');if(!confirm('Delete this business and its shifts?'))return;state.businesses=state.businesses.filter(b=>b.id!==id);state.shifts=state.shifts.filter(s=>s.businessId!==id);if(state.settings.activeBusinessId===id)state.settings.activeBusinessId=state.businesses[0].id;if(state.settings.pasteDrafts)delete state.settings.pasteDrafts[id];save();renderSetup()}
+function updateBusiness(id,field,value){const b=businessById(id);if(!b)return;b[field]=['hourlyRate','ilTax','ficaTax','federalTax','defaultShiftHours','payPeriodDays','paydayOffset'].includes(field)?num(value):value;if(field==='name'&&!b.calendarTitlePrefix)b.calendarTitlePrefix=value;if(field==='color'){(b.locations||[]).forEach(l=>{if(l.useBusinessColor)l.color=''})}save();renderSetup()}
+function updateBusinessState(id,code){const b=businessById(id);if(!b)return;b.stateCode=code;b.ilTax=STATE_TAX_RATES[code]!==undefined?STATE_TAX_RATES[code]:0;save();renderSetup()}
+function updateBusinessLocations(id,value){const b=businessById(id);if(!b)return;b.locations=String(value||'').split('\n').map((line,i)=>{let [name,color]=line.split('|').map(x=>x&&x.trim());return name?{name,color:color||'',useBusinessColor:!color}:null}).filter(Boolean);if(!b.locations.length)b.locations=[{name:b.defaultLocation||'Main Location',color:'',useBusinessColor:true}];save();renderSetup()}
+function addLocation(id){const b=businessById(id);if(!b)return;b.locations=b.locations||[];b.locations.push({name:'New Location',color:'',useBusinessColor:true});if(!b.defaultLocation)b.defaultLocation='New Location';save();renderSetup()}
+function deleteLocation(id,index){const b=businessById(id);if(!b)return;if((b.locations||[]).length<=1)return alert('Keep at least one location.');const removed=b.locations[index]&&b.locations[index].name;b.locations.splice(index,1);if(b.defaultLocation===removed)b.defaultLocation=b.locations[0].name;save();renderSetup()}
+function updateLocationName(id,index,value){const b=businessById(id);if(!b||!b.locations[index])return;const old=b.locations[index].name;b.locations[index].name=String(value||'').trim()||old;if(b.defaultLocation===old)b.defaultLocation=b.locations[index].name;state.shifts.forEach(s=>{if(s.businessId===id&&s.location===old)s.location=b.locations[index].name});save();renderSetup()}
+function updateLocationColor(id,index,value){const b=businessById(id);if(!b||!b.locations[index])return;b.locations[index].color=value;b.locations[index].useBusinessColor=false;save();renderSetup()}
+function toggleLocationBusinessColor(id,index){const b=businessById(id);if(!b||!b.locations[index])return;const loc=b.locations[index];loc.useBusinessColor=!loc.useBusinessColor;if(loc.useBusinessColor)loc.color='';else loc.color=loc.color||b.color||'#315c49';save();renderSetup()}
+function scheduleDayForSync(s){const b=businessById(s.businessId)||activeBusiness();return{date:s.date,day:s.day||day3(s.date),businessId:s.businessId,businessName:b.name,titlePrefix:b.calendarTitlePrefix||b.name||'Work',defaultShiftHours:b.defaultShiftHours||8,start:s.status==='Scheduled'?(s.start||''):'',end:s.status==='Scheduled'?(s.end||''):'',status:s.status==='Scheduled'?'Scheduled':'Off',location:s.status==='Scheduled'?(s.location||''):'',notes:s.status==='Scheduled'?(s.notes||''):'',title:calendarTitle(s),deleteCalendar:s.status!=='Scheduled'||!s.start||s.calendarDelete===true}}function scheduleDaysForSync(filter='ALL'){return shiftsForFilter(filter).filter(s=>s&&s.date).map(scheduleDayForSync)}function googleCalendarPayload(days=scheduleDaysForSync('ALL')){const dates=days.map(s=>s.date).sort();return{secret:state.settings.googleScriptSecret||'',source:'Work Schedule Manager HTML',employeeName:state.settings.employeeName||'',syncStart:dates[0]||'',syncEnd:dates[dates.length-1]||'',defaultShiftHours:8,shifts:days}}
+async function syncToGoogleCalendar(filter='ALL'){return syncPayloadToGoogle(scheduleDaysForSync(filter),null)}function syncOneShift(id){const s=shiftById(id);if(!s)return alert('Shift not found.');return syncPayloadToGoogle([scheduleDayForSync(s)],'Sync completed. 1 schedule sent.')}async function syncPayloadToGoogle(days,successMsg){const url=String(state.settings.googleScriptUrl||'').trim(),secret=String(state.settings.googleScriptSecret||'').trim();if(!url)return alert('Add your Apps Script Web App URL in Setup.');if(!secret)return alert('Add your secret key in Setup.');if(!days.length)return alert('No schedule days to sync.');const payload=googleCalendarPayload(days);const body=JSON.stringify(payload);updateSyncStatus('Sending to Google Calendar...','dirty');let confirmed=false,lastError='';try{const res=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},body});const txt=await res.text();let data=null;try{data=JSON.parse(txt)}catch(e){}if(data&&data.ok===false)throw new Error(data.error||'Apps Script returned failure');if(!res.ok)throw new Error('HTTP '+res.status+' '+txt.slice(0,180));confirmed=true}catch(err){lastError=err&&err.message?err.message:String(err)}if(confirmed){const msg=successMsg||`Sync completed. ${days.length} schedules sent.`;updateSyncStatus(msg,'ok');alert(msg);return}try{const getUrl=buildGoogleSyncGetUrl(url,body);if(getUrl.length>=7500)throw new Error('Payload too large for phone GET sync. Reduce notes or sync fewer days.');postGoogleSyncViaHiddenGet(getUrl);const msg=successMsg||`Sync completed. ${days.length} schedules sent.`;updateSyncStatus(msg,'ok');alert(msg)}catch(err){updateSyncStatus('Google sync could not be sent','dirty');alert('Google Calendar sync could not be sent. Details: '+(err&&err.message?err.message:err)+'\n\nDesktop POST error was: '+lastError)}}function buildGoogleSyncGetUrl(url,json){return url+(url.includes('?')?'&':'?')+'payload='+encodeURIComponent(json)+'&t='+Date.now()}function postGoogleSyncViaHiddenGet(getUrl){let iframe=document.getElementById('googleSyncFrame');if(!iframe){iframe=document.createElement('iframe');iframe.id='googleSyncFrame';iframe.name='googleSyncFrame';iframe.style.display='none';document.body.appendChild(iframe)}iframe.src=getUrl}function openGoogleSyncUrlManually(){const getUrl=buildGoogleSyncGetUrl(String(state.settings.googleScriptUrl||'').trim(),JSON.stringify(googleCalendarPayload()));if(getUrl.length>=7500)return alert('Sync URL is too long.');window.open(getUrl,'_blank')}function testGoogleCalendarPayload(){const preview=JSON.stringify(googleCalendarPayload(),null,2);const w=window.open('','_blank');if(w){w.document.write('<pre style="white-space:pre-wrap;font-family:monospace">'+esc(preview)+'</pre>');w.document.close()}else alert(preview.slice(0,2000))}
+function calendarTitle(s){const b=businessById(s.businessId)||activeBusiness();return `${b.calendarTitlePrefix||b.name||'Work'} ${s.location||'Shift'}`.trim()}function icsDate(iso,time){return iso.replace(/-/g,'')+'T'+(time||'09:00').replace(':','')+'00'}function stableUID(s){return `${s.businessId}-${s.date}-${s.start}-${(s.location||'shift').replace(/[^a-z0-9]/gi,'')}@work-schedule-manager.local`}function escapeICS(s){return String(s||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;')}function makeICS(shifts){let lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Work Schedule Manager//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:Work Schedule','X-WR-TIMEZONE:America/Chicago'];shifts.forEach(s=>{if(s.status!=='Scheduled'||!s.start)return;const b=businessById(s.businessId)||activeBusiness();let end=s.end||numToTime(timeToNum(s.start)+b.defaultShiftHours);lines.push('BEGIN:VEVENT',`UID:${stableUID(s)}`,`DTSTAMP:${new Date().toISOString().replace(/[-:]/g,'').split('.')[0]}Z`,`DTSTART:${icsDate(s.date,s.start)}`,`DTEND:${icsDate(s.date,end)}`,`SUMMARY:${escapeICS(calendarTitle(s))}`,`LOCATION:${escapeICS(s.location||'')}`,`DESCRIPTION:${escapeICS((s.notes||'')+'\n\nBusiness: '+b.name+'\nImported from Work Schedule Manager')}`,'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Work shift starts in 2 hours','TRIGGER:-PT2H','END:VALARM','BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Work shift starts in 1 hour','TRIGGER:-PT1H','END:VALARM','END:VEVENT')});lines.push('END:VCALENDAR');return lines.join('\r\n')}function downloadICS(shifts,name){const valid=(shifts||[]).filter(Boolean).filter(s=>s.status==='Scheduled'&&s.start);if(!valid.length)return alert('No scheduled shifts with start times to export.');downloadBlob(makeICS(valid),name||'schedule.ics','text/calendar')}
+function scheduleShareLines(filter=state.settings.shareFilter||'ALL'){return shiftsForFilter(filter).map(s=>{const b=businessById(s.businessId)||activeBusiness();const day=s.day||day3(s.date),date=mdy(s.date);if(s.status!=='Scheduled')return `${day} | ${date} | OFF | | | ${b.name}`;return `${day} | ${date} | ${fmtTime(s.start,true)} | ${s.end?fmtTime(s.end,true):''} | ${s.location||''} | ${b.name}`})}async function shareSchedule(type){const lines=scheduleShareLines().join('\n'),filter=state.settings.shareFilter||'ALL',label=filter==='ALL'?'All Businesses':businessName(filter);if(type==='text'){if(navigator.share)try{await navigator.share({title:'Work Schedule',text:lines});return}catch(e){}try{await navigator.clipboard.writeText(lines);alert('Schedule copied to clipboard.')}catch(e){alert(lines)}return}const dataUrl=makeScheduleImage(lines,label,type);downloadDataUrl(dataUrl,`schedule.${type==='jpeg'?'jpg':'png'}`)}function makeScheduleImage(text,label,type){const lines=String(text).split('\n'),w=1100,pad=48,row=34,h=pad*2+70+lines.length*row;const c=document.createElement('canvas');c.width=w;c.height=h;const ctx=c.getContext('2d');ctx.fillStyle='#fffdf8';ctx.fillRect(0,0,w,h);ctx.fillStyle='#202124';ctx.font='bold 34px Arial';ctx.fillText('Work Schedule - '+label,pad,pad);ctx.font='22px Arial';ctx.fillStyle='#6b6f76';ctx.fillText('Day | Date | Start | End | Location | Business',pad,pad+42);ctx.font='24px Arial';ctx.fillStyle='#202124';lines.forEach((line,i)=>ctx.fillText(line,pad,pad+86+i*row));return c.toDataURL(type==='jpeg'?'image/jpeg':'image/png',.92)}function downloadDataUrl(url,name){const a=document.createElement('a');a.href=url;a.download=name;a.click()}
+function downloadJSON(){downloadBlob(JSON.stringify(state,null,2),'work-schedule-manager.json','application/json')}function importJSON(file){if(!file)return;const r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);ensureState();save();render()}catch(e){alert('Invalid JSON')}};r.readAsText(file)}function downloadBlob(text,name,type){const blob=new Blob([text],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),500)}function resetAll(){if(confirm('Reset all data to sample?')){state=clone(defaultState);state.logs=[makeLog('Sample schedule',state.shifts,seedText)];save();render()}}
+async function copyCompatibleAppsScript(){const txt=String.raw`const CALENDAR_ID = "PASTE_YOUR_WORK_SCHEDULE_CALENDAR_ID_HERE";
 const SECRET_KEY = "PASTE_YOUR_SECRET_KEY_HERE";
+function doGet(e){return handleRequest(e)}
+function doPost(e){return handleRequest(e)}
+function handleRequest(e){try{const payload=parsePayload(e);if(!payload||payload.secret!==SECRET_KEY)return jsonResponse({ok:false,error:"Unauthorized"});const calendar=CalendarApp.getCalendarById(CALENDAR_ID);if(!calendar)return jsonResponse({ok:false,error:"Calendar not found"});const shifts=payload.shifts||[];const employeeName=payload.employeeName||"";let synced=0,created=0,updated=0,deleted=0;removeUnlistedManagedEvents(calendar,payload,employeeName);shifts.forEach(function(shift){if(!shift.date)return;const managedEvents=findManagedEventsForShift(calendar,shift,employeeName);const shouldDelete=shift.deleteCalendar===true||shift.status!=="Scheduled"||!shift.start;if(shouldDelete){managedEvents.forEach(function(event){event.deleteEvent();deleted++});synced++;return}const start=makeDateTime(shift.date,shift.start);const end=makeDateTime(shift.date,shift.end||addHoursToTime(shift.start,shift.defaultShiftHours||payload.defaultShiftHours||8));const title=shift.title||(((shift.titlePrefix||shift.businessName||payload.titlePrefix||"Work")+" "+(shift.location||"Shift")).trim());const marker=makeMarker(shift,employeeName);const description=marker+"\nImported from Work Schedule Manager\n\nBusiness: "+(shift.businessName||"")+"\nNotes: "+(shift.notes||"");let event=managedEvents.length?managedEvents[0]:null;if(event){event.setTitle(title);event.setTime(start,end);event.setLocation(shift.location||"");event.setDescription(description);event.removeAllReminders();event.addPopupReminder(120);event.addPopupReminder(60);updated++;for(let i=1;i<managedEvents.length;i++){managedEvents[i].deleteEvent();deleted++}}else{event=calendar.createEvent(title,start,end,{location:shift.location||"",description:description});event.addPopupReminder(120);event.addPopupReminder(60);created++}synced++});return jsonResponse({ok:true,synced:synced,created:created,updated:updated,deleted:deleted})}catch(err){return jsonResponse({ok:false,error:String(err)})}}
+function parsePayload(e){if(e&&e.parameter&&e.parameter.payload)return JSON.parse(e.parameter.payload);const raw=e&&e.postData&&e.postData.contents?e.postData.contents:"";if(!raw)return{};const trimmed=raw.trim();if(trimmed.charAt(0)==="{")return JSON.parse(trimmed);const parts=trimmed.split("&");for(let i=0;i<parts.length;i++){const pair=parts[i].split("=");if(decodeURIComponent(pair[0]||"")==="payload")return JSON.parse(decodeURIComponent((pair.slice(1).join("=")||"").replace(/\+/g," ")))}return JSON.parse(trimmed)}
+function removeUnlistedManagedEvents(calendar,payload,employeeName){if(!payload.syncStart||!payload.syncEnd||!payload.shifts)return;const keep={};payload.shifts.forEach(function(s){if(s.date)keep[(s.businessId||"")+"|"+s.date]=true});const events=calendar.getEvents(makeDateTime(payload.syncStart,"00:00"),makeDateTime(addDays(payload.syncEnd,1),"00:00"));events.forEach(function(event){const desc=event.getDescription()||"";if(desc.indexOf("Imported from Work Schedule Manager")===-1)return;const m=desc.match(/WSM-SHIFT-DATE:([^|\n]+)\|BIZ:([^|\n]*)\|EMP:/);if(!m)return;const key=(m[2]||"")+"|"+(m[1]||"");if(!keep[key])event.deleteEvent()})}
+function findManagedEventsForShift(calendar,shift,employeeName){const events=calendar.getEvents(makeDateTime(shift.date,"00:00"),makeDateTime(shift.date,"23:59"));const marker=makeMarker(shift,employeeName);const found=[];events.forEach(function(event){const desc=event.getDescription()||"";if(desc.indexOf(marker)!==-1)found.push(event)});return found}
+function makeMarker(shift,employeeName){return "WSM-SHIFT-DATE:"+shift.date+"|BIZ:"+(shift.businessId||"")+"|EMP:"+(employeeName||"")}
+function makeDateTime(dateStr,timeStr){const p=dateStr.split("-").map(Number);const t=timeStr.split(":").map(Number);return new Date(p[0],p[1]-1,p[2],t[0],t[1]||0,0)}
+function addHoursToTime(timeStr,hours){const t=timeStr.split(":").map(Number);const d=new Date(2000,0,1,t[0],t[1]||0,0);d.setHours(d.getHours()+Number(hours||8));return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")}
+function addDays(dateStr,days){const p=dateStr.split("-").map(Number);const d=new Date(p[0],p[1]-1,p[2]);d.setDate(d.getDate()+Number(days||0));return Utilities.formatDate(d,Session.getScriptTimeZone(),"yyyy-MM-dd")}
+function jsonResponse(obj){return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON)}`;try{await navigator.clipboard.writeText(txt);alert('Apps Script v8 copied. Paste it into Apps Script, update Calendar ID and Secret Key, then deploy a new version.')}catch(e){alert(txt.slice(0,3000))}}
 
-function doGet(e) {
-  return handleRequest(e);
-}
 
-function doPost(e) {
-  return handleRequest(e);
-}
-
-function handleRequest(e) {
-  try {
-    const payload = parsePayload(e);
-    if (!payload || payload.secret !== SECRET_KEY) {
-      return jsonResponse({ ok:false, error:"Unauthorized" });
-    }
-
-    const calendar = CalendarApp.getCalendarById(CALENDAR_ID);
-    if (!calendar) {
-      return jsonResponse({ ok:false, error:"Calendar not found" });
-    }
-
-    const shifts = payload.shifts || [];
-    const employeeName = payload.employeeName || "";
-    let synced = 0;
-    let created = 0;
-    let updated = 0;
-    let deleted = 0;
-
-    removeUnlistedManagedEvents(calendar, payload, employeeName);
-
-    shifts.forEach(function(shift) {
-      if (!shift.date) return;
-
-      const managedEvents = findManagedEventsForDate(calendar, shift.date, employeeName);
-      const shouldDelete = shift.deleteCalendar === true || shift.status !== "Scheduled" || !shift.start;
-
-      if (shouldDelete) {
-        managedEvents.forEach(function(event) {
-          event.deleteEvent();
-          deleted++;
-        });
-        synced++;
-        return;
-      }
-
-      const start = makeDateTime(shift.date, shift.start);
-      const end = makeDateTime(shift.date, shift.end || addHoursToTime(shift.start, payload.defaultShiftHours || 9));
-      const title = (payload.titlePrefix || "Work") + " " + (shift.location || "Shift");
-      const marker = makeMarker(shift.date, employeeName);
-      const description = marker + "\nImported from Work Schedule Manager\n\nNotes: " + (shift.notes || "");
-
-      let event = managedEvents.length ? managedEvents[0] : null;
-      if (event) {
-        event.setTitle(title);
-        event.setTime(start, end);
-        event.setLocation(shift.location || "");
-        event.setDescription(description);
-        event.removeAllReminders();
-        event.addPopupReminder(120);
-        event.addPopupReminder(60);
-        updated++;
-
-        for (let i = 1; i < managedEvents.length; i++) {
-          managedEvents[i].deleteEvent();
-          deleted++;
-        }
-      } else {
-        event = calendar.createEvent(title, start, end, {
-          location: shift.location || "",
-          description: description
-        });
-        event.addPopupReminder(120);
-        event.addPopupReminder(60);
-        created++;
-      }
-
-      synced++;
-    });
-
-    return jsonResponse({ ok:true, synced:synced, created:created, updated:updated, deleted:deleted });
-  } catch (err) {
-    return jsonResponse({ ok:false, error:String(err) });
+/* === v9 fixes: header share popover, clearer next shift date, robust multi-business Google sync === */
+let sharePopoverOpen=false;
+function ensureHeaderShareMenu(){
+  const actions=document.querySelector('.top-actions');
+  if(!actions)return;
+  if(!document.getElementById('shareMenuBtn')){
+    const btn=document.createElement('button');
+    btn.id='shareMenuBtn';
+    btn.className='secondary';
+    btn.textContent='Share';
+    btn.onclick=function(e){e.stopPropagation();toggleSharePopover();};
+    const sync=document.getElementById('googleSyncBtn');
+    actions.insertBefore(btn,sync||actions.firstChild);
+  }
+  if(!document.getElementById('sharePopover')){
+    const pop=document.createElement('div');
+    pop.id='sharePopover';
+    pop.className='share-popover hide';
+    pop.onclick=function(e){e.stopPropagation();};
+    document.body.appendChild(pop);
   }
 }
-
-function parsePayload(e) {
-  if (e && e.parameter && e.parameter.payload) {
-    return JSON.parse(e.parameter.payload);
-  }
-
-  const raw = e && e.postData && e.postData.contents ? e.postData.contents : "";
-  if (!raw) return {};
-
-  const trimmed = raw.trim();
-  if (trimmed.charAt(0) === "{") {
-    return JSON.parse(trimmed);
-  }
-
-  const parts = trimmed.split("&");
-  for (let i = 0; i < parts.length; i++) {
-    const pair = parts[i].split("=");
-    if (decodeURIComponent(pair[0] || "") === "payload") {
-      return JSON.parse(decodeURIComponent((pair.slice(1).join("=") || "").replace(/\+/g, " ")));
-    }
-  }
-
-  return JSON.parse(trimmed);
+function toggleSharePopover(){sharePopoverOpen=!sharePopoverOpen;renderSharePopover();}
+function closeSharePopover(){sharePopoverOpen=false;renderSharePopover();}
+document.addEventListener('click',function(e){const pop=document.getElementById('sharePopover');const btn=document.getElementById('shareMenuBtn');if(pop&&btn&&sharePopoverOpen&&!pop.contains(e.target)&&e.target!==btn)closeSharePopover();});
+function renderSharePopover(){
+  ensureHeaderShareMenu();
+  const pop=document.getElementById('sharePopover');
+  if(!pop)return;
+  pop.classList.toggle('hide',!sharePopoverOpen);
+  if(!sharePopoverOpen)return;
+  pop.innerHTML=`<h3>Share Schedule</h3><p class="small">Choose all businesses or one business, then share as text/image.</p>${filterButtons(state.settings.shareFilter||'ALL','setShareFilter')}<div class="grid three"><button class="secondary" onclick="shareSchedule('text');closeSharePopover()">Text</button><button class="secondary" onclick="shareSchedule('png');closeSharePopover()">PNG</button><button class="secondary" onclick="shareSchedule('jpeg');closeSharePopover()">JPEG</button></div>`;
 }
+setShareFilter=function(id){state.settings.shareFilter=id;save();renderSharePopover();};
 
-function removeUnlistedManagedEvents(calendar, payload, employeeName) {
-  if (!payload.syncStart || !payload.syncEnd || !payload.shifts) return;
+renderHome=function(){
+  if(!state.settings.homeFilter)state.settings.homeFilter='ALL';
+  const filter=state.settings.homeFilter||'ALL';
+  const list=shiftsForFilter(filter);
+  const n=nextShift(filter);
+  const k=summary(list);
+  document.getElementById('home').innerHTML=`<div class="card"><div class="row between"><div><b>Next Shift</b><div class="notice">The next scheduled shift is shown with the day/date clearly marked.</div></div><button class="secondary" onclick="showTab('paste')">Paste New</button></div>${n?shiftCard(n,true):`<div class="shift off"><div class="shift-title">No upcoming scheduled shift</div><div class="notice">Paste or import your next schedule.</div></div>`}</div><div class="kpis"><div class="kpi"><span>Hours</span><b>${k.hours.toFixed(1)}</b></div><div class="kpi"><span>Gross</span><b>${money(k.gross)}</b></div><div class="kpi"><span>Take Home</span><b>${money(k.net)}</b></div><div class="kpi"><span>Next Payday</span><b>${esc(k.payday?mdy(k.payday):'—')}</b></div></div><div class="card"><div class="row between"><div><b>Upcoming / Current Schedule</b><div class="small">Default: All businesses. Filter below when needed.</div></div><div class="row wrap"><button class="secondary" onclick="syncToGoogleCalendar('ALL')">Sync Google</button><button class="secondary" onclick="downloadICS(shiftsForFilter(state.settings.homeFilter||'ALL').filter(s=>s.status==='Scheduled'),'schedule_with_alerts.ics')">Add All</button></div></div>${filterButtons(filter,'setHomeFilter')}${groupedScheduleHtml(list)||'<p class="notice">No schedule loaded.</p>'}</div>`;
+  renderSharePopover();
+};
 
-  const keepDates = {};
-  payload.shifts.forEach(function(shift) {
-    if (shift.date) keepDates[shift.date] = true;
-  });
+shiftCard=function(s,big){
+  const c=calc(s),off=s.status!=='Scheduled',b=businessById(s.businessId)||activeBusiness(),isOpen=openShiftId===s.id,isEdit=openEditorId===s.id,color=shiftColor(s);
+  const dateBox=big?`<div class="shift-datebox">${esc(s.day||day3(s.date))}<span>${esc(mdy(s.date))}</span></div>`:'';
+  return `<div class="shift ${off?'off':''}" tabindex="0" style="border-left-color:${esc(color)}" onclick="toggleShiftMenu('${s.id}')" onfocus="openShiftMenu('${s.id}')"><div class="shift-head ${big?'next-clear':''}"><div class="shift-main"><div class="shift-title">${off?esc(s.status||'Off'):esc(timeRange(s.start,s.end))}</div><div class="shift-meta"><span class="pill color" style="background:${esc(b.color)}">${esc(b.name)}</span> ${esc(s.location||'')}${s.notes?' · '+esc(s.notes):''}</div>${!off?`<div class="shift-meta"><span class="pill">${c.hours.toFixed(1)} hrs</span> <span class="money">${money(c.net)} take-home est.</span></div>`:''}</div>${dateBox}</div>${isOpen?`<div class="shift-tools" onclick="event.stopPropagation()"><div class="menu-row"><button class="danger" onclick="setShiftOff('${s.id}')">Off</button><button class="secondary" onclick="openShiftEditor('${s.id}')">Edit</button><button class="secondary" onclick="syncOneShift('${s.id}')">Sync This Shift</button></div>${isEdit?shiftEditorHtml(s):''}</div>`:''}</div>`;
+};
 
-  const start = makeDateTime(payload.syncStart, "00:00");
-  const end = makeDateTime(addDays(payload.syncEnd, 1), "00:00");
-  const events = calendar.getEvents(start, end);
-
-  events.forEach(function(event) {
-    const desc = event.getDescription() || "";
-    if (desc.indexOf("Imported from Work Schedule Manager") === -1) return;
-
-    const eventDate = Utilities.formatDate(event.getStartTime(), Session.getScriptTimeZone(), "yyyy-MM-dd");
-    if (!keepDates[eventDate]) {
-      event.deleteEvent();
-    }
-  });
-}
-
-function findManagedEventsForDate(calendar, dateStr, employeeName) {
-  const events = calendar.getEvents(makeDateTime(dateStr, "00:00"), makeDateTime(dateStr, "23:59"));
-  const marker = makeMarker(dateStr, employeeName);
-  const legacyStart = "SHIFT-ID:" + dateStr + "-";
-  const found = [];
-
-  events.forEach(function(event) {
-    const desc = event.getDescription() || "";
-    if (
-      desc.indexOf(marker) !== -1 ||
-      desc.indexOf(legacyStart) !== -1 ||
-      desc.indexOf("Imported from Work Schedule Manager") !== -1
-    ) {
-      found.push(event);
-    }
-  });
-
-  return found;
-}
-
-function makeMarker(dateStr, employeeName) {
-  return "PSM-SHIFT-DATE:" + dateStr + "|EMP:" + (employeeName || "");
-}
-
-function makeDateTime(dateStr, timeStr) {
-  const p = dateStr.split("-").map(Number);
-  const t = timeStr.split(":").map(Number);
-  return new Date(p[0], p[1] - 1, p[2], t[0], t[1] || 0, 0);
-}
-
-function addHoursToTime(timeStr, hours) {
-  const t = timeStr.split(":").map(Number);
-  const d = new Date(2000, 0, 1, t[0], t[1] || 0, 0);
-  d.setHours(d.getHours() + Number(hours || 9));
-  return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
-}
-
-function addDays(dateStr, days) {
-  const p = dateStr.split("-").map(Number);
-  const d = new Date(p[0], p[1] - 1, p[2]);
-  d.setDate(d.getDate() + Number(days || 0));
-  return Utilities.formatDate(d, Session.getScriptTimeZone(), "yyyy-MM-dd");
-}
-
-function jsonResponse(obj) {
-  return ContentService
-    .createTextOutput(JSON.stringify(obj))
-    .setMimeType(ContentService.MimeType.JSON);
-}`;
-  try{
-    await navigator.clipboard.writeText(txt);
-    alert('Compatible Apps Script v6 copied. Paste it into Apps Script, update CALENDAR_ID, then deploy as a new version.');
-  }catch(e){
-    alert(txt.slice(0,3000));
-  }
-}
-
-function scheduleDaysForSync(){
-  return (state.shifts||[]).filter(s=>s&&s.date).map(s=>({
-    date:s.date,
-    day:s.day||day3(s.date),
-    start:s.status==='Scheduled'?(s.start||''):'',
-    end:s.status==='Scheduled'?(s.end||''):'',
-    status:s.status==='Scheduled'?'Scheduled':'Off',
-    location:s.status==='Scheduled'?(s.location||''):'',
-    notes:s.status==='Scheduled'?(s.notes||''):'',
-    title:calendarTitle(s),
-    deleteCalendar:s.status!=='Scheduled'||!s.start||s.calendarDelete===true
-  }));
-}
-function scheduledShiftsForSync(){
-  return scheduleDaysForSync().filter(s=>s.status==='Scheduled'&&s.date&&s.start);
-}
-function googleCalendarPayload(){
-  ensureSettingsDefaults();
-  const days=scheduleDaysForSync();
-  const dates=days.map(s=>s.date).sort();
-  return {
-    secret:state.settings.googleScriptSecret||'',
-    titlePrefix:state.settings.calendarTitlePrefix||state.settings.businessName||'Work',
-    defaultShiftHours:state.settings.defaultShiftHours||9,
-    source:'Work Schedule Manager HTML',
-    employeeName:state.settings.employeeName||'',
-    syncStart:dates[0]||'',
-    syncEnd:dates[dates.length-1]||'',
-    shifts:days
-  };
-}
-async function syncToGoogleCalendar(){
-  ensureSettingsDefaults();
-  const url=String(state.settings.googleScriptUrl||'').trim();
-  const secret=String(state.settings.googleScriptSecret||'').trim();
-  const shifts=scheduleDaysForSync();
-  const scheduledCount=shifts.filter(s=>s.status==='Scheduled'&&s.start).length;
-  if(!url)return alert('Add your Apps Script Web App URL in Setup.');
-  if(!secret)return alert('Add your secret key in Setup.');
-  if(!shifts.length)return alert('No schedule days to sync.');
-
-  const payload=googleCalendarPayload();
-  const body=JSON.stringify(payload);
-  const btns=[document.getElementById('googleSyncBtn'),document.getElementById('setupGoogleSyncBtn')].filter(Boolean);
-  btns.forEach(b=>{b.disabled=true;b.textContent='Syncing';});
-  updateSyncStatus('Sending shifts to Google Calendar...','dirty');
-
-  let confirmed=false;
-  let lastError='';
-
-  // 1) Desktop/normal-browser path: POST and read the Apps Script JSON response.
-  try{
-    const res=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},body});
-    const txt=await res.text();
-    let data=null;
-    try{data=JSON.parse(txt)}catch(e){}
-    if(data&&data.ok===false)throw new Error(data.error||'Apps Script returned failure');
-    if(!res.ok)throw new Error('HTTP '+res.status+' '+txt.slice(0,180));
-    confirmed=true;
-  }catch(err){
-    lastError=err&&err.message?err.message:String(err);
-  }
-
-  btns.forEach(b=>{b.disabled=false;b.textContent=b.id==='googleSyncBtn'?'Sync':'Sync Scheduled Shifts';});
-
-  if(confirmed){
-    const msg=`Sync completed. ${shifts.length} schedules sent.`;
-    updateSyncStatus(msg,'ok');
-    alert(msg);
-    return;
-  }
-
-  // 2) iPhone/Edge/Safari local-file test path:
-  // Hidden iframe GET fallback. This avoids the Apps Script pop-up/tab.
-  // It cannot read the response, so confirmation must be checked in Google Calendar.
-  try{
-    const getUrl=buildGoogleSyncGetUrl(url,body);
-    if(getUrl.length>=7500)throw new Error('Payload too large for phone GET sync. Use Add All calendar export or sync from desktop.');
-    postGoogleSyncViaHiddenGet(getUrl);
-    const msg=`Sync completed. ${shifts.length} schedules sent.`;
-    updateSyncStatus(msg,'ok');
-    alert(msg);
-  }catch(err){
-    updateSyncStatus('Google sync could not be sent','dirty');
-    alert('Google Calendar sync could not be sent from this browser. Details: '+(err&&err.message?err.message:err)+'\n\nDesktop POST error was: '+lastError);
-  }
-}
-function openUrlInNewWindow(url){
-  try{
-    const w=window.open(url,'_blank','noopener,noreferrer');
-    if(w)return true;
-  }catch(e){}
-  try{
-    const a=document.createElement('a');
-    a.href=url;
-    a.target='_blank';
-    a.rel='noopener noreferrer';
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(()=>{try{a.remove()}catch(e){}},500);
-    return true;
-  }catch(e){return false;}
-}
-
-function openGoogleSyncUrlManually(){
-  ensureSettingsDefaults();
-  const url=String(state.settings.googleScriptUrl||'').trim();
-  const secret=String(state.settings.googleScriptSecret||'').trim();
-  const shifts=scheduleDaysForSync();
-  if(!url)return alert('Add your Apps Script Web App URL in Setup.');
-  if(!secret)return alert('Add your secret key in Setup.');
-  if(!shifts.length)return alert('No schedule days to sync.');
-  const getUrl=buildGoogleSyncGetUrl(url,JSON.stringify(googleCalendarPayload()));
-  if(getUrl.length>=7500)return alert('Sync URL is too long for iPhone. Reduce notes or sync from desktop.');
-  const ok=openUrlInNewWindow(getUrl);
-  if(!ok)alert('Could not open sync URL. Your browser blocked the pop-up.');
-}
-
-function buildGoogleSyncGetUrl(url,json){
-  const sep=url.indexOf('?')===-1?'?':'&';
-  return url+sep+'payload='+encodeURIComponent(json)+'&t='+Date.now();
-}
-
-function postGoogleSyncViaHiddenGet(getUrl){
-  let iframe=document.getElementById('googleSyncFrame');
-  if(!iframe){
-    iframe=document.createElement('iframe');
-    iframe.name='googleSyncFrame';
-    iframe.id='googleSyncFrame';
-    iframe.style.display='none';
-    document.body.appendChild(iframe);
-  }
-  iframe.src=getUrl;
-}
-
-function postGoogleSyncViaHiddenForm(url,json){
-  let iframe=document.getElementById('googleSyncFrame');
-  if(!iframe){
-    iframe=document.createElement('iframe');
-    iframe.name='googleSyncFrame';
-    iframe.id='googleSyncFrame';
-    iframe.style.display='none';
-    document.body.appendChild(iframe);
-  }
-  const form=document.createElement('form');
-  form.method='POST';
-  form.action=url;
-  form.target='googleSyncFrame';
-  form.style.display='none';
-
-  const input=document.createElement('input');
-  input.type='hidden';
-  input.name='payload';
-  input.value=json;
-  form.appendChild(input);
-
-  document.body.appendChild(form);
-  form.submit();
-  setTimeout(()=>{try{form.remove()}catch(e){}},1000);
-}
-function testGoogleCalendarPayload(){
-  const preview=JSON.stringify(googleCalendarPayload(),null,2);
-  const w=window.open('','_blank');
-  if(w){w.document.write('<pre style="white-space:pre-wrap;font-family:monospace">'+esc(preview)+'</pre>');w.document.close();}
-  else alert(preview.slice(0,2000));
-}
-
-function downloadJSON(){downloadBlob(JSON.stringify(state,null,2),'work-schedule-manager.json','application/json')}
-function importJSON(file){if(!file)return;const r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);save();render()}catch(e){alert('Invalid JSON')}};r.readAsText(file)}
-function resetAll(){if(confirm('Reset to spreadsheet example?')){state=JSON.parse(JSON.stringify(defaultState));state.currentWeekId=weekId(state.shifts);state.logs=[makeLog('Initial spreadsheet example',state.shifts,seedText)];save();render()}}
-function calendarTitle(s){return `${state.settings.calendarTitlePrefix||'Work'} ${s.location||'Shift'}`.trim()}
-function icsDate(iso,time){return iso.replace(/-/g,'')+'T'+(time||'09:00').replace(':','')+'00'}
-function makeICS(shifts){let lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Work Schedule Manager//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:Work Schedule','X-WR-TIMEZONE:America/Chicago'];shifts.forEach(s=>{if(s.status!=='Scheduled'||!s.start)return;let end=s.end||numToTime(timeToNum(s.start)+state.settings.defaultShiftHours);lines.push('BEGIN:VEVENT',`UID:${stableUID(s)}`,`DTSTAMP:${new Date().toISOString().replace(/[-:]/g,'').split('.')[0]}Z`,`DTSTART:${icsDate(s.date,s.start)}`,`DTEND:${icsDate(s.date,end)}`,`SUMMARY:${escapeICS(calendarTitle(s))}`,`LOCATION:${escapeICS(s.location||'')}`,`DESCRIPTION:${escapeICS((s.notes||'')+'\n\nImported from Work Schedule Manager')}`,'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Work shift starts in 2 hours','TRIGGER:-PT2H','END:VALARM','BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Work shift starts in 1 hour','TRIGGER:-PT1H','END:VALARM','END:VEVENT')});lines.push('END:VCALENDAR');return lines.join('\r\n')}
-function stableUID(s){return `${s.date}-${s.start}-${(s.location||'shift').replace(/[^a-z0-9]/gi,'')}@work-schedule-manager.local`}
-function numToTime(n){n=((n%24)+24)%24;let h=Math.floor(n),m=Math.round((n-h)*60);return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`}
-function escapeICS(s){return String(s||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;')}
-function downloadICS(shifts,name){const valid=(shifts||[]).filter(Boolean).filter(s=>s.status==='Scheduled'&&s.start);if(!valid.length)return alert('No scheduled shifts with start times to export.');downloadBlob(makeICS(valid),name||'schedule.ics','text/calendar')}
-function googleLink(s){if(!s||s.status!=='Scheduled')return'#';let end=s.end||numToTime(timeToNum(s.start)+state.settings.defaultShiftHours);let dates=`${icsDate(s.date,s.start)}/${icsDate(s.date,end)}`;return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(calendarTitle(s))}&dates=${dates}&location=${encodeURIComponent(s.location||'')}&details=${encodeURIComponent(s.notes||'')}`}
-function downloadBlob(text,name,type){const blob=new Blob([text],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),500)}
-window.syncToGoogleCalendar=syncToGoogleCalendar;window.testGoogleCalendarPayload=testGoogleCalendarPayload;window.copyCompatibleAppsScript=copyCompatibleAppsScript;window.openGoogleSyncUrlManually=openGoogleSyncUrlManually;
-
-
-/* === Mobile inline editing/share upgrade === */
-let openShiftMenuDate=null;
-let openShiftEditorDate=null;
-
-(function applyMobileEditDefaults(){
-  if(!state.settings) state.settings={};
-  if(!state.settings.defaultShiftHours || Number(state.settings.defaultShiftHours)===9){
-    state.settings.defaultShiftHours=10;
-  }
-  if(!state.settings.locations){
-    state.settings.locations='Main Location\nBack Office\nEvent Site\nRemote\nTraining';
-  }
-  localStorage.setItem(STORE,JSON.stringify(state));
-})();
-
-function allAvailableLocations(){
-  const found=[];
-  function add(v){
-    v=String(v||'').trim();
-    if(v && !found.some(x=>x.toLowerCase()===v.toLowerCase())) found.push(v);
-  }
-  String(state.settings.locations||'').split(/[\n,]+/).forEach(add);
-  add(state.settings.defaultLocation);
-  (state.shifts||[]).forEach(s=>add(s.location));
-  ['Main Location','Back Office','Event Site','Remote','Training'].forEach(add);
-  return found;
-}
-
-function hourOptions(selected='',allowBlank=false){
-  const opts=[];
-  if(allowBlank) opts.push(`<option value="" ${!selected?'selected':''}>Blank / use default hours</option>`);
-  const known=[];
-  for(let h=0;h<24;h++){
-    const v=String(h).padStart(2,'0')+':00';
-    known.push(v);
-    opts.push(`<option value="${v}" ${selected===v?'selected':''}>${fmtTime(v,true)}</option>`);
-  }
-  if(selected && !known.includes(selected)) opts.unshift(`<option value="${esc(selected)}" selected>${esc(fmtTime(selected,true)||selected)}</option>`);
-  return opts.join('');
-}
-
-function locationOptions(selected=''){
-  return allAvailableLocations().map(loc=>`<option value="${esc(loc)}" ${String(loc).toLowerCase()===String(selected||'').toLowerCase()?'selected':''}>${esc(loc)}</option>`).join('');
-}
-
-function toggleShiftMenu(date){
-  if(openShiftMenuDate===date){openShiftMenuDate=null;openShiftEditorDate=null;}
-  else{openShiftMenuDate=date;openShiftEditorDate=null;}
-  render();
-}
-function openShiftMenu(date){
-  if(openShiftMenuDate!==date){openShiftMenuDate=date;openShiftEditorDate=null;render();}
-}
-function openShiftEditor(date){openShiftMenuDate=date;openShiftEditorDate=date;render();}
-function closeShiftMenus(){openShiftMenuDate=null;openShiftEditorDate=null;render();}
-
-function logScheduleChange(reason){
-  state.logs=state.logs||[];
-  state.logs.unshift(makeLog(reason||'Manual schedule change',state.shifts,'Auto-saved from home screen edit'));
-  if(state.logs.length>100) state.logs=state.logs.slice(0,100);
-}
-function saveAfterInlineEdit(reason){
-  logScheduleChange(reason);
-  save();
-  updateSyncStatus('Autosaved locally · change written to log','ok');
-}
-function setShiftOff(date){
-  const i=shiftIndexByDate(date); if(i<0)return;
-  const sh=state.shifts[i];
-  sh.status='Off'; sh.start=''; sh.end=''; sh.location=''; sh.notes=''; sh.calendarDelete=true; sh.editedAt=new Date().toISOString();
-  saveAfterInlineEdit('Set '+(sh.day||day3(sh.date))+' '+mdy(sh.date)+' Off');
-  openShiftMenuDate=date; openShiftEditorDate=null; render();
-}
-function updateShiftField(date,field,value){
-  const i=shiftIndexByDate(date); if(i<0)return;
-  const sh=state.shifts[i];
-  sh.status='Scheduled'; sh.calendarDelete=false;
-  if(field==='start'||field==='end') sh[field]=value;
-  else sh[field]=String(value||'').trim();
-  if(field==='location' && sh.location){
-    const locs=allAvailableLocations();
-    if(!locs.some(x=>x.toLowerCase()===sh.location.toLowerCase())){
-      state.settings.locations=(state.settings.locations?state.settings.locations+'\n':'')+sh.location;
-    }
-  }
-  sh.editedAt=new Date().toISOString();
-  saveAfterInlineEdit('Edited '+(sh.day||day3(sh.date))+' '+mdy(sh.date));
-  openShiftMenuDate=date; openShiftEditorDate=date; render();
-}
-
-function syncOneDay(date){
-  const i=shiftIndexByDate(date); if(i<0)return alert('Day not found.');
-  return syncPayloadToGoogle([scheduleDayForSync(state.shifts[i])], `Sync completed. 1 schedule sent.`);
-}
-
-function scheduleDayForSync(s){
-  return {
-    date:s.date,
-    day:s.day||day3(s.date),
-    start:s.status==='Scheduled'?(s.start||''):'',
-    end:s.status==='Scheduled'?(s.end||''):'',
-    status:s.status==='Scheduled'?'Scheduled':'Off',
-    location:s.status==='Scheduled'?(s.location||''):'',
-    notes:s.status==='Scheduled'?(s.notes||''):'',
-    title:calendarTitle(s),
-    deleteCalendar:s.status!=='Scheduled'||!s.start||s.calendarDelete===true
-  };
-}
-
-async function syncPayloadToGoogle(days,successMsg){
-  ensureSettingsDefaults();
-  const url=String(state.settings.googleScriptUrl||'').trim();
-  const secret=String(state.settings.googleScriptSecret||'').trim();
+scheduleDayForSync=function(s){
+  const b=businessById(s.businessId)||activeBusiness();
+  const titlePrefix=b.calendarTitlePrefix||b.name||'Work';
+  const title=calendarTitle(s);
+  return{date:s.date,day:s.day||day3(s.date),businessId:s.businessId,businessName:b.name,titlePrefix,defaultShiftHours:b.defaultShiftHours||8,start:s.status==='Scheduled'?(s.start||''):'',end:s.status==='Scheduled'?(s.end||''):'',status:s.status==='Scheduled'?'Scheduled':'Off',location:s.status==='Scheduled'?(s.location||''):'',notes:s.status==='Scheduled'?(s.notes||''):'',title,deleteCalendar:s.status!=='Scheduled'||!s.start||s.calendarDelete===true};
+};
+scheduleDaysForSync=function(filter='ALL'){return shiftsForFilter(filter).filter(s=>s&&s.date).map(scheduleDayForSync);};
+googleCalendarPayload=function(days=scheduleDaysForSync('ALL'),fullSync=true){const dates=days.map(s=>s.date).sort();return{secret:state.settings.googleScriptSecret||'',source:'Work Schedule Manager HTML',employeeName:state.settings.employeeName||'',syncStart:dates[0]||'',syncEnd:dates[dates.length-1]||'',defaultShiftHours:8,fullSync:!!fullSync,shifts:days};};
+syncToGoogleCalendar=async function(filter='ALL'){const days=scheduleDaysForSync(filter||'ALL');return syncPayloadToGoogle(days,null,filter==='ALL');};
+syncOneShift=function(id){const s=shiftById(id);if(!s)return alert('Shift not found.');return syncPayloadToGoogle([scheduleDayForSync(s)],'Sync completed. 1 schedule sent.',false);};
+syncPayloadToGoogle=async function(days,successMsg,fullSync=false){
+  const url=String(state.settings.googleScriptUrl||'').trim(),secret=String(state.settings.googleScriptSecret||'').trim();
   if(!url)return alert('Add your Apps Script Web App URL in Setup.');
   if(!secret)return alert('Add your secret key in Setup.');
   if(!days.length)return alert('No schedule days to sync.');
-  const dates=days.map(s=>s.date).sort();
-  const payload={
-    secret:state.settings.googleScriptSecret||'',
-    titlePrefix:state.settings.calendarTitlePrefix||state.settings.businessName||'Work',
-    defaultShiftHours:state.settings.defaultShiftHours||10,
-    source:'Work Schedule Manager HTML',
-    employeeName:state.settings.employeeName||'',
-    syncStart:dates[0]||'',
-    syncEnd:dates[dates.length-1]||'',
-    shifts:days
-  };
+  const payload=googleCalendarPayload(days,fullSync);
   const body=JSON.stringify(payload);
   updateSyncStatus('Sending to Google Calendar...','dirty');
+  let confirmed=false,lastError='';
+  try{const res=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},body});const txt=await res.text();let data=null;try{data=JSON.parse(txt)}catch(e){}if(data&&data.ok===false)throw new Error(data.error||'Apps Script returned failure');if(!res.ok)throw new Error('HTTP '+res.status+' '+txt.slice(0,180));confirmed=true}catch(err){lastError=err&&err.message?err.message:String(err)}
+  if(confirmed){const msg=successMsg||`Sync completed. ${days.length} schedules sent.`;updateSyncStatus(msg,'ok');alert(msg);return;}
+  try{const getUrl=buildGoogleSyncGetUrl(url,body);if(getUrl.length>=7500)throw new Error('Payload too large for phone GET sync. Reduce notes or sync fewer days.');postGoogleSyncViaHiddenGet(getUrl);const msg=successMsg||`Sync completed. ${days.length} schedules sent.`;updateSyncStatus(msg,'ok');alert(msg)}catch(err){updateSyncStatus('Google sync could not be sent','dirty');alert('Google Calendar sync could not be sent. Details: '+(err&&err.message?err.message:err)+'\n\nDesktop POST error was: '+lastError)}
+};
+openGoogleSyncUrlManually=function(){const getUrl=buildGoogleSyncGetUrl(String(state.settings.googleScriptUrl||'').trim(),JSON.stringify(googleCalendarPayload(scheduleDaysForSync('ALL'),true)));if(getUrl.length>=7500)return alert('Sync URL is too long.');window.open(getUrl,'_blank')};
+testGoogleCalendarPayload=function(){const preview=JSON.stringify(googleCalendarPayload(scheduleDaysForSync('ALL'),true),null,2);const w=window.open('','_blank');if(w){w.document.write('<pre style="white-space:pre-wrap;font-family:monospace">'+esc(preview)+'</pre>');w.document.close()}else alert(preview.slice(0,2000));};
+
+copyCompatibleAppsScript=async function(){const txt=String.raw`const CALENDAR_ID = "PASTE_YOUR_WORK_SCHEDULE_CALENDAR_ID_HERE";
+const SECRET_KEY = "PASTE_YOUR_SECRET_KEY_HERE";
+function doGet(e){return handleRequest(e)}
+function doPost(e){return handleRequest(e)}
+function handleRequest(e){try{const payload=parsePayload(e);if(!payload||payload.secret!==SECRET_KEY)return jsonResponse({ok:false,error:"Unauthorized"});const calendar=CalendarApp.getCalendarById(CALENDAR_ID);if(!calendar)return jsonResponse({ok:false,error:"Calendar not found"});const shifts=payload.shifts||[];const employeeName=payload.employeeName||"";let synced=0,created=0,updated=0,deleted=0;if(payload.fullSync===true)removeUnlistedManagedEvents(calendar,payload,employeeName);shifts.forEach(function(shift){if(!shift.date)return;const managedEvents=findManagedEventsForShift(calendar,shift,employeeName);const shouldDelete=shift.deleteCalendar===true||shift.status!=="Scheduled"||!shift.start;if(shouldDelete){managedEvents.forEach(function(event){event.deleteEvent();deleted++});synced++;return}const start=makeDateTime(shift.date,shift.start);const end=makeDateTime(shift.date,shift.end||addHoursToTime(shift.start,shift.defaultShiftHours||payload.defaultShiftHours||8));const title=shift.title||(((shift.titlePrefix||shift.businessName||"Work")+" "+(shift.location||"Shift")).trim());const marker=makeMarker(shift,employeeName);const description=marker+"\nImported from Work Schedule Manager\n\nBusiness: "+(shift.businessName||"")+"\nNotes: "+(shift.notes||"");let event=managedEvents.length?managedEvents[0]:null;if(event){event.setTitle(title);event.setTime(start,end);event.setLocation(shift.location||"");event.setDescription(description);event.removeAllReminders();event.addPopupReminder(120);event.addPopupReminder(60);updated++;for(let i=1;i<managedEvents.length;i++){managedEvents[i].deleteEvent();deleted++}}else{event=calendar.createEvent(title,start,end,{location:shift.location||"",description:description});event.addPopupReminder(120);event.addPopupReminder(60);created++}synced++});return jsonResponse({ok:true,synced:synced,created:created,updated:updated,deleted:deleted})}catch(err){return jsonResponse({ok:false,error:String(err)})}}
+function parsePayload(e){if(e&&e.parameter&&e.parameter.payload)return JSON.parse(e.parameter.payload);const raw=e&&e.postData&&e.postData.contents?e.postData.contents:"";if(!raw)return{};const trimmed=raw.trim();if(trimmed.charAt(0)==="{")return JSON.parse(trimmed);const parts=trimmed.split("&");for(let i=0;i<parts.length;i++){const pair=parts[i].split("=");if(decodeURIComponent(pair[0]||"")==="payload")return JSON.parse(decodeURIComponent((pair.slice(1).join("=")||"").replace(/\+/g," ")))}return JSON.parse(trimmed)}
+function removeUnlistedManagedEvents(calendar,payload,employeeName){if(!payload.syncStart||!payload.syncEnd||!payload.shifts)return;const keep={};payload.shifts.forEach(function(s){if(s.date)keep[makeMarker(s,employeeName)]=true});const events=calendar.getEvents(makeDateTime(payload.syncStart,"00:00"),makeDateTime(addDays(payload.syncEnd,1),"00:00"));events.forEach(function(event){const desc=event.getDescription()||"";const m=desc.match(/WSM-SHIFT-DATE:[^\n]+/);if(!m)return;if(desc.indexOf("Imported from Work Schedule Manager")===-1)return;if(!keep[m[0]]){event.deleteEvent()}})}
+function findManagedEventsForShift(calendar,shift,employeeName){const events=calendar.getEvents(makeDateTime(shift.date,"00:00"),makeDateTime(shift.date,"23:59"));const marker=makeMarker(shift,employeeName);const found=[];events.forEach(function(event){const desc=event.getDescription()||"";if(desc.indexOf(marker)!==-1)found.push(event)});return found}
+function makeMarker(shift,employeeName){return "WSM-SHIFT-DATE:"+shift.date+"|BIZ:"+(shift.businessId||"")+"|EMP:"+(employeeName||"")}
+function makeDateTime(dateStr,timeStr){const p=dateStr.split("-").map(Number);const t=timeStr.split(":").map(Number);return new Date(p[0],p[1]-1,p[2],t[0],t[1]||0,0)}
+function addHoursToTime(timeStr,hours){const t=timeStr.split(":").map(Number);const d=new Date(2000,0,1,t[0],t[1]||0,0);d.setHours(d.getHours()+Number(hours||8));return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")}
+function addDays(dateStr,days){const p=dateStr.split("-").map(Number);const d=new Date(p[0],p[1]-1,p[2]);d.setDate(d.getDate()+Number(days||0));return Utilities.formatDate(d,Session.getScriptTimeZone(),"yyyy-MM-dd")}
+function jsonResponse(obj){return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON)}`;try{await navigator.clipboard.writeText(txt);alert('Apps Script v9 copied. Paste it into Apps Script, update Calendar ID and Secret Key, then deploy a new version.')}catch(e){alert(txt.slice(0,3000))}};
+
+/* === v10 UX + export upgrade === */
+function setStatusProgress(msg,mode='',progress=0,autoStable=false){
+  const el=document.getElementById('syncStatus');
+  if(!el)return;
+  el.className='sync '+(mode||'');
+  el.style.setProperty('--progress',String(progress||0)+'%');
+  el.innerHTML='<span class="sync-text">'+esc(msg)+'</span>';
+  if(autoStable){
+    clearTimeout(window.__statusStableTimer);
+    window.__statusStableTimer=setTimeout(()=>setStatusProgress('Autosaved locally · ready','',0,false),2200);
+  }
+}
+updateSyncStatus=function(msg,mode=''){
+  const progress=mode==='ok'?100:(mode==='dirty'?35:(mode==='working'?70:0));
+  setStatusProgress(msg,mode,progress,(mode==='ok'||(mode==='dirty'&&String(msg).toLowerCase().includes('autosaved'))));
+};
+
+function businessInitials(name){return String(name||'Work').split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase()||'W'}
+function businessLogoHtml(b,small=false){
+  b=b||activeBusiness();
+  if(b.logoData)return `<img class="shift-logo" src="${esc(b.logoData)}" alt="${esc(b.name||'Business')} logo">`;
+  return `<div class="shift-logo letter" style="background:${esc(b.color||'#315c49')}">${esc(businessInitials(b.name))}</div>`;
+}
+function ordinal(n){const s=['th','st','nd','rd'],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0])}
+/**
+ * Return exactly one upcoming scheduled shift per business.
+ * - ALL: first upcoming shift for every configured business.
+ * - Business filter: first upcoming shift for that selected business only.
+ * This keeps the Next Shift panel compact while preserving the full schedule below.
+ */
+function nextScheduledShifts(filter='ALL'){
+  const scopedBusinesses = filter === 'ALL'
+    ? state.businesses
+    : state.businesses.filter(b => b.id === filter);
+
+  return scopedBusinesses
+    .map(b => upcoming(b.id).find(s => s.status === 'Scheduled' && s.start))
+    .filter(Boolean)
+    .sort((a,b) =>
+      a.date.localeCompare(b.date) ||
+      String(a.start).localeCompare(String(b.start)) ||
+      businessName(a.businessId).localeCompare(businessName(b.businessId))
+    );
+}
+
+renderHome=function(){
+  if(!state.settings.homeFilter)state.settings.homeFilter='ALL';
+  const filter=state.settings.homeFilter||'ALL';
+  const list=shiftsForFilter(filter);
+  const nexts=nextScheduledShifts(filter);
+  const k=summary(list);
+  const nextHtml=nexts.length?`<div class="next-stack">${nexts.map((s,i)=>shiftCard(s,true,i+1)).join('')}</div>`:`<div class="shift off"><div class="shift-title">No upcoming scheduled shift</div><div class="notice">Paste or import your next schedule.</div></div>`;
+  document.getElementById('home').innerHTML=`<div class="card"><div class="row between"><div><b>${filter==='ALL'?'Next Shifts':'Next Shift'}</b><div class="notice">${filter==='ALL'?'Showing the next scheduled shift for each business.':'Showing the next scheduled shift for this business.'}</div></div><button class="secondary" onclick="showTab('paste')">Paste New</button></div>${filterButtons(filter,'setHomeFilter')}${nextHtml}</div><div class="kpis"><div class="kpi"><span>Hours</span><b>${k.hours.toFixed(1)}</b></div><div class="kpi"><span>Gross</span><b>${money(k.gross)}</b></div><div class="kpi"><span>Take Home</span><b>${money(k.net)}</b></div><div class="kpi"><span>Next Payday</span><b>${esc(k.payday?mdy(k.payday):'—')}</b></div></div><div class="card"><div class="row between"><div><b>Upcoming / Current Schedule</b><div class="small">Default: All businesses. Filter below when needed.</div></div><div class="row wrap"><button class="secondary" onclick="syncToGoogleCalendar('ALL')">Sync Google</button><button class="secondary" onclick="downloadICS(shiftsForFilter(state.settings.homeFilter||'ALL').filter(s=>s.status==='Scheduled'),'schedule_with_alerts.ics')">Add All</button></div></div>${filterButtons(filter,'setHomeFilter')}${groupedScheduleHtml(list)||'<p class="notice">No schedule loaded.</p>'}</div>`;
+  renderSharePopover();
+};
+
+shiftCard=function(s,big,rank){
+  const c=calc(s),off=s.status!=='Scheduled',b=businessById(s.businessId)||activeBusiness(),isOpen=openShiftId===s.id,isEdit=openEditorId===s.id,color=shiftColor(s);
+  const dateBox=`<div class="shift-datebox">${esc(s.day||day3(s.date))}<span>${esc(mdy(s.date))}</span></div>`;
+  const logo=businessLogoHtml(b);
+  const rankBox=big?`<div class="shift-rank">${esc(ordinal(rank||1))}</div>`:'';
+  const left=big?`<div class="next-left">${rankBox}${dateBox}${logo}</div>`:`<div class="next-left">${logo}</div>`;
+  return `<div class="shift ${off?'off':''}" tabindex="0" style="border-left-color:${esc(color)}" onclick="toggleShiftMenu('${s.id}')" onfocus="openShiftMenu('${s.id}')"><div class="shift-head ${big?'next-clear':''}">${left}<div class="shift-main"><div class="shift-title">${off?esc(s.status||'Off'):esc(timeRange(s.start,s.end))}</div><div class="shift-meta"><span class="pill color" style="background:${esc(b.color)}">${esc(b.name)}</span> ${esc(s.location||'')}${s.notes?' · '+esc(s.notes):''}</div>${!off?`<div class="shift-meta"><span class="pill">${c.hours.toFixed(1)} hrs</span> <span class="money">${money(c.net)} take-home est.</span></div>`:''}</div></div>${isOpen?`<div class="shift-tools" onclick="event.stopPropagation()"><div class="menu-row"><button class="danger" onclick="setShiftOff('${s.id}')">Off</button><button class="secondary" onclick="openShiftEditor('${s.id}')">Edit</button><button class="secondary" onclick="syncOneShift('${s.id}')">Sync This Shift</button></div>${isEdit?shiftEditorHtml(s):''}</div>`:''}</div>`;
+};
+
+groupedScheduleHtml=function(list){
+  const by={};list.forEach(s=>(by[s.date]||(by[s.date]=[])).push(s));
+  return Object.keys(by).sort().map(date=>`<div class="daygroup ${date===todayISO()?'today':''}"><div class="daygroup-head"><div class="daybadge">${day3(date)}<span>${mdy(date)}</span></div><div><b>${new Date(date+'T00:00:00').toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'})}</b><div class="small">${by[date].length} entr${by[date].length===1?'y':'ies'}</div></div></div>${by[date].map(s=>shiftCard(s,false)).join('')}</div>`).join('')
+};
+
+function saveBusinessLogo(id,file){
+  const b=businessById(id); if(!b||!file)return;
+  const r=new FileReader();
+  r.onload=()=>{b.logoData=r.result;save();renderSetup();render();updateSyncStatus('Business logo saved','ok');};
+  r.readAsDataURL(file);
+}
+function clearBusinessLogo(id){const b=businessById(id);if(!b)return;b.logoData='';save();renderSetup();render();updateSyncStatus('Business logo cleared','ok');}
+
+const __oldEnsureBusiness=ensureBusiness;
+ensureBusiness=function(b,i=0){b=__oldEnsureBusiness(b,i);if(!('logoData' in b))b.logoData='';return b;};
+state.businesses=state.businesses.map((b,i)=>ensureBusiness(b,i));saveSilent();
+
+const __oldBusinessSetupHtml=businessSetupHtml;
+businessSetupHtml=function(b,i){
+  let html=__oldBusinessSetupHtml(b,i);
+  const logoBlock=`<div class="row wrap" style="margin:10px 0"><div>${b.logoData?`<img class="business-logo-preview" src="${esc(b.logoData)}" alt="${esc(b.name)} logo">`:businessLogoHtml(b)}</div><label style="flex:1;min-width:180px">Business Logo<input type="file" accept="image/*" onchange="saveBusinessLogo('${b.id}',this.files[0])"></label>${b.logoData?`<button type="button" class="secondary" onclick="clearBusinessLogo('${b.id}')">Remove Logo</button>`:''}</div>`;
+  return html.replace('<div class="grid two">',logoBlock+'<div class="grid two">');
+};
+
+function businessSaveLabelHtml(b){return `${b.logoData?`<img src="${esc(b.logoData)}" alt="" style="width:22px;height:22px;border-radius:7px;object-fit:cover">`:''}<span>Save as Current for ${esc(b.name)}</span>`}
+const __oldDrawPreview=drawPreview;
+drawPreview=function(){const b=activeBusiness();document.getElementById('previewArea').innerHTML=`<div class="card"><div class="row between"><b>Parsed Preview</b><span class="pill">${parsedPreview.length} entries</span></div>${groupedScheduleHtml(parsedPreview)}<div class="grid two"><button onclick="importPreview()">${businessSaveLabelHtml(b)}</button><button class="secondary" onclick="appendPreview()">Add to Log Only</button></div></div>`};
+
+syncPayloadToGoogle=async function(days,successMsg,fullSync=false){
+  const url=String(state.settings.googleScriptUrl||'').trim(),secret=String(state.settings.googleScriptSecret||'').trim();
+  if(!url){updateSyncStatus('Add Apps Script URL in Setup','dirty');return;}
+  if(!secret){updateSyncStatus('Add secret key in Setup','dirty');return;}
+  if(!days.length){updateSyncStatus('No schedule days to sync','dirty');return;}
+  const payload=googleCalendarPayload(days,fullSync);
+  const body=JSON.stringify(payload);
+  setStatusProgress('Sending to Google Calendar...', 'working', 25, false);
+  let confirmed=false,lastError='';
   try{
+    setStatusProgress('Contacting Google Calendar...', 'working', 55, false);
     const res=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},body});
-    const txt=await res.text();
-    let data=null; try{data=JSON.parse(txt)}catch(e){}
+    const txt=await res.text();let data=null;try{data=JSON.parse(txt)}catch(e){}
     if(data&&data.ok===false)throw new Error(data.error||'Apps Script returned failure');
     if(!res.ok)throw new Error('HTTP '+res.status+' '+txt.slice(0,180));
-    updateSyncStatus(successMsg,'ok'); alert(successMsg); return;
-  }catch(e){
-    try{
-      const getUrl=buildGoogleSyncGetUrl(url,body);
-      if(getUrl.length>=7500)throw new Error('Payload too large for phone GET sync.');
-      postGoogleSyncViaHiddenGet(getUrl);
-      updateSyncStatus(successMsg,'ok'); alert(successMsg); return;
-    }catch(err){
-      updateSyncStatus('Google sync could not be sent','dirty');
-      alert('Google Calendar sync could not be sent. Details: '+(err&&err.message?err.message:err));
-    }
-  }
-}
-
-const oldScheduleDaysForSync=scheduleDaysForSync;
-scheduleDaysForSync=function(){return (state.shifts||[]).filter(s=>s&&s.date).map(scheduleDayForSync);};
-
-const oldGooglePayload=googleCalendarPayload;
-googleCalendarPayload=function(){
-  ensureSettingsDefaults();
-  const days=scheduleDaysForSync();
-  const dates=days.map(s=>s.date).sort();
-  return {
-    secret:state.settings.googleScriptSecret||'',
-    titlePrefix:state.settings.calendarTitlePrefix||state.settings.businessName||'Work',
-    defaultShiftHours:state.settings.defaultShiftHours||10,
-    source:'Work Schedule Manager HTML',
-    employeeName:state.settings.employeeName||'',
-    syncStart:dates[0]||'',
-    syncEnd:dates[dates.length-1]||'',
-    shifts:days
-  };
+    confirmed=true;
+  }catch(err){lastError=err&&err.message?err.message:String(err)}
+  if(confirmed){const msg=successMsg||`Google synced · ${days.length} schedules sent`;setStatusProgress(msg,'ok',100,true);return;}
+  try{
+    setStatusProgress('Sending via mobile fallback...', 'working', 70, false);
+    const getUrl=buildGoogleSyncGetUrl(url,body);
+    if(getUrl.length>=7500)throw new Error('Payload too large for phone GET sync. Reduce notes or sync fewer days.');
+    postGoogleSyncViaHiddenGet(getUrl);
+    const msg=successMsg||`Google sync sent · ${days.length} schedules sent`;
+    setStatusProgress(msg,'ok',100,true);
+  }catch(err){setStatusProgress('Google sync could not be sent','dirty',35,false);console.warn('Google sync failed',err,lastError);}
 };
 
-function shiftEditorHtml(s){
-  return `<div class="inline-editor" onclick="event.stopPropagation()">
-    <div class="grid two">
-      <label>Start Time
-        <select onchange="updateShiftField('${s.date}','start',this.value)">${hourOptions(s.start,false)}</select>
-      </label>
-      <label>End Time
-        <select onchange="updateShiftField('${s.date}','end',this.value)">${hourOptions(s.end,true)}</select>
-      </label>
-      <label>Location
-        <select onchange="updateShiftField('${s.date}','location',this.value)">${locationOptions(s.location||state.settings.defaultLocation||'')}</select>
-      </label>
-      <label>Notes
-        <textarea onchange="updateShiftField('${s.date}','notes',this.value)" placeholder="Notes...">${esc(s.notes||'')}</textarea>
-      </label>
-    </div>
-  </div>`;
+function logRows(){
+  const rows=[['Log Label','Imported At','Week Start','Business','Date','Day','Status','Start','End','Location','Notes','Hours','Gross','Net']];
+  (state.logs||[]).forEach(l=>{(l.shifts||[]).forEach(s=>{const c=calc(s);rows.push([l.label||'Schedule',l.importedAt||'',l.weekStart||'',businessName(s.businessId),s.date||'',s.day||day3(s.date),s.status||'',s.start||'',s.end||'',s.location||'',s.notes||'',c.hours.toFixed(2),c.gross.toFixed(2),c.net.toFixed(2)])})});
+  return rows;
 }
+function csvEscape(v){v=String(v??'');return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}
+function exportLogCSV(){downloadBlob(logRows().map(r=>r.map(csvEscape).join(',')).join('\n'),'schedule-log.csv','text/csv')}
+function exportLogExcel(){const html='<table>'+logRows().map(r=>'<tr>'+r.map(c=>'<td>'+esc(c)+'</td>').join('')+'</tr>').join('')+'</table>';downloadBlob(html,'schedule-log.xls','application/vnd.ms-excel')}
+function exportLogWord(){const body='<h1>Schedule Log</h1>'+logRows().map((r,i)=>i===0?'<h3>'+r.join(' | ')+'</h3>':'<p>'+r.map(esc).join(' | ')+'</p>').join('');downloadBlob('<html><body>'+body+'</body></html>','schedule-log.doc','application/msword')}
+function exportLogPDF(){const lines=logRows().map(r=>r.join(' | '));downloadBlob(makeSimplePDF(lines),'schedule-log.pdf','application/pdf')}
+function makeSimplePDF(lines){
+  const safe=lines.join('\n').replace(/[\\()]/g,'\\$&').slice(0,50000).split('\n');
+  let y=760,content='BT /F1 8 Tf 36 '+y+' Td ';
+  safe.forEach((line,i)=>{if(i>0){content+='0 -12 Td '}content+='('+line.slice(0,155)+') Tj ';});
+  content+='ET';
+  const objs=[];objs.push('1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj');objs.push('2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj');objs.push('3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >> endobj');objs.push('4 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj');objs.push('5 0 obj << /Length '+content.length+' >> stream\n'+content+'\nendstream endobj');let pdf='%PDF-1.4\n',xref=[];objs.forEach(o=>{xref.push(pdf.length);pdf+=o+'\n'});let start=pdf.length;pdf+='xref\n0 '+(objs.length+1)+'\n0000000000 65535 f \n';xref.forEach(x=>pdf+=String(x).padStart(10,'0')+' 00000 n \n');pdf+='trailer << /Size '+(objs.length+1)+' /Root 1 0 R >>\nstartxref\n'+start+'\n%%EOF';return pdf;
+}
+function logTextForImage(){return logRows().map(r=>r.join(' | ')).join('\n')}
+function exportLogImage(type){const dataUrl=makeScheduleImage(logTextForImage(),'Schedule Log',type);downloadDataUrl(dataUrl,`schedule-log.${type==='jpeg'?'jpg':'png'}`)}
+function exportLogMenuHtml(){return `<div class="log-export-menu"><button class="secondary" onclick="exportLogCSV()">CSV</button><button class="secondary" onclick="exportLogExcel()">Excel</button><button class="secondary" onclick="exportLogWord()">Word</button><button class="secondary" onclick="exportLogPDF()">PDF</button><button class="secondary" onclick="exportLogImage('png')">PNG</button><button class="secondary" onclick="exportLogImage('jpeg')">JPEG</button><button class="danger" onclick="clearLogs()">Clear</button></div>`}
+renderLog=function(){document.getElementById('log').innerHTML=`<div class="card"><div class="row between wrap"><h2>Schedule Log</h2>${exportLogMenuHtml()}</div><p class="notice">Imports and inline edits are saved here as a running log.</p></div>${(state.logs||[]).map((l,i)=>`<div class="card"><div class="row between"><div><b>${esc(l.label||'Schedule')}</b><div class="small">${new Date(l.importedAt).toLocaleString()} · Week ${esc(mdy(l.weekStart))}</div></div><button class="secondary" onclick="restoreLog(${i})">Restore</button></div><div class="raw">${esc((l.shifts||[]).map(s=>`${businessName(s.businessId)} | ${s.day||day3(s.date)} ${mdy(s.date)} | ${s.status==='Scheduled'?timeRange(s.start,s.end):s.status} | ${s.location||''} | ${s.notes||''}`).join('\n'))}</div></div>`).join('')||'<div class="card notice">No saved logs yet.</div>'}`};
 
-shiftCard=function(s,big){
-  const c=calc(s),isToday=s.date===todayISO(),off=s.status!=='Scheduled';
-  const isOpen=openShiftMenuDate===s.date;
-  const isEdit=openShiftEditorDate===s.date;
-  return `<div class="shift ${off?'off':''} ${isToday?'today':''}" tabindex="0" onclick="toggleShiftMenu('${s.date}')" onfocus="openShiftMenu('${s.date}')">
-    <div class="shift-head">
-      <div class="daybadge">${esc(s.day||day3(s.date))}<span>${esc(mdy(s.date))}</span></div>
-      <div class="shift-main">
-        <div class="shift-title">${off?esc(s.status||'Off'):esc(timeRange(s.start,s.end))}</div>
-        <div class="shift-meta">${esc(s.location||'')}${s.notes?' · '+esc(s.notes):''}</div>
-        ${!off?`<div class="shift-meta"><span class="pill">${c.hours.toFixed(1)} hrs</span> <span class="money">${money(c.net)} take-home est.</span></div>`:''}
-      </div>
-    </div>
-    ${isOpen?`<div class="shift-tools" onclick="event.stopPropagation()">
-      <div class="menu-row">
-        <button class="danger" onclick="setShiftOff('${s.date}')">Off</button>
-        <button class="secondary" onclick="openShiftEditor('${s.date}')">Edit</button>
-        <button class="secondary" onclick="syncOneDay('${s.date}')">Sync This Day</button>
-      </div>
-      ${isEdit?shiftEditorHtml(s):''}
-    </div>`:''}
-  </div>`;
+ensureHeaderShareMenu=function(){
+  const actions=document.querySelector('.top-actions');
+  if(!actions)return;
+  const btn=document.getElementById('shareMenuBtn');
+  if(btn){btn.onclick=function(e){e.stopPropagation();toggleSharePopover();};}
+  if(!document.getElementById('sharePopover')){const pop=document.createElement('div');pop.id='sharePopover';pop.className='share-popover hide';pop.onclick=function(e){e.stopPropagation();};document.body.appendChild(pop)}
 };
+ensureHeaderShareMenu();
 
-function scheduleShareLines(){
-  return (state.shifts||[]).slice().sort((a,b)=>a.date.localeCompare(b.date)).map(s=>{
-    const day=s.day||day3(s.date);
-    const date=mdy(s.date);
-    if(s.status!=='Scheduled') return `${day} | ${date} | OFF |  | `;
-    return `${day} | ${date} | ${fmtTime(s.start,true)||''} | ${s.end?fmtTime(s.end,true):''} | ${s.location||''}`;
-  }).join('\n');
-}
-async function shareScheduleText(){
-  const text=scheduleShareLines();
-  if(navigator.share){try{await navigator.share({title:'My Schedule',text});return;}catch(e){}}
-  try{await navigator.clipboard.writeText(text);alert('Schedule copied as text.');}
-  catch(e){alert(text);}
-}
-function drawScheduleCanvas(type='image/png'){
-  const lines=scheduleShareLines().split('\n');
-  const scale=2, width=900, lineH=42, pad=34, headerH=70;
-  const height=pad*2+headerH+lines.length*lineH;
-  const canvas=document.createElement('canvas'); canvas.width=width*scale; canvas.height=height*scale;
-  const ctx=canvas.getContext('2d'); ctx.scale(scale,scale);
-  ctx.fillStyle='#fffdf8'; ctx.fillRect(0,0,width,height);
-  ctx.strokeStyle='#ded8cc'; ctx.strokeRect(0,0,width,height);
-  ctx.fillStyle='#202124'; ctx.font='bold 28px Arial'; ctx.fillText(`${state.settings.employeeName||'My'} Schedule`,pad,pad+24);
-  ctx.fillStyle='#6b6f76'; ctx.font='16px Arial'; ctx.fillText(`${state.settings.businessName||''}`,pad,pad+50);
-  ctx.fillStyle='#315c49'; ctx.font='bold 17px Arial'; ctx.fillText('Day | Date | Start Time | End Time | Location',pad,pad+headerH);
-  ctx.fillStyle='#202124'; ctx.font='20px Arial';
-  let y=pad+headerH+lineH;
-  lines.forEach(line=>{ctx.fillText(line,pad,y); y+=lineH;});
-  return canvas;
-}
-async function shareScheduleImage(type){
-  const canvas=drawScheduleCanvas(type);
-  const ext=type==='image/jpeg'?'jpg':'png';
-  canvas.toBlob(async blob=>{
-    const file=new File([blob],`schedule.${ext}`,{type});
-    if(navigator.canShare&&navigator.canShare({files:[file]})){
-      try{await navigator.share({files:[file],title:'My Schedule'});return;}catch(e){}
-    }
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url;
-    a.download=`schedule.${ext}`;
-    a.click();
-    setTimeout(()=>URL.revokeObjectURL(url),800);
-  },type,0.92);
-}
 
-const oldRenderHome=renderHome;
-renderHome=function(){
-  const n=nextShift();const current=state.shifts.slice().sort((a,b)=>a.date.localeCompare(b.date));let k=summary(current);
-  document.getElementById('home').innerHTML=`
-<div class="card">
-  <div class="row between"><div><b>Next Shift</b><div class="notice">Tap any day below to edit, set Off, or sync that day.</div></div><button class="secondary" onclick="showTab('paste')">Paste New</button></div>
-  ${n?shiftCard(n,true):`<div class="shift off"><div class="shift-title">No upcoming scheduled shift</div><div class="notice">Paste or import your next schedule.</div></div>`}
-</div>
-<div class="kpis">
-  <div class="kpi"><span>Upcoming Hours</span><b>${k.hours.toFixed(1)}</b></div>
-  <div class="kpi"><span>Est. Gross</span><b>${money(k.gross)}</b></div>
-  <div class="kpi"><span>Est. Take Home</span><b>${money(k.net)}</b></div>
-  <div class="kpi"><span>Next Payday</span><b>${esc(k.payday?mdy(k.payday):'—')}</b></div>
-</div>
-<div class="card share-panel">
-  <div class="row between"><b>Share Schedule</b><span class="small">Day | Date | Start | End | Location</span></div>
-  <div class="grid three">
-    <button class="secondary" onclick="shareScheduleText()">Share Text</button>
-    <button class="secondary" onclick="shareScheduleImage('image/png')">Share PNG</button>
-    <button class="secondary" onclick="shareScheduleImage('image/jpeg')">Share JPEG</button>
-  </div>
-</div>
-<div class="card">
-  <div class="row between"><b>Upcoming / Current Schedule</b><div class="row wrap"><button class="secondary" onclick="syncToGoogleCalendar()">Sync Google</button><button class="secondary" onclick="downloadICS(state.shifts.filter(s=>s.status==='Scheduled'),'schedule_with_alerts.ics')">Add All to Calendar</button></div></div>
-  ${current.map(s=>shiftCard(s,false)).join('') || '<p class="notice">No schedule loaded.</p>'}
-</div>`;
-};
-
-const oldRenderSetup=renderSetup;
-renderSetup=function(){
-  oldRenderSetup();
-  const setup=document.getElementById('setup');
-  const cards=setup.querySelectorAll('.card');
-  if(cards.length>0 && !document.getElementById('locationsList')){
-    const locCard=document.createElement('div');
-    locCard.className='card';
-    locCard.innerHTML=`<h3>Locations</h3><p class="notice">One per line. These feed the home-screen Location dropdown.</p><textarea id="locationsList">${esc(state.settings.locations||'')}</textarea>`;
-    setup.insertBefore(locCard,cards[1]||null);
-    document.getElementById('locationsList').onchange=e=>{state.settings.locations=e.target.value;save();render();};
-  }
-};
-
-window.toggleShiftMenu=toggleShiftMenu;
-window.openShiftMenu=openShiftMenu;
-window.openShiftEditor=openShiftEditor;
-window.setShiftOff=setShiftOff;
-window.updateShiftField=updateShiftField;
-window.syncOneDay=syncOneDay;
-window.shareScheduleText=shareScheduleText;
-window.shareScheduleImage=shareScheduleImage;
-
-render();updateSyncStatus('Autosaved locally in this browser','');
+window.setHomeFilter=setHomeFilter;window.setPayFilter=setPayFilter;window.setShareFilter=setShareFilter;window.setPasteBusiness=setPasteBusiness;window.syncToGoogleCalendar=syncToGoogleCalendar;window.shiftsForFilter=shiftsForFilter;window.copyCompatibleAppsScript=copyCompatibleAppsScript;window.testGoogleCalendarPayload=testGoogleCalendarPayload;window.openGoogleSyncUrlManually=openGoogleSyncUrlManually;
+render();updateSyncStatus('Autosaved locally · versioned storage enabled','ok');
 </script>
 </body>
 </html>
