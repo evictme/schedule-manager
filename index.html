@@ -24,6 +24,12 @@
 .next-stack{display:grid;gap:8px;margin-top:10px}.shift-rank{width:30px;height:30px;border-radius:999px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--accent);flex:0 0 auto}.shift-logo{width:42px;height:42px;border-radius:13px;object-fit:cover;background:var(--accent2);border:1px solid var(--line);flex:0 0 auto}.shift-logo.letter{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;border-color:transparent}.next-left{display:flex;gap:8px;align-items:flex-start}.shift-head.next-clear{justify-content:flex-start}.shift-datebox{flex:0 0 auto}.log-export-menu{display:flex;gap:6px;overflow-x:auto;padding:4px 0}.log-export-menu button{white-space:nowrap}.business-logo-preview{width:48px;height:48px;border-radius:14px;object-fit:cover;border:1px solid var(--line);background:var(--accent2)}
 @media(max-width:430px){.sync{min-width:210px;font-size:10px}.shift-logo{width:38px;height:38px}.shift-rank{width:28px;height:28px}.log-export-menu{width:100%}}
 
+
+/* v12 mobile-first layout and drill-down menus */
+.mobile-menu-btn{display:none;margin-left:auto;border:1px solid var(--accent);background:#fff;color:var(--accent);border-radius:12px;min-width:42px;min-height:42px;padding:8px 10px;font-size:22px;line-height:1;font-weight:900}
+.mobile-header-menu{position:fixed;right:10px;top:72px;z-index:40;width:min(94vw,360px);background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 14px 38px rgba(0,0,0,.2);padding:12px}.mobile-header-menu.hide{display:none!important}.mobile-header-menu h3{margin:0 0 8px}.mobile-menu-list{display:grid;gap:8px}.mobile-menu-list button{width:100%;justify-content:flex-start}.mobile-menu-list .secondary{background:#fff}.setup-selector-card{position:sticky;top:74px;z-index:3}.setup-business-panel{display:grid;gap:10px}.setup-location-filter{margin-top:10px}.setup-selected-note{font-size:12px;color:var(--muted);margin-top:6px}.app,header .header-inner{width:100%;max-width:760px}.app{overflow-x:hidden}.card,.daygroup,.shift{max-width:100%}
+@media(max-width:430px){html,body{width:100%;overflow-x:hidden}.app{max-width:430px;margin:0 auto;padding:10px 10px 24px}.header-inner{max-width:430px}.top-actions{display:none}.mobile-menu-btn{display:inline-flex;align-items:center;justify-content:center}.share-popover,.mobile-header-menu{right:8px;left:8px;top:72px;width:auto}.sync{display:block;width:100%;min-width:0;max-width:calc(100vw - 86px);font-size:10px;white-space:nowrap;text-overflow:ellipsis}.header-inner>div:nth-child(2){min-width:0;flex:1}h1{font-size:17px}.sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.filterbar{padding-bottom:10px}.filterbar button{min-height:40px}.setup-selector-card{top:68px}.setup-business-panel .business-card{margin-top:8px}.business-card .grid.two{grid-template-columns:1fr}.location-filter-title{display:block;margin-bottom:6px}.row.between{align-items:flex-start}.kpis{grid-template-columns:1fr 1fr}.shift-head.next-clear,.shift-head{gap:8px}.next-left{gap:7px}.shift-datebox{min-width:52px;padding:7px 5px}.shift-logo{width:36px;height:36px}.shift-rank{width:26px;height:26px}.daybadge{min-width:50px}.log-export-menu{display:grid;grid-template-columns:repeat(2,1fr);overflow:visible}.log-export-menu button{width:100%}input,select,textarea,button,.btn{font-size:16px}.grid.three{grid-template-columns:1fr}.share-panel{display:none!important}}
+
 </style>
 </head>
 <body>
@@ -361,6 +367,137 @@ ensureHeaderShareMenu=function(){
 };
 ensureHeaderShareMenu();
 
+
+
+/* === v12 mobile-first overrides: burger header menu + setup drill-down selectors === */
+(function(){
+  function setStatusStable(msg){ if(typeof setStatusProgress==='function') setStatusProgress(msg||'Ready','ok',100,true); else updateSyncStatus(msg||'Ready','ok'); }
+
+  function ensureMobileHeaderMenu(){
+    const headerInner=document.querySelector('.header-inner');
+    if(!headerInner)return;
+    let btn=document.getElementById('mobileMenuBtn');
+    if(!btn){
+      btn=document.createElement('button');
+      btn.id='mobileMenuBtn';
+      btn.className='mobile-menu-btn';
+      btn.type='button';
+      btn.setAttribute('aria-label','Open actions menu');
+      btn.textContent='☰';
+      btn.onclick=function(e){e.stopPropagation();toggleMobileHeaderMenu();};
+      headerInner.appendChild(btn);
+    }
+    if(!document.getElementById('mobileHeaderMenu')){
+      const menu=document.createElement('div');
+      menu.id='mobileHeaderMenu';
+      menu.className='mobile-header-menu hide';
+      menu.onclick=function(e){e.stopPropagation();};
+      document.body.appendChild(menu);
+    }
+  }
+
+  function renderMobileHeaderMenu(open){
+    ensureMobileHeaderMenu();
+    const menu=document.getElementById('mobileHeaderMenu');
+    if(!menu)return;
+    menu.classList.toggle('hide',!open);
+    if(!open)return;
+    menu.innerHTML='<h3>Menu</h3><div class="mobile-menu-list">'
+      +'<button class="secondary" onclick="closeMobileHeaderMenu();document.getElementById(\'jsonImport\').click()">Import Backup JSON</button>'
+      +'<button class="secondary" onclick="closeMobileHeaderMenu();downloadJSON()">Download Backup</button>'
+      +'<button class="secondary" onclick="closeMobileHeaderMenu();toggleSharePopover()">Share Schedule</button>'
+      +'<button class="secondary" onclick="closeMobileHeaderMenu();syncToGoogleCalendar(\'ALL\')">Sync Google Calendar</button>'
+      +'<button class="secondary" onclick="closeMobileHeaderMenu();downloadICS(upcoming(state.settings.homeFilter||\'ALL\').filter(s=>s.status===\'Scheduled\'),\'upcoming_schedule.ics\')">Add All to Calendar</button>'
+      +'</div>';
+  }
+
+  window.toggleMobileHeaderMenu=function(){
+    const menu=document.getElementById('mobileHeaderMenu');
+    renderMobileHeaderMenu(!menu || menu.classList.contains('hide'));
+  };
+  window.closeMobileHeaderMenu=function(){ renderMobileHeaderMenu(false); };
+  document.addEventListener('click',function(e){
+    const menu=document.getElementById('mobileHeaderMenu');
+    const btn=document.getElementById('mobileMenuBtn');
+    if(menu && btn && !menu.classList.contains('hide') && !menu.contains(e.target) && e.target!==btn) closeMobileHeaderMenu();
+  });
+
+  function setupBusinessFilter(){return state.settings.setupBusinessFilter||'ALL'}
+  function setupLocationFilter(id){state.settings.setupLocationFilters=state.settings.setupLocationFilters||{};return state.settings.setupLocationFilters[id]||'ALL'}
+  window.setSetupBusinessFilter=function(id){state.settings.setupBusinessFilter=id;save();renderSetup();};
+  window.setSetupLocationFilter=function(businessId,loc){state.settings.setupLocationFilters=state.settings.setupLocationFilters||{};state.settings.setupLocationFilters[businessId]=loc;save();renderSetup();};
+
+  function escAttr(s){return String(s??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+  function businessLogoMini(b){return b&&b.logoData?'<img src="'+esc(b.logoData)+'" alt="" style="width:18px;height:18px;border-radius:6px;object-fit:cover">':''}
+  function locationDisplayColor(b,loc){return loc&&loc.useBusinessColor?b.color:(loc&&loc.color)||b.color||'#315c49'}
+
+  function businessSelectorHtml(current){
+    let html='<div class="filterbar"><button class="'+(current==='ALL'?'active':'secondary')+'" onclick="setSetupBusinessFilter(\'ALL\')">All</button>';
+    state.businesses.forEach(function(b,i){
+      html+='<button class="'+(current===b.id?'active':'secondary')+'" onclick="setSetupBusinessFilter(\''+b.id+'\')">'+businessLogoMini(b)+' '+esc(b.name||('Business '+(i+1)))+'</button>';
+    });
+    return html+'</div>';
+  }
+
+  function locationSelectorHtml(b){
+    const current=setupLocationFilter(b.id);
+    let html='<div class="setup-location-filter"><b class="location-filter-title">Locations</b><div class="filterbar"><button class="'+(current==='ALL'?'active':'secondary')+'" onclick="setSetupLocationFilter(\''+b.id+'\',\'ALL\')">All</button>';
+    (b.locations||[]).forEach(function(loc,i){
+      const name=loc.name||('Location '+(i+1));
+      html+='<button class="'+(current===name?'active':'secondary')+'" onclick="setSetupLocationFilter(\''+b.id+'\',\''+escAttr(name)+'\')"><span class="color-dot" style="background:'+esc(locationDisplayColor(b,loc))+'"></span>'+esc(name)+'</button>';
+    });
+    return html+'</div><div class="setup-selected-note">Use the selector to focus one location or show all locations for this business.</div></div>';
+  }
+
+  function locationRowsHtmlFiltered(b){
+    const selected=setupLocationFilter(b.id);
+    const all=(b.locations||[]);
+    const rows=selected==='ALL'?all:all.filter(function(l){return l.name===selected});
+    if(!rows.length)return '<p class="notice">No matching location selected.</p>';
+    return rows.map(function(loc){
+      const originalIndex=all.findIndex(function(l){return l===loc});
+      const i=originalIndex>=0?originalIndex:0;
+      const useBiz=loc.useBusinessColor!==false&&!loc.color;
+      const pickerColor=useBiz?(b.color||'#315c49'):(loc.color||b.color||'#315c49');
+      return '<div class="grid three" style="align-items:end;margin:8px 0;padding:8px;border:1px solid var(--line);border-radius:12px;background:#fff">'
+        +'<label>Location Name<input value="'+esc(loc.name)+'" onchange="updateLocationName(\''+b.id+'\','+i+',this.value)"></label>'
+        +'<label>Location Color<input type="color" value="'+esc(pickerColor)+'" '+(useBiz?'disabled':'')+' onchange="updateLocationColor(\''+b.id+'\','+i+',this.value)"></label>'
+        +'<label style="gap:8px"><span>Color Mode</span><button type="button" class="secondary" onclick="toggleLocationBusinessColor(\''+b.id+'\','+i+')">'+(useBiz?'Using Workplace Color':'Using Custom Color')+'</button></label>'
+        +'<button type="button" class="danger" onclick="deleteLocation(\''+b.id+'\','+i+')">Delete Location</button></div>';
+    }).join('');
+  }
+
+  const oldBusinessSetupHtmlForV12=businessSetupHtml;
+  businessSetupHtml=function(b,i){
+    let html=oldBusinessSetupHtmlForV12(b,i);
+    const start=html.indexOf('<div style="margin-top:12px"><div class="row between"><b>Locations</b>');
+    if(start===-1)return html;
+    const end=html.lastIndexOf('</div></div>');
+    if(end===-1)return html;
+    const locationBlock='<div style="margin-top:12px"><div class="row between"><b>Locations</b><button type="button" class="secondary" onclick="addLocation(\''+b.id+'\')">Add Location</button></div><p class="small">Scheduled shift color uses the location color. If a location uses workplace color, it follows the business color automatically.</p>'+locationSelectorHtml(b)+locationRowsHtmlFiltered(b)+'</div>';
+    return html.slice(0,start)+locationBlock+html.slice(end+6);
+  };
+
+  renderSetup=function(){
+    const selected=setupBusinessFilter();
+    const businesses=selected==='ALL'?state.businesses:state.businesses.filter(function(b){return b.id===selected});
+    document.getElementById('setup').innerHTML='<div class="card setup-selector-card"><h2>Setup</h2><p class="notice"><b>Mobile-first setup:</b> choose All or one business to keep this screen manageable.</p>'
+      +businessSelectorHtml(selected)
+      +'<div class="grid two"><label>Your Name<input id="employeeName" value="'+esc(state.settings.employeeName)+'"></label><label>Logo Image<input type="file" id="logoFile" accept="image/*"></label></div></div>'
+      +'<div class="card"><div class="row between"><h3>Businesses</h3><button onclick="addBusiness()">Add Business</button></div><div class="setup-business-panel">'+businesses.map(function(b,i){return businessSetupHtml(b,i)}).join('')+'</div></div>'
+      +'<div class="card"><h3>Google Calendar Sync</h3><p class="notice">Optional. One Google Calendar for all businesses. Events include business-specific titles.</p><div class="grid"><label>Apps Script Web App URL<input id="googleScriptUrl" value="'+esc(state.settings.googleScriptUrl||'')+'"></label><label>Secret Key<input id="googleScriptSecret" value="'+esc(state.settings.googleScriptSecret||'')+'"></label></div><div class="grid two" style="margin-top:10px"><button onclick="syncToGoogleCalendar(\'ALL\')">Sync All Shifts</button><button class="secondary" onclick="testGoogleCalendarPayload()">Preview Payload</button><button class="secondary" onclick="copyCompatibleAppsScript()">Copy Apps Script</button><button class="secondary" onclick="openGoogleSyncUrlManually()">Open Sync URL</button></div></div>'
+      +'<div class="card"><h3>Data Backup / Restore</h3><p class="notice">The app autosaves locally to this browser. Download JSON before changing devices or clearing browser data.</p><div class="grid two"><button onclick="downloadJSON()">Download JSON</button><label class="btn secondary">Import JSON<input class="hide" type="file" id="jsonFile" accept="application/json"></label><button class="danger" onclick="resetAll()">Reset Example</button><button class="secondary" onclick="print()">Print</button></div></div>';
+    document.getElementById('employeeName').onchange=function(e){state.settings.employeeName=e.target.value;save();renderSetup()};
+    document.getElementById('logoFile').onchange=function(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=function(){state.settings.logoData=r.result;save();renderSetup()};r.readAsDataURL(f)};
+    ['googleScriptUrl','googleScriptSecret'].forEach(function(id){document.getElementById(id).onchange=function(e){state.settings[id]=e.target.value;save();renderSetup()}});
+    document.getElementById('jsonFile').onchange=function(e){importJSON(e.target.files[0])};
+  };
+
+  const oldRefreshHeaderForV12=refreshHeader;
+  refreshHeader=function(){oldRefreshHeaderForV12();ensureMobileHeaderMenu();};
+  ensureMobileHeaderMenu();
+  setStatusStable('Ready · autosaved locally');
+})();
 
 window.setHomeFilter=setHomeFilter;window.setPayFilter=setPayFilter;window.setShareFilter=setShareFilter;window.setPasteBusiness=setPasteBusiness;window.syncToGoogleCalendar=syncToGoogleCalendar;window.shiftsForFilter=shiftsForFilter;window.copyCompatibleAppsScript=copyCompatibleAppsScript;window.testGoogleCalendarPayload=testGoogleCalendarPayload;window.openGoogleSyncUrlManually=openGoogleSyncUrlManually;
 render();updateSyncStatus('Autosaved locally · versioned storage enabled','ok');
