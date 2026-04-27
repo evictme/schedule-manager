@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Personal Schedule Manager</title>
+<title>Work Schedule Manager</title>
 <style>
 :root{
   --bg:#f5f3ee;--card:#fffdf8;--ink:#202124;--muted:#6b6f76;--line:#ded8cc;
@@ -61,32 +61,32 @@ label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:800;
   <section id="setup" class="tab hide"></section>
 </div>
 <script>
-const STORE='personalScheduleManager.v1';
+const STORE='workScheduleManager.general.v1';
 const seedText=`Monday 4/27: OFF
 
-Tuesday: 4/28: 8am U of C
+Tuesday 4/28: 9am Main Location
 
-Wednesday 4/29: 8am U of C
+Wednesday 4/29: 9am Main Location
 
-Thursday 4/30: 10am Prep Shift
+Thursday 4/30: 10am Back Office
 
-Friday 5/1: 8am OFF
+Friday 5/1: 12pm-8pm Main Location
 
-Saturday 5/2: 11am-8:30pm (James Off)
-(Catering 3pm-7pm at U of C)
+Saturday 5/2: 11am-7pm Event Site
+(Training shift)
 
 Sunday 5/3: OFF`;
 const defaultState={
-  settings:{businessName:'The Fat Shallot',employeeName:'Edwin',logoData:'',hourlyRate:17,ilTax:.0495,ficaTax:.0765,federalTax:.10,payPeriodAnchor:'2026-04-20',payPeriodDays:14,paydayOffset:5,defaultShiftHours:9,defaultEndIfMissing:true,defaultLocation:'U of C',calendarTitlePrefix:'The Fat Shallot',googleScriptUrl:'',googleScriptSecret:''},
+  settings:{businessName:'My Workplace',employeeName:'Your Name',logoData:'',hourlyRate:15,ilTax:0,ficaTax:.0765,federalTax:0,payPeriodAnchor:'2026-04-20',payPeriodDays:14,paydayOffset:5,defaultShiftHours:8,defaultEndIfMissing:true,defaultLocation:'Main Location',calendarTitlePrefix:'Work',googleScriptUrl:'',googleScriptSecret:'',locations:'Main Location\nBack Office\nEvent Site\nRemote\nTraining'},
   currentWeekId:'',
   shifts:[
-    {date:'2026-04-27',day:'MON',start:'',end:'',status:'Off',location:'',notes:'Monday 4/27: OFF',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''},
-    {date:'2026-04-28',day:'TUE',start:'08:00',end:'',status:'Scheduled',location:'U of C',notes:'',source:seedText,importedAt:new Date().toISOString(),calendarEventId:'0a57efurv4cotpt0gfcerfuf30@google.com'},
-    {date:'2026-04-29',day:'WED',start:'08:00',end:'',status:'Scheduled',location:'U of C',notes:'',source:seedText,importedAt:new Date().toISOString(),calendarEventId:'dcb0d8220748puhons49v957hs@google.com'},
-    {date:'2026-04-30',day:'THU',start:'10:00',end:'',status:'Scheduled',location:'Prep Shift',notes:'',source:seedText,importedAt:new Date().toISOString(),calendarEventId:'7u8sqjjnfcbt39pq49bmcbo41k@google.com'},
-    {date:'2026-05-01',day:'FRI',start:'',end:'',status:'Off',location:'',notes:'Friday 5/1: 8am OFF',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''},
-    {date:'2026-05-02',day:'SAT',start:'11:00',end:'20:30',status:'Scheduled',location:'U of C',notes:'James Off | Catering 3pm-7pm at U of C',source:seedText,importedAt:new Date().toISOString(),calendarEventId:'02o75go01ia8bf7cdtto6b73v8@google.com'},
-    {date:'2026-05-03',day:'SUN',start:'',end:'',status:'Off',location:'',notes:'Sunday 5/3: OFF',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''}
+    {date:'2026-04-27',day:'MON',start:'',end:'',status:'Off',location:'',notes:'Sample off day',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''},
+    {date:'2026-04-28',day:'TUE',start:'09:00',end:'',status:'Scheduled',location:'Main Location',notes:'',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''},
+    {date:'2026-04-29',day:'WED',start:'09:00',end:'',status:'Scheduled',location:'Main Location',notes:'',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''},
+    {date:'2026-04-30',day:'THU',start:'10:00',end:'',status:'Scheduled',location:'Back Office',notes:'',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''},
+    {date:'2026-05-01',day:'FRI',start:'12:00',end:'20:00',status:'Scheduled',location:'Main Location',notes:'',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''},
+    {date:'2026-05-02',day:'SAT',start:'11:00',end:'19:00',status:'Scheduled',location:'Event Site',notes:'Training shift',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''},
+    {date:'2026-05-03',day:'SUN',start:'',end:'',status:'Off',location:'',notes:'Sample off day',source:seedText,importedAt:new Date().toISOString(),calendarEventId:''}
   ],
   logs:[]
 };
@@ -103,9 +103,9 @@ function save(){
   localStorage.setItem(STORE,JSON.stringify(state));
   dirty=true;
   refreshHeader();
-  updateSyncStatus('Autosaved locally · save to iCloud when done','dirty');
+  updateSyncStatus('Autosaved locally · saved in this browser · export backup if needed','dirty');
 }
-function markClean(msg='Saved to iCloud data file'){
+function markClean(msg='Saved to data file'){
   dirty=false;
   updateSyncStatus(msg,'ok');
 }
@@ -133,7 +133,7 @@ function nextShift(){return upcoming().find(s=>s.status==='Scheduled')||null}
 function weekId(shifts){const dates=shifts.map(s=>s.date).sort();return dates[0]||''}
 function makeLog(label,shifts,source){return{id:Date.now()+Math.random(),label,importedAt:new Date().toISOString(),weekStart:weekId(shifts),source:source||'',shifts:JSON.parse(JSON.stringify(shifts))}}
 function refreshHeader(){document.getElementById('title').textContent=state.settings.businessName||'Schedule Manager';document.getElementById('subtitle').textContent=`${state.settings.employeeName||'My'} schedule · ${state.shifts.length} saved entries`;const img=document.getElementById('logoImg');img.src=state.settings.logoData||svgLogo()}
-function svgLogo(){return 'data:image/svg+xml;utf8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96"><rect width="96" height="96" rx="24" fill="#e8f1ea"/><text x="48" y="57" text-anchor="middle" font-family="Arial" font-size="34" font-weight="700" fill="#315c49">FS</text></svg>`)}
+function svgLogo(){return 'data:image/svg+xml;utf8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96"><rect width="96" height="96" rx="24" fill="#e8f1ea"/><text x="48" y="57" text-anchor="middle" font-family="Arial" font-size="34" font-weight="700" fill="#315c49">WS</text></svg>`)}
 function showTab(id){document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));document.querySelectorAll('.tab').forEach(s=>s.classList.add('hide'));document.getElementById(id).classList.remove('hide');render();window.scrollTo({top:0,behavior:'smooth'})}
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));document.getElementById('quickIcs').onclick=()=>downloadICS(upcoming().filter(s=>s.status==='Scheduled'),'upcoming_schedule.ics');document.getElementById('icloudLoadBtn').onclick=loadICloudData;document.getElementById('icloudSaveBtn').onclick=saveICloudData;document.getElementById('googleSyncBtn').onclick=syncToGoogleCalendar;
 function render(){refreshHeader();renderHome();renderPaste();renderLog();renderPay();renderSetup()}
@@ -241,7 +241,7 @@ function parseScheduleText(txt){
     const oneTimeMatch=mainAfterDate.match(/\b(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b/i);
 
     // OFF only counts when it appears outside parentheses, in the main schedule text.
-    // This prevents notes like "(James Off)" from changing the employee schedule.
+    // This prevents notes like "(Training shift)" from changing the employee schedule.
     const isOffMain=/\boff\b|unavailable|not scheduled/i.test(mainAfterDate);
 
     if(dayMatch||dateMatch||timeRangeMatch||oneTimeMatch||isOffMain){
@@ -270,12 +270,12 @@ function parseScheduleText(txt){
 
       let loc='',notes='';
       if(status==='Scheduled'){
-        const known=['U of C','Prep Shift','Catering','Commissary','Event'];
+        const known=['Main Location','Back Office','Event Site','Remote','Training'];
         const knownMain=known.find(k=>clean.toLowerCase().includes(k.toLowerCase()));
         loc=knownMain||clean||state.settings.defaultLocation;
 
         // Parenthetical time/location details are secondary schedule notes, not separate shifts.
-        // Example: (Catering 3pm-7pm at U of C) stays as a note on the same day.
+        // Example: (Event Site 3pm-7pm at Main Location) stays as a note on the same day.
         notes=parenNotes.join(' | ');
       }else{
         loc='';
@@ -310,7 +310,7 @@ function renderLog(){document.getElementById('log').innerHTML=`<div class="card"
 function restoreLog(i){if(!confirm('Restore this schedule as current?'))return;state.shifts=JSON.parse(JSON.stringify(state.logs[i].shifts));state.currentWeekId=weekId(state.shifts);save();showTab('home')}
 function clearLogs(){if(confirm('Clear schedule log?')){state.logs=[];save();renderLog()}}
 function renderPay(){const rows=state.shifts.filter(s=>s.status==='Scheduled').map(s=>({...s,...calc(s),pp:payPeriod(s.date)}));const sum=summary(state.shifts);document.getElementById('pay').innerHTML=`<div class="card"><h2>Pay Estimate</h2><div class="kpis"><div class="kpi"><span>Hours</span><b>${sum.hours.toFixed(1)}</b></div><div class="kpi"><span>Gross</span><b>${money(sum.gross)}</b></div><div class="kpi"><span>Taxes</span><b>${money(sum.gross-sum.net)}</b></div><div class="kpi"><span>Take Home</span><b>${money(sum.net)}</b></div></div></div><div class="card"><table class="table"><thead><tr><th>Shift</th><th>Hrs</th><th>Gross</th><th>Net</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.day)} ${esc(mdy(r.date))}<br><span class="small">${esc(timeRange(r.start,r.end))}</span></td><td>${r.hours.toFixed(1)}</td><td>${money(r.gross)}</td><td>${money(r.net)}</td></tr>`).join('')}</tbody></table></div><div class="card"><b>Tax Settings Used</b><p class="notice">IL ${(state.settings.ilTax*100).toFixed(2)}% · FICA ${(state.settings.ficaTax*100).toFixed(2)}% · Federal ${(state.settings.federalTax*100).toFixed(2)}% · Hourly ${money(state.settings.hourlyRate)}</p></div>`}
-function renderSetup(){let s=state.settings;document.getElementById('setup').innerHTML=`<div class="card"><h2>Setup</h2><div class="grid"><label>Business Name <input id="businessName" value="${esc(s.businessName)}"></label><label>Your Name <input id="employeeName" value="${esc(s.employeeName)}"></label><label>Logo Image <input type="file" id="logoFile" accept="image/*"></label></div></div><div class="card"><h3>Google Calendar Sync</h3><p class="notice">Sync scheduled shifts to your Google Calendar through your Apps Script web app. This test version uses hidden iframe sync on iPhone so it does not open the Apps Script pop-up/tab.</p><div class="grid"><label>Apps Script Web App URL <input id="googleScriptUrl" value="${esc(s.googleScriptUrl||'')}"></label><label>Secret Key <input id="googleScriptSecret" value="${esc(s.googleScriptSecret||'')}"></label><label>Calendar Event Title Prefix <input id="calendarTitlePrefix" value="${esc(s.calendarTitlePrefix||'Work')}"></label></div><div class="grid two" style="margin-top:10px"><button id="setupGoogleSyncBtn" type="button">Sync Scheduled Shifts</button><button id="previewGooglePayloadBtn" class="secondary" type="button">Preview Payload</button><button id="copyAppsScriptFixBtn" class="secondary" type="button">Copy Apps Script v6</button><button id="openGoogleSyncUrlBtn" class="secondary" type="button">Open Sync URL</button></div><p class="small">Hidden iframe sync cannot read the Apps Script response. It now sends Scheduled and Off days so Google Calendar can update or delete matching shift events.</p></div><div class="card"><h3>Pay / Tax Formulas</h3><div class="grid two"><label>Hourly Rate <input id="hourlyRate" type="number" step="0.01" value="${s.hourlyRate}"></label><label>Default Shift Hours <input id="defaultShiftHours" type="number" step="0.25" value="${s.defaultShiftHours}"></label><label>IL Tax Rate <input id="ilTax" type="number" step="0.0001" value="${s.ilTax}"></label><label>FICA Tax Rate <input id="ficaTax" type="number" step="0.0001" value="${s.ficaTax}"></label><label>Federal Tax Rate <input id="federalTax" type="number" step="0.0001" value="${s.federalTax}"></label><label>Default Location <input id="defaultLocation" value="${esc(s.defaultLocation)}"></label><label>Pay Period Anchor <input id="payPeriodAnchor" type="date" value="${esc(s.payPeriodAnchor)}"></label><label>Payday Offset Days <input id="paydayOffset" type="number" value="${s.paydayOffset}"></label></div></div><div class="card"><h3>iCloud Data File</h3><p class="notice">Keep this HTML file and <b>data.json</b> in your iCloud Drive / Schedule folder. The app autosaves locally while you work. Use Load Data File to pull from iCloud and Save Data File to write/download the current data file.</p><div class="grid two"><button onclick="loadICloudData()">Load Data File</button><button onclick="saveICloudData()">Save Data File</button></div><input class="hide" type="file" id="icloudJsonFile" accept="application/json"></div><div class="card"><h3>Data</h3><div class="grid two"><button onclick="downloadJSON()">Backup JSON</button><label class="btn secondary">Import JSON <input class="hide" type="file" id="jsonFile" accept="application/json"></label><button class="danger" onclick="resetAll()">Reset Example</button><button class="secondary" onclick="print()">Print</button></div></div>`;['businessName','employeeName','hourlyRate','defaultShiftHours','ilTax','ficaTax','federalTax','defaultLocation','payPeriodAnchor','paydayOffset','googleScriptUrl','googleScriptSecret','calendarTitlePrefix'].forEach(id=>document.getElementById(id).onchange=e=>{state.settings[id]=e.target.type==='number'?Number(e.target.value):e.target.value;save();render()});document.getElementById('logoFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{state.settings.logoData=r.result;save();render()};r.readAsDataURL(f)};document.getElementById('jsonFile').onchange=e=>importJSON(e.target.files[0]);const syncBtn=document.getElementById('setupGoogleSyncBtn');if(syncBtn)syncBtn.onclick=syncToGoogleCalendar;const prevBtn=document.getElementById('previewGooglePayloadBtn');if(prevBtn)prevBtn.onclick=testGoogleCalendarPayload;const fixBtn=document.getElementById('copyAppsScriptFixBtn');if(fixBtn)fixBtn.onclick=copyCompatibleAppsScript;const openBtn=document.getElementById('openGoogleSyncUrlBtn');if(openBtn)openBtn.onclick=openGoogleSyncUrlManually;const ic=document.getElementById('icloudJsonFile');if(ic)ic.onchange=e=>loadSelectedICloudFile(e.target.files[0])}
+function renderSetup(){let s=state.settings;document.getElementById('setup').innerHTML=`<div class="card"><h2>Setup</h2><p class="notice"><b>First use:</b> enter your workplace name, your name, default location, hourly rate, tax assumptions, and optional Google Calendar sync details. These settings are saved privately in this browser.</p><div class="grid"><label>Business Name <input id="businessName" value="${esc(s.businessName)}"></label><label>Your Name <input id="employeeName" value="${esc(s.employeeName)}"></label><label>Logo Image <input type="file" id="logoFile" accept="image/*"></label></div></div><div class="card"><h3>Google Calendar Sync</h3><p class="notice">Optional: sync shifts to your own Google Calendar using your own Google Apps Script web app. Leave these blank if you only want local tracking and export/share tools.</p><div class="grid"><label>Apps Script Web App URL <input id="googleScriptUrl" value="${esc(s.googleScriptUrl||'')}"></label><label>Secret Key <input id="googleScriptSecret" value="${esc(s.googleScriptSecret||'')}"></label><label>Calendar Event Title Prefix <input id="calendarTitlePrefix" value="${esc(s.calendarTitlePrefix||'Work')}"></label></div><div class="grid two" style="margin-top:10px"><button id="setupGoogleSyncBtn" type="button">Sync Scheduled Shifts</button><button id="previewGooglePayloadBtn" class="secondary" type="button">Preview Payload</button><button id="copyAppsScriptFixBtn" class="secondary" type="button">Copy Apps Script v6</button><button id="openGoogleSyncUrlBtn" class="secondary" type="button">Open Sync URL</button></div><p class="small">Setup requires your own Calendar ID, Apps Script web app URL, and secret key. Sync sends Scheduled and Off days so Google Calendar can create, update, or delete matching shift events.</p></div><div class="card"><h3>Pay / Tax Formulas</h3><div class="grid two"><label>Hourly Rate <input id="hourlyRate" type="number" step="0.01" value="${s.hourlyRate}"></label><label>Default Shift Hours <input id="defaultShiftHours" type="number" step="0.25" value="${s.defaultShiftHours}"></label><label>IL Tax Rate <input id="ilTax" type="number" step="0.0001" value="${s.ilTax}"></label><label>FICA Tax Rate <input id="ficaTax" type="number" step="0.0001" value="${s.ficaTax}"></label><label>Federal Tax Rate <input id="federalTax" type="number" step="0.0001" value="${s.federalTax}"></label><label>Default Location <input id="defaultLocation" value="${esc(s.defaultLocation)}"></label><label>Pay Period Anchor <input id="payPeriodAnchor" type="date" value="${esc(s.payPeriodAnchor)}"></label><label>Payday Offset Days <input id="paydayOffset" type="number" value="${s.paydayOffset}"></label></div></div><div class="card"><h3>Data Backup / Restore</h3><p class="notice">The app autosaves to this browser. Use Download JSON to keep a copy or Import JSON to move your schedule to another device/browser.</p><div class="grid two"><button onclick="loadICloudData()">Import Backup</button><button onclick="saveICloudData()">Download Backup</button></div><input class="hide" type="file" id="icloudJsonFile" accept="application/json"></div><div class="card"><h3>Data</h3><div class="grid two"><button onclick="downloadJSON()">Download JSON</button><label class="btn secondary">Import JSON <input class="hide" type="file" id="jsonFile" accept="application/json"></label><button class="danger" onclick="resetAll()">Reset Example</button><button class="secondary" onclick="print()">Print</button></div></div>`;['businessName','employeeName','hourlyRate','defaultShiftHours','ilTax','ficaTax','federalTax','defaultLocation','payPeriodAnchor','paydayOffset','googleScriptUrl','googleScriptSecret','calendarTitlePrefix'].forEach(id=>document.getElementById(id).onchange=e=>{state.settings[id]=e.target.type==='number'?Number(e.target.value):e.target.value;save();render()});document.getElementById('logoFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{state.settings.logoData=r.result;save();render()};r.readAsDataURL(f)};document.getElementById('jsonFile').onchange=e=>importJSON(e.target.files[0]);const syncBtn=document.getElementById('setupGoogleSyncBtn');if(syncBtn)syncBtn.onclick=syncToGoogleCalendar;const prevBtn=document.getElementById('previewGooglePayloadBtn');if(prevBtn)prevBtn.onclick=testGoogleCalendarPayload;const fixBtn=document.getElementById('copyAppsScriptFixBtn');if(fixBtn)fixBtn.onclick=copyCompatibleAppsScript;const openBtn=document.getElementById('openGoogleSyncUrlBtn');if(openBtn)openBtn.onclick=openGoogleSyncUrlManually;const ic=document.getElementById('icloudJsonFile');if(ic)ic.onchange=e=>loadSelectedICloudFile(e.target.files[0])}
 
 async function loadICloudData(){
   // Best case: browsers that support File System Access API keep a writable handle.
@@ -339,7 +339,7 @@ async function loadICloudData(){
   // iPhone/Safari fallback: use a normal file picker.
   const picker=document.getElementById('icloudJsonFile');
   if(picker){ picker.value=''; picker.click(); }
-  else alert('Use Setup > Load Data File.');
+  else alert('Use Setup > Import Backup.');
 }
 function loadSelectedICloudFile(file){
   if(!file)return;
@@ -374,8 +374,8 @@ async function saveICloudData(){
   }
   // Fallback for iPhone/Safari: download the updated data.json.
   downloadBlob(text,'data.json','application/json');
-  markClean('Downloaded updated data.json · move/replace it in iCloud Drive / Schedule','dirty');
-  alert('Your updated data.json was downloaded. On iPhone, save/move it into iCloud Drive > Schedule and replace the old data.json file.');
+  markClean('Downloaded data.json backup','dirty');
+  alert('Your updated data.json backup was downloaded. Keep it somewhere safe or import it on another device/browser.');
 }
 
 
@@ -431,7 +431,7 @@ function handleRequest(e) {
       const end = makeDateTime(shift.date, shift.end || addHoursToTime(shift.start, payload.defaultShiftHours || 9));
       const title = (payload.titlePrefix || "Work") + " " + (shift.location || "Shift");
       const marker = makeMarker(shift.date, employeeName);
-      const description = marker + "\nImported from Personal Schedule Manager\n\nNotes: " + (shift.notes || "");
+      const description = marker + "\nImported from Work Schedule Manager\n\nNotes: " + (shift.notes || "");
 
       let event = managedEvents.length ? managedEvents[0] : null;
       if (event) {
@@ -505,7 +505,7 @@ function removeUnlistedManagedEvents(calendar, payload, employeeName) {
 
   events.forEach(function(event) {
     const desc = event.getDescription() || "";
-    if (desc.indexOf("Imported from Personal Schedule Manager") === -1) return;
+    if (desc.indexOf("Imported from Work Schedule Manager") === -1) return;
 
     const eventDate = Utilities.formatDate(event.getStartTime(), Session.getScriptTimeZone(), "yyyy-MM-dd");
     if (!keepDates[eventDate]) {
@@ -525,7 +525,7 @@ function findManagedEventsForDate(calendar, dateStr, employeeName) {
     if (
       desc.indexOf(marker) !== -1 ||
       desc.indexOf(legacyStart) !== -1 ||
-      desc.indexOf("Imported from Personal Schedule Manager") !== -1
+      desc.indexOf("Imported from Work Schedule Manager") !== -1
     ) {
       found.push(event);
     }
@@ -595,7 +595,7 @@ function googleCalendarPayload(){
     secret:state.settings.googleScriptSecret||'',
     titlePrefix:state.settings.calendarTitlePrefix||state.settings.businessName||'Work',
     defaultShiftHours:state.settings.defaultShiftHours||9,
-    source:'Personal Schedule Manager HTML',
+    source:'Work Schedule Manager HTML',
     employeeName:state.settings.employeeName||'',
     syncStart:dates[0]||'',
     syncEnd:dates[dates.length-1]||'',
@@ -738,13 +738,13 @@ function testGoogleCalendarPayload(){
   else alert(preview.slice(0,2000));
 }
 
-function downloadJSON(){downloadBlob(JSON.stringify(state,null,2),'personal-schedule-manager.json','application/json')}
+function downloadJSON(){downloadBlob(JSON.stringify(state,null,2),'work-schedule-manager.json','application/json')}
 function importJSON(file){if(!file)return;const r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);save();render()}catch(e){alert('Invalid JSON')}};r.readAsText(file)}
 function resetAll(){if(confirm('Reset to spreadsheet example?')){state=JSON.parse(JSON.stringify(defaultState));state.currentWeekId=weekId(state.shifts);state.logs=[makeLog('Initial spreadsheet example',state.shifts,seedText)];save();render()}}
 function calendarTitle(s){return `${state.settings.calendarTitlePrefix||'Work'} ${s.location||'Shift'}`.trim()}
 function icsDate(iso,time){return iso.replace(/-/g,'')+'T'+(time||'09:00').replace(':','')+'00'}
-function makeICS(shifts){let lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Personal Schedule Manager//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:Work Schedule','X-WR-TIMEZONE:America/Chicago'];shifts.forEach(s=>{if(s.status!=='Scheduled'||!s.start)return;let end=s.end||numToTime(timeToNum(s.start)+state.settings.defaultShiftHours);lines.push('BEGIN:VEVENT',`UID:${stableUID(s)}`,`DTSTAMP:${new Date().toISOString().replace(/[-:]/g,'').split('.')[0]}Z`,`DTSTART:${icsDate(s.date,s.start)}`,`DTEND:${icsDate(s.date,end)}`,`SUMMARY:${escapeICS(calendarTitle(s))}`,`LOCATION:${escapeICS(s.location||'')}`,`DESCRIPTION:${escapeICS((s.notes||'')+'\n\nImported from Personal Schedule Manager')}`,'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Work shift starts in 2 hours','TRIGGER:-PT2H','END:VALARM','BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Work shift starts in 1 hour','TRIGGER:-PT1H','END:VALARM','END:VEVENT')});lines.push('END:VCALENDAR');return lines.join('\r\n')}
-function stableUID(s){return `${s.date}-${s.start}-${(s.location||'shift').replace(/[^a-z0-9]/gi,'')}@personal-schedule-manager.local`}
+function makeICS(shifts){let lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Work Schedule Manager//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:Work Schedule','X-WR-TIMEZONE:America/Chicago'];shifts.forEach(s=>{if(s.status!=='Scheduled'||!s.start)return;let end=s.end||numToTime(timeToNum(s.start)+state.settings.defaultShiftHours);lines.push('BEGIN:VEVENT',`UID:${stableUID(s)}`,`DTSTAMP:${new Date().toISOString().replace(/[-:]/g,'').split('.')[0]}Z`,`DTSTART:${icsDate(s.date,s.start)}`,`DTEND:${icsDate(s.date,end)}`,`SUMMARY:${escapeICS(calendarTitle(s))}`,`LOCATION:${escapeICS(s.location||'')}`,`DESCRIPTION:${escapeICS((s.notes||'')+'\n\nImported from Work Schedule Manager')}`,'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Work shift starts in 2 hours','TRIGGER:-PT2H','END:VALARM','BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Work shift starts in 1 hour','TRIGGER:-PT1H','END:VALARM','END:VEVENT')});lines.push('END:VCALENDAR');return lines.join('\r\n')}
+function stableUID(s){return `${s.date}-${s.start}-${(s.location||'shift').replace(/[^a-z0-9]/gi,'')}@work-schedule-manager.local`}
 function numToTime(n){n=((n%24)+24)%24;let h=Math.floor(n),m=Math.round((n-h)*60);return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`}
 function escapeICS(s){return String(s||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;')}
 function downloadICS(shifts,name){const valid=(shifts||[]).filter(Boolean).filter(s=>s.status==='Scheduled'&&s.start);if(!valid.length)return alert('No scheduled shifts with start times to export.');downloadBlob(makeICS(valid),name||'schedule.ics','text/calendar')}
@@ -763,7 +763,7 @@ let openShiftEditorDate=null;
     state.settings.defaultShiftHours=10;
   }
   if(!state.settings.locations){
-    state.settings.locations='U of C\nPrep Shift\nCatering\nCommissary\nEvent';
+    state.settings.locations='Main Location\nBack Office\nEvent Site\nRemote\nTraining';
   }
   localStorage.setItem(STORE,JSON.stringify(state));
 })();
@@ -777,7 +777,7 @@ function allAvailableLocations(){
   String(state.settings.locations||'').split(/[\n,]+/).forEach(add);
   add(state.settings.defaultLocation);
   (state.shifts||[]).forEach(s=>add(s.location));
-  ['U of C','Prep Shift','Catering','Commissary','Event'].forEach(add);
+  ['Main Location','Back Office','Event Site','Remote','Training'].forEach(add);
   return found;
 }
 
@@ -874,7 +874,7 @@ async function syncPayloadToGoogle(days,successMsg){
     secret:state.settings.googleScriptSecret||'',
     titlePrefix:state.settings.calendarTitlePrefix||state.settings.businessName||'Work',
     defaultShiftHours:state.settings.defaultShiftHours||10,
-    source:'Personal Schedule Manager HTML',
+    source:'Work Schedule Manager HTML',
     employeeName:state.settings.employeeName||'',
     syncStart:dates[0]||'',
     syncEnd:dates[dates.length-1]||'',
@@ -914,7 +914,7 @@ googleCalendarPayload=function(){
     secret:state.settings.googleScriptSecret||'',
     titlePrefix:state.settings.calendarTitlePrefix||state.settings.businessName||'Work',
     defaultShiftHours:state.settings.defaultShiftHours||10,
-    source:'Personal Schedule Manager HTML',
+    source:'Work Schedule Manager HTML',
     employeeName:state.settings.employeeName||'',
     syncStart:dates[0]||'',
     syncEnd:dates[dates.length-1]||'',
@@ -1063,7 +1063,7 @@ window.syncOneDay=syncOneDay;
 window.shareScheduleText=shareScheduleText;
 window.shareScheduleImage=shareScheduleImage;
 
-render();updateSyncStatus('Autosaved locally · iCloud file not loaded yet','');
+render();updateSyncStatus('Autosaved locally in this browser','');
 </script>
 </body>
 </html>
