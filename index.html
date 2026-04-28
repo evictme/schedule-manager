@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Work Schedule Manager</title>
+<title>Work Schedule Manager v13</title>
 <style>
 :root{--bg:#f5f3ee;--card:#fffdf8;--ink:#202124;--muted:#6b6f76;--line:#ded8cc;--accent:#315c49;--accent2:#e8f1ea;--bad:#a33a3a;--badbg:#fff0f0;--good:#246b45;--warn:#8a5a1b;--shadow:0 4px 18px rgba(30,35,32,.08);--radius:18px}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-size:16px}body{padding-bottom:88px}.app{max-width:760px;margin:0 auto;padding:14px 12px 24px}header{position:sticky;top:0;z-index:5;background:linear-gradient(#fffdf8 70%,rgba(255,253,248,.92));border-bottom:1px solid var(--line);padding:12px 12px 10px;box-shadow:0 1px 10px rgba(0,0,0,.04)}.header-inner{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:10px}.logo{width:42px;height:42px;border-radius:14px;background:var(--accent2);object-fit:cover;border:1px solid var(--line)}h1{font-size:18px;line-height:1.1;margin:0}h2,h3{margin:0 0 10px}.sub{font-size:12px;color:var(--muted);margin-top:2px}.sync{font-size:11px;color:var(--muted);margin-top:2px}.sync.dirty{color:var(--warn);font-weight:800}.sync.ok{color:var(--good);font-weight:800}.top-actions{margin-left:auto;display:flex;gap:6px}.top-actions button{padding:8px 9px;font-size:13px}nav{position:fixed;left:0;right:0;bottom:0;z-index:10;background:#fffdf8;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:7px 7px calc(7px + env(safe-area-inset-bottom));box-shadow:0 -4px 16px rgba(0,0,0,.08)}nav button{border:0;background:transparent;color:var(--muted);padding:7px 2px;border-radius:12px;font-size:11px;font-weight:700;display:flex;flex-direction:column;gap:2px;align-items:center}nav button.active{background:var(--accent2);color:var(--accent)}nav span{font-size:18px;line-height:1}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;margin:12px 0}.row{display:flex;gap:8px;align-items:center}.row.wrap{flex-wrap:wrap}.between{justify-content:space-between}.grid{display:grid;gap:10px}.grid.two{grid-template-columns:1fr 1fr}.grid.three{grid-template-columns:repeat(3,1fr)}label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:800;color:#384139}input,select,textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px;background:#fff;color:var(--ink);font:inherit;min-height:44px}input[type=color]{padding:4px;height:44px}textarea{min-height:120px;resize:vertical;line-height:1.35}button,.btn{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:12px;padding:11px 13px;font-weight:800;font:inherit;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:42px}button.secondary,.btn.secondary{background:#fff;color:var(--accent)}button.danger{background:#fff;color:var(--bad);border-color:var(--bad)}button.warn{background:#fff;color:var(--warn);border-color:var(--warn)}button:disabled{opacity:.45}.full{width:100%}.hide{display:none!important}.notice{font-size:13px;color:var(--muted);line-height:1.35}.small{font-size:12px;color:var(--muted)}.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.kpi{background:var(--accent2);border-radius:15px;padding:10px}.kpi b{font-size:20px;display:block}.kpi span{font-size:12px;color:var(--muted);font-weight:700}.filterbar{display:flex;gap:6px;overflow-x:auto;padding:4px 0 8px}.filterbar button{white-space:nowrap;min-height:36px;padding:8px 11px;font-size:13px}.filterbar button.active{background:var(--accent);color:#fff}.daygroup{border:1px solid var(--line);border-radius:18px;background:#fff;padding:10px;margin:10px 0}.daygroup.today{outline:2px solid var(--accent)}.daygroup-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}.daybadge{min-width:54px;text-align:center;background:var(--accent2);border-radius:12px;padding:7px 6px;font-weight:900}.daybadge span{display:block;font-size:11px;color:var(--muted);font-weight:800}.shift{border:1px solid var(--line);border-left:8px solid var(--accent);border-radius:16px;background:#fff;padding:12px;margin:8px 0;cursor:pointer}.shift.off{background:var(--badbg);border-left-color:var(--bad);border-color:#efc7c7}.shift:focus{outline:2px solid var(--accent);outline-offset:2px}.shift-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.shift-main{flex:1}.shift-title{font-size:17px;font-weight:900}.shift-meta{font-size:13px;color:var(--muted);margin-top:3px}.money{font-variant-numeric:tabular-nums;font-weight:900}.pill{display:inline-block;border-radius:999px;background:var(--accent2);padding:3px 8px;font-size:12px;font-weight:800;color:var(--accent)}.pill.bad{background:#ffe1e1;color:var(--bad)}.pill.color{color:#fff}.shift-tools{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.shift-tools .menu-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}.shift-tools button{width:100%;min-height:40px;padding:9px;font-size:13px}.inline-editor{background:#f8f5ee;border:1px solid var(--line);border-radius:14px;padding:10px;margin-top:8px}.inline-editor textarea{min-height:80px}.table{width:100%;border-collapse:separate;border-spacing:0 8px}.table th{font-size:11px;color:var(--muted);text-align:left}.table td{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px;font-size:13px}.table td:first-child{border-left:1px solid var(--line);border-radius:12px 0 0 12px}.table td:last-child{border-right:1px solid var(--line);border-radius:0 12px 12px 0}.raw{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px;max-height:260px;overflow:auto;font-size:12px}.business-card{border:1px solid var(--line);border-radius:16px;padding:12px;background:#fff;margin:10px 0}.color-dot{width:12px;height:12px;border-radius:999px;display:inline-block;border:1px solid rgba(0,0,0,.15)}.share-panel .grid{margin-top:10px}@media(max-width:430px){.app{padding:10px 9px 24px}.grid.two,.grid.three{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.card{padding:12px}.shift-title{font-size:16px}button,.btn{padding:10px 11px}.header-inner{gap:8px}.logo{width:38px;height:38px}.shift-tools .menu-row{grid-template-columns:1fr}.share-panel .grid.two{grid-template-columns:1fr}.top-actions{gap:4px}.top-actions button{padding:7px 7px;font-size:12px}}@media print{header,nav,.no-print{display:none!important}body{background:#fff}.app{max-width:100%;padding:0}.card{box-shadow:none;border:0}}
@@ -29,6 +29,46 @@
 .mobile-menu-btn{display:none;margin-left:auto;border:1px solid var(--accent);background:#fff;color:var(--accent);border-radius:12px;min-width:42px;min-height:42px;padding:8px 10px;font-size:22px;line-height:1;font-weight:900}
 .mobile-header-menu{position:fixed;right:10px;top:72px;z-index:40;width:min(94vw,360px);background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 14px 38px rgba(0,0,0,.2);padding:12px}.mobile-header-menu.hide{display:none!important}.mobile-header-menu h3{margin:0 0 8px}.mobile-menu-list{display:grid;gap:8px}.mobile-menu-list button{width:100%;justify-content:flex-start}.mobile-menu-list .secondary{background:#fff}.setup-selector-card{position:sticky;top:74px;z-index:3}.setup-business-panel{display:grid;gap:10px}.setup-location-filter{margin-top:10px}.setup-selected-note{font-size:12px;color:var(--muted);margin-top:6px}.app,header .header-inner{width:100%;max-width:760px}.app{overflow-x:hidden}.card,.daygroup,.shift{max-width:100%}
 @media(max-width:430px){html,body{width:100%;overflow-x:hidden}.app{max-width:430px;margin:0 auto;padding:10px 10px 24px}.header-inner{max-width:430px}.top-actions{display:none}.mobile-menu-btn{display:inline-flex;align-items:center;justify-content:center}.share-popover,.mobile-header-menu{right:8px;left:8px;top:72px;width:auto}.sync{display:block;width:100%;min-width:0;max-width:calc(100vw - 86px);font-size:10px;white-space:nowrap;text-overflow:ellipsis}.header-inner>div:nth-child(2){min-width:0;flex:1}h1{font-size:17px}.sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.filterbar{padding-bottom:10px}.filterbar button{min-height:40px}.setup-selector-card{top:68px}.setup-business-panel .business-card{margin-top:8px}.business-card .grid.two{grid-template-columns:1fr}.location-filter-title{display:block;margin-bottom:6px}.row.between{align-items:flex-start}.kpis{grid-template-columns:1fr 1fr}.shift-head.next-clear,.shift-head{gap:8px}.next-left{gap:7px}.shift-datebox{min-width:52px;padding:7px 5px}.shift-logo{width:36px;height:36px}.shift-rank{width:26px;height:26px}.daybadge{min-width:50px}.log-export-menu{display:grid;grid-template-columns:repeat(2,1fr);overflow:visible}.log-export-menu button{width:100%}input,select,textarea,button,.btn{font-size:16px}.grid.three{grid-template-columns:1fr}.share-panel{display:none!important}}
+
+
+
+/* === v13 mobile app polish: containment, collapsibles, swipe, menus, guide, exports === */
+html,body{max-width:100%;overflow-x:hidden}.app,header,.header-inner,.card,.business-card,.daygroup,.shift,.grid,.row,label,input,select,textarea,button,.btn{max-width:100%;min-width:0}.grid,.row{min-width:0}.card,.business-card,.daygroup,.shift{overflow:hidden}.setup-accordion,.setup-section,.swipe-row,.swipe-content,.shift-action-menu,.export-popover,.help-card{max-width:100%;min-width:0}.setup-business-header,.setup-section-header{width:100%;border:0;background:#fff;color:var(--ink);display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border-radius:14px;padding:12px}.setup-business-header{border:1px solid var(--line);box-shadow:var(--shadow)}.setup-business-title{display:flex;align-items:center;gap:10px;min-width:0;flex:1}.setup-business-title strong,.setup-section-header strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.setup-chevron{font-size:18px;color:var(--muted);flex:0 0 auto}.setup-section{border:1px solid var(--line);border-radius:15px;background:#fff;margin:10px 0;overflow:hidden}.setup-section-header{border-radius:0;background:#f8f5ee}.setup-section-body{padding:12px;border-top:1px solid var(--line)}.setup-summary{font-size:12px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.swipe-row{position:relative;overflow:hidden;border-radius:16px;margin:8px 0}.swipe-content{position:relative;z-index:2;background:transparent;transition:transform .22s ease}.swipe-action{position:absolute;right:0;top:0;bottom:0;width:92px;background:var(--bad);color:#fff;border:0;border-radius:0 16px 16px 0;display:flex;align-items:center;justify-content:center;font-weight:900;z-index:1}.swipe-row.swiped .swipe-content{transform:translateX(-92px)}.shift-action-button{margin-left:auto;min-width:38px;min-height:38px;padding:6px 9px;border-radius:999px;background:#fff;color:var(--accent);border:1px solid var(--line);font-size:18px;line-height:1}.shift-card-shell{position:relative}.shift-action-menu{position:absolute;right:12px;top:48px;background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 30px rgba(0,0,0,.18);padding:8px;z-index:20;display:grid;gap:7px;width:min(220px,calc(100vw - 48px))}.shift-action-menu button{justify-content:flex-start;width:100%;font-size:14px}.upcoming-toolbar{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}.export-popover{position:fixed;right:10px;top:82px;z-index:45;width:min(94vw,380px);background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 14px 38px rgba(0,0,0,.22);padding:12px}.export-popover.hide{display:none!important}.export-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.export-grid button{width:100%;font-size:13px}.help-page .card{overflow:visible}.help-card h3{margin-top:16px}.help-card ul,.help-card ol{padding-left:20px}.help-card li{margin:7px 0}.mobile-only-note{display:none}.danger-inline{color:var(--bad);font-weight:900}.business-card.collapsed{background:transparent;border:0;box-shadow:none;padding:0}.location-card{border:1px solid var(--line);border-radius:14px;background:#fff;padding:10px;margin:8px 0}.desktop-delete{margin-top:8px}
+@media(max-width:430px){.app{width:100%;max-width:430px;overflow-x:hidden}.grid,.grid.two,.grid.three{grid-template-columns:1fr!important}.row{flex-wrap:wrap}.row.between{align-items:flex-start}.filterbar{max-width:100%;overflow-x:auto}.business-card{padding:0;border:0;background:transparent;box-shadow:none}.setup-business-header{padding:11px}.setup-section-body{padding:10px}.swipe-action{width:86px}.swipe-row.swiped .swipe-content{transform:translateX(-86px)}.shift-head{align-items:flex-start}.shift-action-menu{right:8px;top:44px}.upcoming-toolbar{width:100%;justify-content:stretch}.upcoming-toolbar button{flex:1}.export-popover{left:8px;right:8px;top:74px;width:auto}.export-grid{grid-template-columns:1fr}.mobile-only-note{display:block}.desktop-delete{display:none!important}input,select,textarea,button,.btn{max-width:100%;min-width:0}.setup-selector-card{position:relative;top:auto}.share-panel{display:none!important}}
+
+
+@media (max-width: 430px) {
+  .row.between.setup-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+}
+
+/* FIX: allow shift cog menus to display above clipped shift cards */
+.shift.shift-card-shell {
+  overflow: visible !important;
+}
+
+.swipe-row:has(.shift-action-menu),
+.swipe-row:has(.shift-action-menu) .swipe-content,
+.daygroup:has(.shift-action-menu),
+.card:has(.shift-action-menu) {
+  overflow: visible !important;
+}
+
+.shift-action-menu {
+  z-index: 9999 !important;
+}
+
+
+
+/* === v13.3 definitive shift cog menu fix === */
+.shift-action-button{position:relative;z-index:50;pointer-events:auto!important;touch-action:manipulation}
+.shift-cog-popover{position:fixed;z-index:100000;background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 16px 42px rgba(0,0,0,.24);padding:10px;display:grid;gap:8px;width:min(250px,calc(100vw - 24px))}
+.shift-cog-popover button{width:100%;justify-content:flex-start;font-size:14px;min-height:42px}
+.shift-cog-popover-title{font-size:12px;font-weight:900;color:var(--muted);padding:2px 4px 6px}
+@media(max-width:430px){.shift-cog-popover{left:8px!important;right:8px!important;bottom:calc(74px + env(safe-area-inset-bottom))!important;top:auto!important;width:auto;border-radius:20px;padding:12px}.shift-cog-popover button{min-height:48px;font-size:16px}}
 
 </style>
 </head>
@@ -72,7 +112,24 @@ function render(){refreshHeader();if(activeTab==='home')renderHome();if(activeTa
 function filterButtons(current,handlerName,includeAll=true){let html='<div class="filterbar">';if(includeAll)html+=`<button class="${current==='ALL'?'active':'secondary'}" onclick="${handlerName}('ALL')">All</button>`;state.businesses.forEach(b=>html+=`<button class="${current===b.id?'active':'secondary'}" onclick="${handlerName}('${b.id}')"><span class="color-dot" style="background:${esc(b.color)}"></span>${esc(b.name)}</button>`);return html+'</div>'}function setHomeFilter(id){state.settings.homeFilter=id;openShiftId=null;openEditorId=null;save();renderHome()}function setPayFilter(id){state.settings.payFilter=id;save();renderPay()}function setShareFilter(id){state.settings.shareFilter=id;save();renderHome()}function setPasteBusiness(id){state.settings.activeBusinessId=id;parsedPreview=[];state.settings.pasteDrafts=state.settings.pasteDrafts||{};state.settings.pasteDrafts[id]=state.settings.pasteDrafts[id]||businessPasteText(id);save();renderPaste()}
 function renderHome(){const filter=state.settings.homeFilter||'ALL';const list=shiftsForFilter(filter);const n=nextShift(filter);const k=summary(list);document.getElementById('home').innerHTML=`<div class="card"><div class="row between"><div><b>Next Shift</b><div class="notice">Tap any shift to edit, set Off, or sync that day.</div></div><button class="secondary" onclick="showTab('paste')">Paste New</button></div>${filterButtons(filter,'setHomeFilter')}${n?shiftCard(n,true):`<div class="shift off"><div class="shift-title">No upcoming scheduled shift</div><div class="notice">Paste or import your next schedule.</div></div>`}</div><div class="kpis"><div class="kpi"><span>Hours</span><b>${k.hours.toFixed(1)}</b></div><div class="kpi"><span>Gross</span><b>${money(k.gross)}</b></div><div class="kpi"><span>Take Home</span><b>${money(k.net)}</b></div><div class="kpi"><span>Next Payday</span><b>${esc(k.payday?mdy(k.payday):'—')}</b></div></div><div class="card share-panel"><div class="row between"><b>Share Schedule</b><span class="small">Text / PNG / JPEG</span></div>${filterButtons(state.settings.shareFilter||'ALL','setShareFilter')}<div class="grid three"><button class="secondary" onclick="shareSchedule('text')">Share Text</button><button class="secondary" onclick="shareSchedule('png')">Share PNG</button><button class="secondary" onclick="shareSchedule('jpeg')">Share JPEG</button></div></div><div class="card"><div class="row between"><b>Upcoming / Current Schedule</b><div class="row wrap"><button class="secondary" onclick="syncToGoogleCalendar()">Sync Google</button><button class="secondary" onclick="downloadICS(shiftsForFilter(state.settings.homeFilter).filter(s=>s.status==='Scheduled'),'schedule_with_alerts.ics')">Add All</button></div></div>${groupedScheduleHtml(list)||'<p class="notice">No schedule loaded.</p>'}</div>`}
 function groupedScheduleHtml(list){const by={};list.forEach(s=>(by[s.date]||(by[s.date]=[])).push(s));return Object.keys(by).sort().map(date=>`<div class="daygroup ${date===todayISO()?'today':''}"><div class="daygroup-head"><div class="daybadge">${day3(date)}<span>${mdy(date)}</span></div><div><b>${new Date(date+'T00:00:00').toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'})}</b><div class="small">${by[date].length} entr${by[date].length===1?'y':'ies'}</div></div></div>${by[date].map(s=>shiftCard(s,false)).join('')}</div>`).join('')}
-function shiftCard(s,big){const c=calc(s),off=s.status!=='Scheduled',b=businessById(s.businessId)||activeBusiness(),isOpen=openShiftId===s.id,isEdit=openEditorId===s.id,color=shiftColor(s);return `<div class="shift ${off?'off':''}" tabindex="0" style="border-left-color:${esc(color)}" onclick="toggleShiftMenu('${s.id}')" onfocus="openShiftMenu('${s.id}')"><div class="shift-head"><div class="shift-main"><div class="shift-title">${off?esc(s.status||'Off'):esc(timeRange(s.start,s.end))}</div><div class="shift-meta"><span class="pill color" style="background:${esc(b.color)}">${esc(b.name)}</span> ${esc(s.location||'')}${s.notes?' · '+esc(s.notes):''}</div>${!off?`<div class="shift-meta"><span class="pill">${c.hours.toFixed(1)} hrs</span> <span class="money">${money(c.net)} take-home est.</span></div>`:''}</div></div>${isOpen?`<div class="shift-tools" onclick="event.stopPropagation()"><div class="menu-row"><button class="danger" onclick="setShiftOff('${s.id}')">Off</button><button class="secondary" onclick="openShiftEditor('${s.id}')">Edit</button><button class="secondary" onclick="syncOneShift('${s.id}')">Sync This Shift</button></div>${isEdit?shiftEditorHtml(s):''}</div>`:''}</div>`}
+
+function shiftCard(s,big){
+  const c=calc(s),off=s.status!=='Scheduled',b=businessById(s.businessId)||activeBusiness(),color=shiftColor(s);
+  return `<div class="shift shift-card-shell ${off?'off':''}" style="border-left-color:${esc(color)}">
+    <div class="shift-head">
+      <div class="shift-main">
+        <div class="shift-title">${off?esc(s.status||'Off'):esc(timeRange(s.start,s.end))}</div>
+        <div class="shift-meta"><span class="pill color" style="background:${esc(b.color)}">${esc(b.name)}</span> ${esc(s.location||'')}${s.notes?' · '+esc(s.notes):''}</div>
+      </div>
+      <button class="shift-action-button" onclick="event.stopPropagation();toggleCog('${s.id}')">⚙</button>
+    </div>
+    <div class="shift-action-menu ${'hide'}" id="menu-${s.id}">
+      <button onclick="openShiftEditor('${s.id}')">Edit</button>
+      <button onclick="setShiftOff('${s.id}')">Set Off</button>
+      <button onclick="syncOneShift('${s.id}')">Sync</button>
+    </div>
+  </div>`;
+}
 function toggleShiftMenu(id){if(openShiftId===id){openShiftId=null;openEditorId=null}else{openShiftId=id;openEditorId=null}renderHome()}function openShiftMenu(id){if(openShiftId!==id){openShiftId=id;openEditorId=null;renderHome()}}function openShiftEditor(id){openShiftId=id;openEditorId=id;renderHome()}function shiftById(id){return state.shifts.find(s=>s.id===id)}function shiftIndexById(id){return state.shifts.findIndex(s=>s.id===id)}function shiftEditorHtml(s){const b=businessById(s.businessId)||activeBusiness();return `<div class="inline-editor"><div class="grid two"><label>Business<select onchange="updateShiftField('${s.id}','businessId',this.value)">${state.businesses.map(x=>`<option value="${x.id}" ${x.id===s.businessId?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label><label>Status<select onchange="updateShiftStatus('${s.id}',this.value)"><option value="Scheduled" ${s.status==='Scheduled'?'selected':''}>Scheduled</option><option value="Off" ${s.status!=='Scheduled'?'selected':''}>Off</option></select></label><label>Start Time<select onchange="updateShiftField('${s.id}','start',this.value)">${hourOptions(s.start,false)}</select></label><label>End Time<select onchange="updateShiftField('${s.id}','end',this.value)">${hourOptions(s.end,true)}</select></label><label>Location<select onchange="updateShiftField('${s.id}','location',this.value)">${locationOptions(b,s.location||b.defaultLocation)}</select></label><label>Notes<textarea onchange="updateShiftField('${s.id}','notes',this.value)" placeholder="Notes...">${esc(s.notes||'')}</textarea></label></div></div>`}
 function hourOptions(selected='',allowBlank=false){const opts=[];if(allowBlank)opts.push(`<option value="" ${!selected?'selected':''}>Blank / use default hours</option>`);const known=[];for(let h=0;h<24;h++){const v=String(h).padStart(2,'0')+':00';known.push(v);opts.push(`<option value="${v}" ${selected===v?'selected':''}>${fmtTime(v,true)}</option>`)}if(selected&&!known.includes(selected))opts.unshift(`<option value="${esc(selected)}" selected>${esc(fmtTime(selected,true)||selected)}</option>`);return opts.join('')}function locationOptions(b,selected=''){return (b.locations||[]).map(loc=>`<option value="${esc(loc.name)}" ${String(loc.name).toLowerCase()===String(selected||'').toLowerCase()?'selected':''}>${esc(loc.name)}</option>`).join('')}
 function logScheduleChange(reason){state.logs.unshift(makeLog(reason||'Manual schedule change',state.shifts,'Auto-saved from inline edit'));if(state.logs.length>100)state.logs=state.logs.slice(0,100)}function saveAfterInlineEdit(reason){logScheduleChange(reason);save();updateSyncStatus('Autosaved locally · change written to log','ok')}function setShiftOff(id){const sh=shiftById(id);if(!sh)return;sh.status='Off';sh.start='';sh.end='';sh.location='';sh.notes='';sh.calendarDelete=true;sh.editedAt=new Date().toISOString();saveAfterInlineEdit('Set '+day3(sh.date)+' '+mdy(sh.date)+' Off');openShiftId=id;openEditorId=null;renderHome()}function updateShiftStatus(id,value){if(value==='Off')return setShiftOff(id);const sh=shiftById(id);if(!sh)return;const b=businessById(sh.businessId)||activeBusiness();sh.status='Scheduled';sh.calendarDelete=false;if(!sh.start)sh.start='09:00';if(!sh.location)sh.location=b.defaultLocation;saveAfterInlineEdit('Set shift scheduled');renderHome()}function updateShiftField(id,field,value){const sh=shiftById(id);if(!sh)return;if(field==='businessId'){sh.businessId=value;const b=businessById(value);sh.location=b.defaultLocation||((b.locations||[])[0]||{}).name||''}else if(field==='start'||field==='end'){sh[field]=value}else{sh[field]=String(value||'').trim()}if(field!=='notes'){sh.status='Scheduled';sh.calendarDelete=false}sh.editedAt=new Date().toISOString();saveAfterInlineEdit('Edited '+day3(sh.date)+' '+mdy(sh.date));openShiftId=id;openEditorId=id;renderHome()}
@@ -499,8 +556,312 @@ ensureHeaderShareMenu();
   setStatusStable('Ready · autosaved locally');
 })();
 
+
+
+/* === v13 iPhone-first polish: COLLAPSIBLE SETUP / SWIPE ACTIONS / SHIFT MENU / EXPORT SYSTEM / HELP PAGE === */
+(function(){
+  const $=id=>document.getElementById(id);
+  function boolSetting(key,def){ if(state.settings[key]===undefined) state.settings[key]=def; return state.settings[key]; }
+  function ensureV13State(){
+    state.settings.openSetupBusinesses=state.settings.openSetupBusinesses||{};
+    state.settings.openSetupSections=state.settings.openSetupSections||{};
+    state.settings.showOffUpcoming=state.settings.showOffUpcoming===true;
+    state.settings.helpOpen=state.settings.helpOpen===true;
+    state.settings.openExportMenu=false;
+    state.settings.openShiftActionId='';
+  }
+  ensureV13State();
+  // Header/mobile menu refinement: replace Add All with Export
+  function renderV13HeaderMenu(open){
+    const menu=document.getElementById('mobileHeaderMenu');
+    if(!menu)return;
+    menu.classList.toggle('hide',!open);
+    if(!open)return;
+    menu.innerHTML='<h3>Menu</h3><div class="mobile-menu-list">'
+      +'<button class="secondary" onclick="closeMobileHeaderMenu();document.getElementById(\'jsonImport\').click()">Import Backup JSON</button>'
+      +'<button class="secondary" onclick="closeMobileHeaderMenu();downloadJSON()">Download Backup</button>'
+      +'<button class="secondary" onclick="closeMobileHeaderMenu();openExportMenu()">Export Schedule</button>'
+      +'<button class="secondary" onclick="closeMobileHeaderMenu();toggleSharePopover()">Share Schedule</button>'
+      +'<button class="secondary" onclick="closeMobileHeaderMenu();syncToGoogleCalendar(state.settings.homeFilter||\'ALL\')">Sync Google Calendar</button>'
+      +'</div>';
+  }
+  window.toggleMobileHeaderMenu=function(){const menu=document.getElementById('mobileHeaderMenu');renderV13HeaderMenu(!menu||menu.classList.contains('hide'));};
+  window.closeMobileHeaderMenu=function(){renderV13HeaderMenu(false);};
+  const quickBtn=document.getElementById('quickIcs'); if(quickBtn){quickBtn.textContent='Export'; quickBtn.onclick=function(e){openExportMenu();};}
+
+  function setStatus(msg,mode='ok'){ if(typeof setStatusProgress==='function') setStatusProgress(msg,mode,mode==='ok'?100:55,true); else updateSyncStatus(msg,mode); }
+  function safeId(id){ return String(id||'').replace(/[^a-zA-Z0-9_-]/g,'_'); }
+  function escJs(s){ return String(s??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,' '); }
+  function businessLogoSmall(b){ return b&&b.logoData?`<img class="shift-logo" src="${esc(b.logoData)}" alt="${esc(b.name)} logo">`:`<span class="shift-logo letter" style="background:${esc((b&&b.color)||'#315c49')}">${esc(((b&&b.name)||'W').slice(0,2).toUpperCase())}</span>`; }
+
+  // SWIPE ACTIONS
+  window.v13BindSwipe=function(){
+    document.querySelectorAll('.swipe-row').forEach(row=>{
+      if(row.dataset.swipeBound==='1')return; row.dataset.swipeBound='1';
+      let startX=0,startY=0,active=false;
+      row.addEventListener('touchstart',e=>{const t=e.touches[0];startX=t.clientX;startY=t.clientY;active=true;},{passive:true});
+      row.addEventListener('touchmove',e=>{if(!active)return;const t=e.touches[0];const dx=t.clientX-startX,dy=Math.abs(t.clientY-startY);if(dy>35)return;if(dx<-38){row.classList.add('swiped');active=false}else if(dx>25){row.classList.remove('swiped');active=false}},{passive:true});
+    });
+  };
+  document.addEventListener('click',e=>{
+    document.querySelectorAll('.swipe-row.swiped').forEach(r=>{ if(!r.contains(e.target)) r.classList.remove('swiped'); });
+    const menu=$('shiftActionMenu');
+    if(menu && !menu.contains(e.target) && !e.target.closest('.shift-action-button')) closeShiftActionMenu(false);
+    const exp=$('exportPopover');
+    if(exp && !exp.contains(e.target) && !e.target.closest('#homeExportBtn')) closeExportMenu(false);
+  });
+
+  function wrapSwipe(inner,deleteCall,label='Delete'){
+    return `<div class="swipe-row"><button type="button" class="swipe-action" onclick="event.stopPropagation();${deleteCall}">${esc(label)}</button><div class="swipe-content">${inner}</div></div>`;
+  }
+
+  // SHIFT MENU
+  window.openShiftActionMenu=function(id,e){
+  if(e){
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  state.settings.openShiftActionId =
+    state.settings.openShiftActionId === id ? '' : id;
+
+  renderHome();
+  setTimeout(v13BindSwipe,0);
+};
+  window.closeShiftActionMenu=function(redraw=true){ state.settings.openShiftActionId=''; if(redraw&&activeTab==='home')renderHome(); };
+  function shiftMenuHtml(s){
+    if(state.settings.openShiftActionId!==s.id)return '';
+    return `<div id="shiftActionMenu" class="shift-action-menu" onclick="event.stopPropagation()"><button class="secondary" onclick="openShiftEditor('${s.id}')">⚙ Edit</button><button class="warn" onclick="setShiftOff('${s.id}')">Set Off</button><button class="secondary" onclick="syncOneShift('${s.id}')">Sync This Shift</button><button class="danger" onclick="deleteShiftV13('${s.id}')">Delete Shift</button></div>`;
+  }
+
+  window.deleteShiftV13=function(id){
+    const idx=state.shifts.findIndex(s=>s.id===id); if(idx<0)return;
+    const original=clone(state.shifts[idx]);
+    const deletePayload=scheduleDayForSync(original);
+    deletePayload.deleteCalendar=true; deletePayload.status='Off'; deletePayload.start=original.start||deletePayload.start; deletePayload.location=original.location||deletePayload.location;
+    state.shifts[idx].calendarDelete=true;
+    state.shifts.splice(idx,1);
+    state.settings.pasteDrafts=state.settings.pasteDrafts||{};
+    state.settings.pasteDrafts[original.businessId]=businessPasteText(original.businessId);
+    state.logs.unshift(makeLog('Deleted shift - '+businessName(original.businessId)+' '+(original.day||day3(original.date))+' '+mdy(original.date),state.shifts,'Deleted shift and calendar deletion requested'));
+    save(); closeShiftActionMenu(false); renderHome(); setStatus('Shift deleted locally · syncing calendar deletion','working');
+    if(state.settings.googleScriptUrl&&state.settings.googleScriptSecret){ syncPayloadToGoogle([deletePayload],'Deleted shift synced to Google Calendar'); } else { setStatus('Shift deleted locally · Google sync not configured','ok'); }
+  };
+
+  const oldSetShiftOff=setShiftOff;
+  setShiftOff=function(id){ closeShiftActionMenu(false); oldSetShiftOff(id); };
+
+  shiftCard=function(s,big){
+    const c=calc(s),off=s.status!=='Scheduled',b=businessById(s.businessId)||activeBusiness(),isEdit=openEditorId===s.id,color=shiftColor(s);
+    const dateBox=`<div class="shift-datebox">${esc(s.day||day3(s.date))}<span>${esc(mdy(s.date))}</span></div>`;
+    const logo=businessLogoSmall(b);
+    const left=big?`<div class="next-left">${dateBox}${logo}</div>`:`${logo}`;
+    const card=`<div class="shift shift-card-shell ${off?'off':''}" tabindex="0" style="border-left-color:${esc(color)}"><div class="shift-head ${big?'next-clear':''}">${left}<div class="shift-main"><div class="shift-title">${off?esc(s.status||'Off'):esc(timeRange(s.start,s.end))}</div><div class="shift-meta"><span class="pill color" style="background:${esc(b.color)}">${esc(b.name)}</span> ${esc(s.location||'')}${s.notes?' · '+esc(s.notes):''}</div>${!off?`<div class="shift-meta"><span class="pill">${c.hours.toFixed(1)} hrs</span> <span class="money">${money(c.net)} take-home est.</span></div>`:''}</div><button type="button" class="shift-action-button" aria-label="Shift options" onclick="event.preventDefault();event.stopPropagation();openShiftActionMenu('${s.id}',event)">⚙</button></div>${shiftMenuHtml(s)}${isEdit?`<div class="shift-tools" onclick="event.stopPropagation()">${shiftEditorHtml(s)}</div>`:''}</div>`;
+    return wrapSwipe(card,`deleteShiftV13('${s.id}')`,'Delete');
+  };
+
+  function nextShiftPerBusiness(filter='ALL'){
+    const businesses=filter==='ALL'?state.businesses:state.businesses.filter(b=>b.id===filter);
+    return businesses.map(b=>upcoming(b.id).find(s=>s.status==='Scheduled')).filter(Boolean).sort((a,b)=>a.date.localeCompare(b.date)||String(a.start).localeCompare(String(b.start)));
+  }
+  function listForUpcoming(filter){
+    const list=shiftsForFilter(filter);
+    return state.settings.showOffUpcoming?list:list.filter(s=>s.status==='Scheduled');
+  }
+  window.toggleShowOffUpcoming=function(){ state.settings.showOffUpcoming=!state.settings.showOffUpcoming; save(); renderHome(); };
+
+  // EXPORT SYSTEM
+  function scheduledForExport(){ return shiftsForFilter(state.settings.homeFilter||'ALL').filter(s=>s.status==='Scheduled'&&s.start); }
+  function shareLines(filter=state.settings.homeFilter||'ALL'){ return scheduleShareLines(filter).join('\n'); }
+  function csvRowsForSchedule(filter=state.settings.homeFilter||'ALL'){
+    const rows=[['Business','Day','Date','Status','Start','End','Location','Notes','Hours','Gross','Net']];
+    shiftsForFilter(filter).forEach(s=>{const c=calc(s);rows.push([businessName(s.businessId),s.day||day3(s.date),s.date,s.status,s.start,s.end,s.location,s.notes,c.hours.toFixed(2),c.gross.toFixed(2),c.net.toFixed(2)])});
+    return rows;
+  }
+  function csvEscape2(v){return '"'+String(v??'').replace(/"/g,'""')+'"'}
+  window.toggleExportMenu=function(e){ if(e)e.stopPropagation(); const p=$('exportPopover'); if(p&&!p.classList.contains('hide')) closeExportMenu(); else openExportMenu(); };
+  window.openExportMenu=function(){
+    let pop=$('exportPopover'); if(!pop){pop=document.createElement('div');pop.id='exportPopover';pop.className='export-popover';pop.onclick=e=>e.stopPropagation();document.body.appendChild(pop);} pop.classList.remove('hide');
+    pop.innerHTML=`<h3>Export Schedule</h3><p class="small">Exports use the current Home business filter.</p><div class="export-grid"><button class="secondary" onclick="shareCurrentScheduleText()">Share Text</button><button class="secondary" onclick="exportScheduleCSV()">CSV</button><button class="secondary" onclick="exportScheduleExcel()">Excel</button><button class="secondary" onclick="exportScheduleWord()">Word</button><button class="secondary" onclick="exportSchedulePDF()">PDF / Print</button><button class="secondary" onclick="exportScheduleImageV13('png')">PNG</button><button class="secondary" onclick="exportScheduleImageV13('jpeg')">JPEG</button><button class="secondary" onclick="exportCalendarFile('ics')">ICS</button><button class="secondary" onclick="exportCalendarFile('ical')">iCal</button><button class="secondary" onclick="exportCalendarFile('vcs')">vCal</button></div>`;
+  };
+  window.closeExportMenu=function(){ const p=$('exportPopover'); if(p)p.classList.add('hide'); };
+  window.shareCurrentScheduleText=async function(){ const text=shareLines(); try{ if(navigator.share){ await navigator.share({title:'Work Schedule',text}); setStatus('Schedule shared','ok'); closeExportMenu(); return; }}catch(e){} try{await navigator.clipboard.writeText(text); setStatus('Schedule copied to clipboard','ok')}catch(e){downloadBlob(text,'schedule.txt','text/plain'); setStatus('Text downloaded','ok')} closeExportMenu(); };
+  window.exportScheduleCSV=function(){downloadBlob(csvRowsForSchedule().map(r=>r.map(csvEscape2).join(',')).join('\n'),'schedule.csv','text/csv');setStatus('CSV exported','ok');closeExportMenu();};
+  window.exportScheduleExcel=function(){const html='<table>'+csvRowsForSchedule().map(r=>'<tr>'+r.map(c=>'<td>'+esc(c)+'</td>').join('')+'</tr>').join('')+'</table>';downloadBlob(html,'schedule.xls','application/vnd.ms-excel');setStatus('Excel-compatible file exported','ok');closeExportMenu();};
+  window.exportScheduleWord=function(){const body='<h1>Work Schedule</h1><pre>'+esc(shareLines())+'</pre>';downloadBlob('<html><body>'+body+'</body></html>','schedule.doc','application/msword');setStatus('Word-compatible file exported','ok');closeExportMenu();};
+  window.exportSchedulePDF=function(){downloadBlob(makeSimplePDF(shareLines().split('\n')),'schedule.pdf','application/pdf');setStatus('PDF exported','ok');closeExportMenu();};
+  window.exportScheduleImageV13=function(type){const dataUrl=makeScheduleImage(shareLines(),'Work Schedule',type);downloadDataUrl(dataUrl,`schedule.${type==='jpeg'?'jpg':'png'}`);setStatus(type.toUpperCase()+' exported','ok');closeExportMenu();};
+  function makeVCS(shifts){let lines=['BEGIN:VCALENDAR','VERSION:1.0'];shifts.forEach(s=>{const b=businessById(s.businessId)||activeBusiness();const end=s.end||numToTime(timeToNum(s.start)+(b.defaultShiftHours||8));lines.push('BEGIN:VEVENT','DTSTART:'+icsDate(s.date,s.start),'DTEND:'+icsDate(s.date,end),'SUMMARY:'+calendarTitle(s),'LOCATION:'+(s.location||''),'DESCRIPTION:'+((s.notes||'')+' Business: '+b.name),'END:VEVENT')});lines.push('END:VCALENDAR');return lines.join('\r\n')}
+  window.exportCalendarFile=function(ext){const shifts=scheduledForExport(); if(!shifts.length){setStatus('No scheduled shifts to export','dirty');return} if(ext==='vcs')downloadBlob(makeVCS(shifts),'schedule.vcs','text/x-vcalendar'); else downloadBlob(makeICS(shifts),'schedule.'+ext,'text/calendar'); setStatus(ext.toUpperCase()+' calendar file exported','ok'); closeExportMenu();};
+
+  const oldDownloadICS=downloadICS;
+  downloadICS=function(shifts,name){const valid=(shifts||[]).filter(s=>s&&s.status==='Scheduled'&&s.start); if(!valid.length){setStatus('No scheduled shifts with start times to export','dirty');return} oldDownloadICS(valid,name);};
+
+  // COLLAPSIBLE SETUP
+  window.toggleSetupBusiness=function(id){ ensureV13State(); state.settings.openSetupBusinesses[id]=!state.settings.openSetupBusinesses[id]; save(); renderSetup(); };
+  window.toggleSetupSection=function(id,section){ ensureV13State(); const key=id+':'+section; state.settings.openSetupSections[key]=!state.settings.openSetupSections[key]; save(); renderSetup(); };
+  function isBusinessOpen(id){ ensureV13State(); return state.settings.openSetupBusinesses[id]===true; }
+  function isSectionOpen(id,section){ ensureV13State(); return state.settings.openSetupSections[id+':'+section]===true; }
+  function setupSectionHtml(b,key,title,body){const open=isSectionOpen(b.id,key);return `<div class="setup-section"><button type="button" class="setup-section-header" onclick="toggleSetupSection('${b.id}','${key}')"><strong>${esc(title)}</strong><span class="setup-chevron">${open?'⌄':'›'}</span></button>${open?`<div class="setup-section-body">${body}</div>`:''}</div>`}
+  function businessDetailsHtml(b){return `<div class="grid two"><label>Business Name<input value="${esc(b.name)}" onchange="updateBusiness('${b.id}','name',this.value)"></label><label>Business Color<input type="color" value="${esc(b.color)}" onchange="updateBusiness('${b.id}','color',this.value)"></label><label>Calendar Title Prefix<input value="${esc(b.calendarTitlePrefix)}" onchange="updateBusiness('${b.id}','calendarTitlePrefix',this.value)"></label><label>Default Shift Hours<input type="number" step="0.25" value="${b.defaultShiftHours}" onchange="updateBusiness('${b.id}','defaultShiftHours',this.value)"></label><label>Default Location<select onchange="updateBusiness('${b.id}','defaultLocation',this.value)">${(b.locations||[]).map(l=>`<option value="${esc(l.name)}" ${l.name===b.defaultLocation?'selected':''}>${esc(l.name)}</option>`).join('')}</select></label><label>Business Logo<input type="file" accept="image/*" onchange="saveBusinessLogo('${b.id}',this.files[0])"></label>${b.logoData?`<button type="button" class="secondary" onclick="clearBusinessLogo('${b.id}')">Remove Logo</button>`:''}</div>`}
+  function payrollDetailsHtml(b){return `<div class="grid two"><label>Hourly Rate<input type="number" step="0.01" value="${b.hourlyRate}" onchange="updateBusiness('${b.id}','hourlyRate',this.value)"></label><label>State for Income Tax<select onchange="updateBusinessState('${b.id}',this.value)">${stateOptions(b.stateCode||'NONE')}</select></label><label>State Tax Rate <span class="small">Editable estimate</span><input type="number" step="0.0001" value="${b.ilTax}" onchange="updateBusiness('${b.id}','ilTax',this.value)"></label><label>FICA Tax Rate<input type="number" step="0.0001" value="${b.ficaTax}" onchange="updateBusiness('${b.id}','ficaTax',this.value)"></label><label>Federal Tax Rate<input type="number" step="0.0001" value="${b.federalTax}" onchange="updateBusiness('${b.id}','federalTax',this.value)"></label><label>Pay Period Anchor<input type="date" value="${esc(b.payPeriodAnchor)}" onchange="updateBusiness('${b.id}','payPeriodAnchor',this.value)"></label><label>Pay Period Days<input type="number" value="${b.payPeriodDays}" onchange="updateBusiness('${b.id}','payPeriodDays',this.value)"></label><label>Payday Offset Days<input type="number" value="${b.paydayOffset}" onchange="updateBusiness('${b.id}','paydayOffset',this.value)"></label></div><p class="small">These are estimates only. Override rates to match actual withholding.</p>`}
+  function locationCardHtml(b,loc,i){const useBiz=loc.useBusinessColor!==false&&!loc.color;const pickerColor=useBiz?(b.color||'#315c49'):(loc.color||b.color||'#315c49');const card=`<div class="location-card"><div class="grid two"><label>Location Name<input value="${esc(loc.name)}" onchange="updateLocationName('${b.id}',${i},this.value)"></label><label>Location Color<input type="color" value="${esc(pickerColor)}" ${useBiz?'disabled':''} onchange="updateLocationColor('${b.id}',${i},this.value)"></label><button type="button" class="secondary" onclick="toggleLocationBusinessColor('${b.id}',${i})">${useBiz?'Using Workplace Color':'Using Custom Color'}</button><button type="button" class="danger desktop-delete" onclick="deleteLocation('${b.id}',${i})">Delete Location</button></div></div>`;return wrapSwipe(card,`deleteLocation('${b.id}',${i})`,'Delete')}
+  function locationsHtml(b){return `<div class="row between"><b>Locations</b><button type="button" class="secondary" onclick="addLocation('${b.id}')">Add Location</button></div><p class="small">Location color controls scheduled shift color.</p>${(b.locations||[]).map((loc,i)=>locationCardHtml(b,loc,i)).join('')}`}
+  window.deleteBusinessV13=function(id){ deleteBusiness(id); };
+  businessSetupHtml=function(b,i){const open=isBusinessOpen(b.id);const header=`<button type="button" class="setup-business-header" onclick="toggleSetupBusiness('${b.id}')"><div class="setup-business-title">${businessLogoSmall(b)}<div><strong>${esc(b.name)}</strong><div class="setup-summary">${(b.locations||[]).length} location${(b.locations||[]).length===1?'':'s'} · Default: ${esc(b.defaultLocation||'—')}</div></div></div><span class="color-dot" style="background:${esc(b.color)}"></span><span class="setup-chevron">${open?'⌄':'›'}</span></button>`;const body=open?`<div class="business-card"><div class="desktop-delete"><button type="button" class="danger" onclick="deleteBusinessV13('${b.id}')">Delete Business</button></div>${setupSectionHtml(b,'business','Business Details',businessDetailsHtml(b))}${setupSectionHtml(b,'payroll','Payroll Details',payrollDetailsHtml(b))}${setupSectionHtml(b,'locations','Locations',locationsHtml(b))}</div>`:'';return wrapSwipe(`<div class="setup-accordion">${header}${body}</div>`,`deleteBusinessV13('${b.id}')`,'Delete')};
+
+  // HELP PAGE
+  window.openHelpGuide=function(){ state.settings.helpOpen=true; save(); renderSetup(); window.scrollTo({top:0,behavior:'smooth'}); };
+  window.closeHelpGuide=function(){ state.settings.helpOpen=false; save(); renderSetup(); };
+  function helpGuideHtml(){return `<div class="help-page"><div class="card help-card"><div class="row between"><h2>Help / Setup Guide</h2><button class="secondary" onclick="closeHelpGuide()">Back</button></div><h3>What this app does</h3><p class="notice">This app stores your work schedules locally in your browser, lets you manage multiple jobs, estimate pay, keep a running log, export schedules, and optionally sync shifts to Google Calendar.</p><h3>Autosave</h3><p>Changes save to this browser using localStorage. Use Backup JSON before clearing browser data or switching devices.</p><h3>Businesses and locations</h3><ol><li>Add each job/business in Setup.</li><li>Set its pay, taxes, default shift hours, title prefix, and locations.</li><li>Use location colors to visually separate shifts.</li></ol><h3>Paste/import schedule</h3><p>Choose a business on the Paste page, paste your schedule text, preview it, then save it as current. Each business keeps its own paste draft.</p><h3>Editing shifts</h3><p>Use the cog on any shift to edit, set Off, sync, or delete. OFF clears scheduled details. Deleted shifts are logged and sent as calendar deletions when sync is configured.</p><h3>Log</h3><p>The Log stores imported and edited schedule snapshots so you can restore or export history.</p><h3>Exports</h3><ul><li>Text: quick sharing/copying.</li><li>CSV/Excel/Word: spreadsheet/document compatible.</li><li>PDF/PNG/JPEG: printable or visual exports.</li><li>ICS/iCal/vCal: calendar file exports. ICS is the primary standard.</li></ul><h3>Google Calendar sync</h3><ol><li>Create or open your Apps Script.</li><li>Set your Calendar ID and secret key in Apps Script.</li><li>Deploy as a Web App.</li><li>Paste the Web App URL and same Secret Key into Setup.</li><li>Redeploy Apps Script after code changes.</li></ol><p class="notice">The URL/key are stored only in this browser, not in the public GitHub file.</p></div></div>`}
+
+  renderSetup=function(){ensureV13State(); if(state.settings.helpOpen){$('setup').innerHTML=helpGuideHtml();return} const selected=state.settings.setupBusinessFilter||'ALL'; const businesses=selected==='ALL'?state.businesses:state.businesses.filter(b=>b.id===selected); $('setup').innerHTML=`<div class="card setup-selector-card"><h2>Setup</h2><p class="notice"><b>Mobile-first setup:</b> businesses are collapsed by default. Expand only what you need.</p>${typeof businessSelectorHtml==='function'?businessSelectorHtml(selected):filterButtons(selected,'setSetupBusinessFilter')}<div class="grid two"><label>Your Name<input id="employeeName" value="${esc(state.settings.employeeName)}"></label><label>Logo Image<div class="row between setup-actions"><input type="file" id="logoFile" accept="image/*"></label></div><button class="secondary full" style="margin-top:10px" onclick="openHelpGuide()">Help / Setup Guide</button></div><div class="card"><div class="row between"><h3>Businesses</h3><button onclick="addBusiness()">Add Business</button></div></div><div class="setup-business-panel">${businesses.map((b,i)=>businessSetupHtml(b,i)).join('')}</div></div><div class="card"><h3>Google Calendar Sync</h3><p class="notice">Optional. One Google Calendar for all businesses.</p><div class="grid"><label>Apps Script Web App URL<input id="googleScriptUrl" value="${esc(state.settings.googleScriptUrl||'')}"></label><label>Secret Key<input id="googleScriptSecret" value="${esc(state.settings.googleScriptSecret||'')}"></label></div><div class="grid two" style="margin-top:10px"><button onclick="syncToGoogleCalendar('ALL')">Sync All Shifts</button><button class="secondary" onclick="testGoogleCalendarPayload()">Preview Payload</button><button class="secondary" onclick="copyCompatibleAppsScript()">Copy Apps Script</button><button class="secondary" onclick="openGoogleSyncUrlManually()">Open Sync URL</button></div></div><div class="card"><h3>Data Backup / Restore</h3><p class="notice">Download JSON before changing devices or clearing browser data.</p><div class="grid two"><button onclick="downloadJSON()">Download JSON</button><label class="btn secondary">Import JSON<input class="hide" type="file" id="jsonFile" accept="application/json"></label><button class="danger" onclick="resetAll()">Reset Example</button><button class="secondary" onclick="print()">Print</button></div></div>`; $('employeeName').onchange=e=>{state.settings.employeeName=e.target.value;save();renderSetup()}; $('logoFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{state.settings.logoData=r.result;save();renderSetup()};r.readAsDataURL(f)}; ['googleScriptUrl','googleScriptSecret'].forEach(id=>{$(id).onchange=e=>{state.settings[id]=e.target.value;save();renderSetup()}}); $('jsonFile').onchange=e=>importJSON(e.target.files[0]); setTimeout(v13BindSwipe,0); };
+
+  renderHome=function(){ensureV13State(); const filter=state.settings.homeFilter||'ALL'; const list=shiftsForFilter(filter); const visible=listForUpcoming(filter); const nextList=nextShiftPerBusiness(filter); const k=summary(list); $('home').innerHTML=`<div class="card"><div class="row between"><div><b>Next Shift</b><div class="notice">One next scheduled shift per business. Use cog for actions.</div></div><button class="secondary" onclick="showTab('paste')">Paste New</button></div>${filterButtons(filter,'setHomeFilter')}${nextList.length?'<div class="next-stack">'+nextList.map(s=>shiftCard(s,true)).join('')+'</div>':`<div class="shift off"><div class="shift-title">No upcoming scheduled shift</div><div class="notice">Paste or import your next schedule.</div></div>`}</div><div class="kpis"><div class="kpi"><span>Hours</span><b>${k.hours.toFixed(1)}</b></div><div class="kpi"><span>Gross</span><b>${money(k.gross)}</b></div><div class="kpi"><span>Take Home</span><b>${money(k.net)}</b></div><div class="kpi"><span>Next Payday</span><b>${esc(k.payday?mdy(k.payday):'—')}</b></div></div><div class="card"><div class="row between wrap"><b>Upcoming / Current Schedule</b><div class="upcoming-toolbar"><button class="secondary" onclick="syncToGoogleCalendar(state.settings.homeFilter||'ALL')">Sync</button><button class="secondary" onclick="toggleShowOffUpcoming()">${state.settings.showOffUpcoming?'Hide OFF':'Show OFF'}</button><button id="homeExportBtn" class="secondary" onclick="toggleExportMenu(event)">Export</button></div></div>${groupedScheduleHtml(visible)||'<p class="notice">No schedule loaded.</p>'}</div>`; setTimeout(v13BindSwipe,0); };
+
+  const oldRender=render;
+  render=function(){ ensureV13State(); oldRender(); setTimeout(v13BindSwipe,0); };
+
+  ensureV13State(); setStatus('Ready · v13 mobile refinements loaded','ok');
+})();
+
 window.setHomeFilter=setHomeFilter;window.setPayFilter=setPayFilter;window.setShareFilter=setShareFilter;window.setPasteBusiness=setPasteBusiness;window.syncToGoogleCalendar=syncToGoogleCalendar;window.shiftsForFilter=shiftsForFilter;window.copyCompatibleAppsScript=copyCompatibleAppsScript;window.testGoogleCalendarPayload=testGoogleCalendarPayload;window.openGoogleSyncUrlManually=openGoogleSyncUrlManually;
 render();updateSyncStatus('Autosaved locally · versioned storage enabled','ok');
+
+function toggleCog(id){
+  document.querySelectorAll('.shift-action-menu').forEach(m=>m.classList.add('hide'));
+  const el=document.getElementById('menu-'+id);
+  if(el) el.classList.toggle('hide');
+}
+
+
+
+/* === v13.3 definitive shift cog menu fix ===
+   This intentionally uses a body-level fixed popover instead of rendering the
+   menu inside shift/swipe/card containers. That avoids clipping, re-render,
+   and iOS touch bubbling issues. */
+(function(){
+  function removeShiftCogMenu(){
+    const existing=document.getElementById('shiftCogPopover');
+    if(existing) existing.remove();
+    if(state && state.settings) state.settings.openShiftActionId='';
+  }
+
+  window.closeShiftActionMenu=function(redraw){
+    removeShiftCogMenu();
+    if(redraw && typeof renderHome==='function' && activeTab==='home') renderHome();
+  };
+
+  window.openShiftActionMenu=function(id,e){
+    if(e){
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    const shift=typeof shiftById==='function' ? shiftById(id) : null;
+    if(!shift){
+      if(typeof updateSyncStatus==='function') updateSyncStatus('Shift not found','dirty');
+      return false;
+    }
+
+    const existing=document.getElementById('shiftCogPopover');
+    if(existing && existing.dataset.shiftId===id){
+      removeShiftCogMenu();
+      return false;
+    }
+    removeShiftCogMenu();
+
+    if(state && state.settings) state.settings.openShiftActionId=id;
+
+    const business=(typeof businessById==='function' ? businessById(shift.businessId) : null) || {};
+    const menu=document.createElement('div');
+    menu.id='shiftCogPopover';
+    menu.className='shift-cog-popover';
+    menu.dataset.shiftId=id;
+    menu.innerHTML=`
+      <div class="shift-cog-popover-title">${esc((shift.day||day3(shift.date))+' '+mdy(shift.date)+' · '+(business.name||'Shift'))}</div>
+      <button type="button" class="secondary" data-action="edit">⚙ Edit Shift</button>
+      <button type="button" class="warn" data-action="off">Set Off</button>
+      <button type="button" class="secondary" data-action="sync">Sync This Shift</button>
+      <button type="button" class="danger" data-action="delete">Delete Shift</button>
+    `;
+
+    menu.addEventListener('click',function(ev){
+      ev.preventDefault();
+      ev.stopPropagation();
+      const action=ev.target && ev.target.getAttribute('data-action');
+      if(!action) return;
+      removeShiftCogMenu();
+      if(action==='edit'){
+        openShiftId=id;
+        openEditorId=id;
+        renderHome();
+      }else if(action==='off'){
+        if(typeof setShiftOff==='function') setShiftOff(id);
+      }else if(action==='sync'){
+        if(typeof syncOneShift==='function') syncOneShift(id);
+      }else if(action==='delete'){
+        if(typeof deleteShiftV13==='function') deleteShiftV13(id);
+        else{
+          const idx=state.shifts.findIndex(s=>s.id===id);
+          if(idx>=0){state.shifts.splice(idx,1);save();renderHome();}
+        }
+      }
+    });
+
+    document.body.appendChild(menu);
+
+    if(e && e.currentTarget){
+      const r=e.currentTarget.getBoundingClientRect();
+      const width=Math.min(250, window.innerWidth-24);
+      let left=Math.min(Math.max(12, r.right-width), window.innerWidth-width-12);
+      let top=Math.min(r.bottom+8, window.innerHeight-menu.offsetHeight-90);
+      menu.style.left=left+'px';
+      menu.style.top=Math.max(8,top)+'px';
+    }
+
+    return false;
+  };
+
+  // Final authoritative shift card renderer. Avoid inline card click behavior.
+  window.shiftCard=shiftCard=function(s,big){
+    const c=calc(s),off=s.status!=='Scheduled',b=businessById(s.businessId)||activeBusiness(),isEdit=openEditorId===s.id,color=shiftColor(s);
+    const dateBox=`<div class="shift-datebox">${esc(s.day||day3(s.date))}<span>${esc(mdy(s.date))}</span></div>`;
+    const logo=(typeof businessLogoSmall==='function') ? businessLogoSmall(b) : `<span class="shift-logo letter" style="background:${esc(b.color||'#315c49')}">${esc((b.name||'W').slice(0,2).toUpperCase())}</span>`;
+    const left=big?`<div class="next-left">${dateBox}${logo}</div>`:logo;
+    const card=`<div class="shift shift-card-shell ${off?'off':''}" style="border-left-color:${esc(color)}">
+      <div class="shift-head ${big?'next-clear':''}">
+        ${left}
+        <div class="shift-main">
+          <div class="shift-title">${off?esc(s.status||'Off'):esc(timeRange(s.start,s.end))}</div>
+          <div class="shift-meta"><span class="pill color" style="background:${esc(b.color)}">${esc(b.name)}</span> ${esc(s.location||'')}${s.notes?' · '+esc(s.notes):''}</div>
+          ${!off?`<div class="shift-meta"><span class="pill">${c.hours.toFixed(1)} hrs</span> <span class="money">${money(c.net)} take-home est.</span></div>`:''}
+        </div>
+        <button type="button" class="shift-action-button" aria-label="Shift options" data-shift-id="${esc(s.id)}" onclick="return openShiftActionMenu('${s.id}',event)">⚙</button>
+      </div>
+      ${isEdit?`<div class="shift-tools" onclick="event.stopPropagation()">${shiftEditorHtml(s)}</div>`:''}
+    </div>`;
+    return (typeof wrapSwipe==='function') ? wrapSwipe(card,`deleteShiftV13('${s.id}')`,'Delete') : card;
+  };
+
+  // Capture fallback: catches taps even if inline onclick is swallowed by iOS/WebKit.
+  document.addEventListener('click',function(e){
+    const cog=e.target.closest && e.target.closest('.shift-action-button');
+    if(cog){
+      e.preventDefault();
+      e.stopPropagation();
+      const id=cog.getAttribute('data-shift-id');
+      if(id) openShiftActionMenu(id,{preventDefault(){},stopPropagation(){},currentTarget:cog});
+      return false;
+    }
+    const menu=document.getElementById('shiftCogPopover');
+    if(menu && !menu.contains(e.target)) removeShiftCogMenu();
+  },true);
+
+  if(typeof renderHome==='function' && activeTab==='home') renderHome();
+  if(typeof updateSyncStatus==='function') updateSyncStatus('Ready · shift cog menu fixed','ok');
+})();
+
 </script>
 </body>
 </html>
